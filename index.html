@@ -200,7 +200,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 14</span></span>
+    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 15</span></span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -917,6 +917,8 @@ A.lactose=L.map(c=>(LACT[c]||LACT.en)[1]);ORDER.push("lactose");
 const PARA={de:"Paracetamol",en:"Paracetamol (acetaminophen)",fr:"Paracétamol",es:"Paracetamol",it:"Paracetamolo",tr:"Parasetamol",el:"Παρακεταμόλη",pl:"Paracetamol",nl:"Paracetamol",pt:"Paracetamol",sv:"Paracetamol",da:"Paracetamol",no:"Paracetamol",fi:"Parasetamoli",cs:"Paracetamol",sk:"Paracetamol",hu:"Paracetamol",ro:"Paracetamol",hr:"Paracetamol",sl:"Paracetamol",bg:"Парацетамол",ru:"Парацетамол",uk:"Парацетамол",sq:"Paracetamol",ar:"الباراسيتامول",fa:"استامینوفن (پاراستامول)",he:"פרצטמול (אקמול)",hi:"पैरासिटामोल",zh:"对乙酰氨基酚（扑热息痛）",ja:"アセトアミノフェン（パラセタモール）",ko:"아세트아미노펜(파라세타몰)",th:"พาราเซตามอล",vi:"Paracetamol",id:"Parasetamol",mk:"Парацетамол",ku:"Parasetamol",ka:"პარაცეტამოლი"};
 A.paracetamol=L.map(c=>PARA[c]||PARA.en);MEDK.push("paracetamol");
 A.nsaid[0]="NSAR-Schmerzmittel (Ibuprofen, Aspirin, Diclofenac)";
+const MILK={de:"Milch und Milchprodukte (Milcheiweiß)",en:"Milk and dairy products (milk protein)",fr:"Lait et produits laitiers (protéines de lait)",es:"Leche y productos lácteos (proteína de leche)",it:"Latte e latticini (proteine del latte)",tr:"Süt ve süt ürünleri (süt proteini)",el:"Γάλα και γαλακτοκομικά (πρωτεΐνη γάλακτος)",pl:"Mleko i produkty mleczne (białko mleka)",nl:"Melk en zuivel (melkeiwit)",pt:"Leite e laticínios (proteína do leite)",sv:"Mjölk och mejeriprodukter (mjölkprotein)",da:"Mælk og mejeriprodukter (mælkeprotein)",no:"Melk og meieriprodukter (melkeprotein)",fi:"Maito ja maitotuotteet (maitoproteiini)",cs:"Mléko a mléčné výrobky (mléčná bílkovina)",sk:"Mlieko a mliečne výrobky (mliečna bielkovina)",hu:"Tej és tejtermékek (tejfehérje)",ro:"Lapte și produse lactate (proteine din lapte)",hr:"Mlijeko i mliječni proizvodi (mliječni proteini)",sl:"Mleko in mlečni izdelki (mlečne beljakovine)",bg:"Мляко и млечни продукти (млечен протеин)",ru:"Молоко и молочные продукты (молочный белок)",uk:"Молоко та молочні продукти (молочний білок)",sq:"Qumësht dhe nënprodukte qumështi (proteina e qumështit)",ar:"الحليب ومنتجات الألبان (بروتين الحليب)",fa:"شیر و لبنیات (پروتئین شیر)",he:"חלב ומוצרי חלב (חלבון חלב)",hi:"दूध और दूध से बने उत्पाद (दूध का प्रोटीन)",zh:"牛奶及乳制品（牛奶蛋白）",ja:"牛乳・乳製品（乳たんぱく）",ko:"우유 및 유제품(우유 단백질)",th:"นมและผลิตภัณฑ์จากนม (โปรตีนนม)",vi:"Sữa và các sản phẩm từ sữa (đạm sữa)",id:"Susu dan produk olahan susu (protein susu)",ka:"რძე და რძის პროდუქტები (რძის ცილა)",mk:"Млеко и млечни производи (млечни протеини)",ku:"Şîr û berhemên şîr (proteîna şîr)"};
+A.milk=L.map((c,i)=>MILK[c]||A.milk[i]);
 const ALLK=ORDER.concat(MEDK);
 if(!L.includes(S.lang))S.lang="en";
 /* Küchen-Ansicht: Wurde die Seite über einen Karten-Link geöffnet? */
