@@ -9,8 +9,6 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Allerlingo">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
 <style>
 /* Layout: eine schmale Spalte wie ein Handy-Bildschirm; oben Tabs, darunter entweder das Formular oder die Karte für die Küche */
 :root{
@@ -18,8 +16,8 @@
   --accent:#0B5D6B; --accent-ink:#FFFFFF; --accent-soft:#DDEEF0;
   --danger:#C4161C; --danger-soft:#FBE3E3; --warn:#B85E00; --warn-soft:#FCEBD8; --caution:#8A6D00; --caution-soft:#F7F0CF;
   --card-bg:#FFFFFF; --card-ink:#111418; --card-muted:#4A525A; --card-line:#E1E5E9;
-  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
-  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-display:"Helvetica Neue",Arial,system-ui,sans-serif;
+  --f-body:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0E151B; --surface:#16212A; --ink:#E6EDF2; --muted:#9AA9B5; --line:#2A3843;
@@ -115,7 +113,7 @@ input[type=text],input[type=tel]{font:inherit;font-weight:400;padding:10px 12px;
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tag" id="tagline">Testversion · Version 3</span>
+    <span class="tag" id="tagline">Testversion · Version 4</span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -177,7 +175,7 @@ input[type=text],input[type=tel]{font:inherit;font-weight:400;padding:10px 12px;
     <div class="qr" id="qr" hidden></div>
     <p class="hint" id="own-link" hidden><a href="./" id="own-a">Allerlingo – eigene Allergiekarte erstellen</a></p>
   </section>
-  <p class="hint foot" id="foot">Allerlingo ersetzt nicht das Gespräch mit dem Personal. Übersetzungen ohne Gewähr. Deine Angaben bleiben auf deinem Gerät bzw. im Link des QR-Codes und werden nicht auf einem Server gespeichert.</p>
+  <p class="hint foot"><span id="foot">Allerlingo ersetzt nicht das Gespräch mit dem Personal. Übersetzungen ohne Gewähr. Deine Angaben bleiben auf deinem Gerät bzw. im Link des QR-Codes und werden nicht auf einem Server gespeichert.</span><br><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>

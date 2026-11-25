@@ -1,6 +1,6 @@
 /* Allerlingo Offline-Speicher: Die App wird beim ersten Besuch auf dem Handy gespeichert
    und funktioniert danach auch ohne Internet. Bei Internet holt sie sich im Hintergrund Updates. */
-const CACHE = "allerlingo-v3";
+const CACHE = "allerlingo-v4";
 const FILES = [
   "./",
   "./index.html",
@@ -9,6 +9,9 @@ const FILES = [
   "./icon-512.png",
   "./apple-touch-icon.png",
   "./favicon.png",
+  "./impressum.html",
+  "./datenschutz.html",
+  "./legal.css",
   "https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"
 ];
 self.addEventListener("install", e => {

@@ -1,0 +1,15 @@
+:root{--bg:#EEF2F4;--surface:#FFFFFF;--ink:#14202B;--muted:#56636F;--line:#D5DDE3;--accent:#0B5D6B;--danger:#C4161C;color-scheme:light}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0E151B;--surface:#16212A;--ink:#E6EDF2;--muted:#9AA9B5;--line:#2A3843;--accent:#55B8C6;--danger:#FF6B6F;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0E151B;--surface:#16212A;--ink:#E6EDF2;--muted:#9AA9B5;--line:#2A3843;--accent:#55B8C6;--danger:#FF6B6F;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:680px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.logo{font:800 1.5rem/1 "Helvetica Neue",Arial,sans-serif;color:var(--ink);text-decoration:none}
+.logo span{color:var(--danger)}
+a{color:var(--accent)}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px}
+h1{font-size:1.5rem;margin:0 0 12px;text-wrap:balance}
+h2{font-size:1.05rem;margin:24px 0 6px}
+p,ul{margin:0 0 10px}
+.muted{color:var(--muted);font-size:.875rem}
