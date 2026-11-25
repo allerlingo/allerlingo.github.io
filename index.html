@@ -187,7 +187,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tag" id="tagline">Testversion · Version 6</span>
+    <span class="tag" id="tagline">Testversion · Version 7</span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -228,6 +228,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
         <div class="medrow"><label class="check"><input id="md-anti" type="checkbox"> Allergietabletten (Antihistaminikum)</label><input id="mn-anti" type="text" maxlength="40" placeholder="Name, z. B. Cetirizin 10 mg" aria-label="Name der Allergietabletten"></div>
         <div class="medrow"><label class="check"><input id="md-cort" type="checkbox"> Kortison (Tabletten, Saft oder Zäpfchen)</label><input id="mn-cort" type="text" maxlength="40" placeholder="Name, z. B. Prednisolon 50 mg" aria-label="Name des Kortisons"></div>
         <div class="medrow"><label class="check"><input id="md-spray" type="checkbox"> Asthma-Spray</label><input id="mn-spray" type="text" maxlength="40" placeholder="Name, z. B. Salbutamol" aria-label="Name des Asthma-Sprays"></div>
+        <div class="medrow"><label class="check"><input id="md-lact" type="checkbox"> Laktase-Tabletten (bei Laktoseintoleranz)</label><input id="mn-lact" type="text" maxlength="40" placeholder="Name, z. B. Lactase 6000 FCC" aria-label="Name der Laktase-Tabletten"></div>
       </div>
       <label class="field">Wo hast du es dabei?
         <input id="in-where" type="text" maxlength="60" placeholder="z. B. Rucksack, Seitenfach" autocomplete="off">
@@ -357,7 +358,7 @@ const KEY="allergiekarte-v1";
 let S={name:"",levels:{},custom:[],pen:false,num:"112",c:[["",""],["",""]],lang:"en",cmp:false};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.levels)S=Object.assign(S,s);}catch(e){}
 if(!Array.isArray(S.custom))S.custom=[];
-const MEDS=["pen","anti","cort","spray"];
+const MEDS=["pen","anti","cort","spray","lact"];
 if(!S.meds||typeof S.meds!=="object")S.meds={};
 MEDS.forEach(m=>{if(!S.meds[m])S.meds[m]={on:false,n:""};});
 if(S.pen&&!S.meds.pen.on)S.meds.pen.on=true;delete S.pen;
@@ -371,7 +372,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 /* Kategorien: jede Allergie steht in genau einer Kategorie */
 const CATS=[
  {id:"nuts",n:"Nüsse & Samen",i:"🥜",k:["peanut","treenuts","cashew","pistachio","pine","sesame"]},
- {id:"basics",n:"Ei, Milch & Getreide",i:"🥚",k:["egg","milk","gluten","soy"]},
+ {id:"basics",n:"Ei, Milch & Getreide",i:"🥚",k:["egg","milk","lactose","gluten","soy"]},
  {id:"sea",n:"Fisch & Meerestiere",i:"🐟",k:["fish","crust","moll","algae"]},
  {id:"fruit",n:"Obst",i:"🍓",k:["apple","kiwi","strawberry","stonefruit","citrus","banana"]},
  {id:"veg",n:"Gemüse & Hülsenfrüchte",i:"🥕",k:["tomato","paprika","onion","garlic","carrot","mushroom","celery","legumes","lupine"]},
@@ -845,6 +846,12 @@ id:[["DARURAT ALERGI","Saya punya alergi berat. Jika saya sulit bernapas atau ti
 const nm=c=>{const r=NEWM[c];return r&&r[0].length===EK.length&&r[1].length===MEDK.length?r:NEWM.en;};
 EK.forEach((k,i)=>{T[k]=L.map(c=>nm(c)[0][i]);});
 MEDK.forEach((k,i)=>{A[k]=L.map(c=>nm(c)[1][i]);});
+/* Version 7: Laktase-Tabletten (Notfallset) und Laktose als eigener Eintrag */
+const LACT={
+de:["Laktase-Tabletten (bei Laktoseintoleranz)","Laktose (Milchzucker)"],en:["Lactase tablets (for lactose intolerance)","Lactose (milk sugar)"],fr:["Comprimés de lactase (intolérance au lactose)","Lactose (sucre du lait)"],es:["Comprimidos de lactasa (intolerancia a la lactosa)","Lactosa (azúcar de la leche)"],it:["Compresse di lattasi (intolleranza al lattosio)","Lattosio (zucchero del latte)"],tr:["Laktaz tabletleri (laktoz intoleransı için)","Laktoz (süt şekeri)"],el:["Δισκία λακτάσης (για δυσανεξία στη λακτόζη)","Λακτόζη (ζάχαρη του γάλακτος)"],pl:["Tabletki z laktazą (przy nietolerancji laktozy)","Laktoza (cukier mleczny)"],nl:["Lactasetabletten (bij lactose-intolerantie)","Lactose (melksuiker)"],pt:["Comprimidos de lactase (intolerância à lactose)","Lactose (açúcar do leite)"],sv:["Laktastabletter (vid laktosintolerans)","Laktos (mjölksocker)"],da:["Laktasetabletter (ved laktoseintolerans)","Laktose (mælkesukker)"],no:["Laktasetabletter (ved laktoseintoleranse)","Laktose (melkesukker)"],fi:["Laktaasitabletit (laktoosi-intoleranssiin)","Laktoosi (maitosokeri)"],cs:["Tablety s laktázou (při intoleranci laktózy)","Laktóza (mléčný cukr)"],sk:["Tablety s laktázou (pri intolerancii laktózy)","Laktóza (mliečny cukor)"],hu:["Laktáz tabletta (laktózérzékenység esetén)","Laktóz (tejcukor)"],ro:["Tablete cu lactază (pentru intoleranța la lactoză)","Lactoză (zahărul din lapte)"],hr:["Tablete laktaze (kod nepodnošenja laktoze)","Laktoza (mliječni šećer)"],sl:["Tablete z laktazo (pri intoleranci za laktozo)","Laktoza (mlečni sladkor)"],bg:["Таблетки лактаза (при лактозна непоносимост)","Лактоза (млечна захар)"],ru:["Таблетки лактазы (при непереносимости лактозы)","Лактоза (молочный сахар)"],uk:["Таблетки лактази (при непереносимості лактози)","Лактоза (молочний цукор)"],sq:["Tableta laktaze (për intolerancën ndaj laktozës)","Laktozë (sheqeri i qumështit)"],ar:["أقراص اللاكتاز (لعدم تحمل اللاكتوز)","اللاكتوز (سكر الحليب)"],fa:["قرص لاکتاز (برای عدم تحمل لاکتوز)","لاکتوز (قند شیر)"],he:["טבליות לקטאז (לרגישות ללקטוז)","לקטוז (סוכר חלב)"],hi:["लैक्टेज़ की गोलियाँ (लैक्टोज़ असहिष्णुता के लिए)","लैक्टोज़ (दूध की शक्कर)"],zh:["乳糖酶片（用于乳糖不耐受）","乳糖"],ja:["ラクターゼ錠（乳糖不耐症用）","乳糖（ラクトース）"],ko:["락타아제 정제(유당불내증용)","유당(락토스)"],th:["ยาเม็ดแล็กเทส (สำหรับภาวะแพ้น้ำตาลแล็กโทส)","แล็กโทส (น้ำตาลในนม)"],vi:["Viên lactase (cho người không dung nạp lactose)","Lactose (đường sữa)"],id:["Tablet laktase (untuk intoleransi laktosa)","Laktosa (gula susu)"]
+};
+T.m_lact=L.map(c=>(LACT[c]||LACT.en)[0]);
+A.lactose=L.map(c=>(LACT[c]||LACT.en)[1]);ORDER.push("lactose");
 const ALLK=ORDER.concat(MEDK);
 if(!L.includes(S.lang))S.lang="en";
 /* Küchen-Ansicht: Wurde die Seite über einen Karten-Link geöffnet? */
