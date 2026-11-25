@@ -1,0 +1,16 @@
+{
+  "name": "Allerlingo – Allergiekarte",
+  "short_name": "Allerlingo",
+  "description": "Deine Allergiekarte für Restaurants, automatisch in der Sprache der Küche.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EEF2F4",
+  "theme_color": "#0B5D6B",
+  "lang": "de",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
