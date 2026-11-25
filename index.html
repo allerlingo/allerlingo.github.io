@@ -256,7 +256,7 @@ const tr=(k,lang)=>T[k][L.indexOf(lang)];
 const an=(k,lang)=>A[k][L.indexOf(lang)];
 const LV=["Aus","Unverträglich","Allergie","Lebensgefährlich"];
 const KEY="allergiekarte-v1";
-let S={name:"",levels:{egg:3},pen:true,num:"112",c:[["",""],["",""]],lang:"en",cmp:false};
+let S={name:"",levels:{},pen:false,num:"112",c:[["",""],["",""]],lang:"en",cmp:false};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.levels)S=Object.assign(S,s);}catch(e){}
 let VIEW=false;
 const save=()=>{if(VIEW)return;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
