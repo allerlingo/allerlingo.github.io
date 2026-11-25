@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="google" content="notranslate">
 <title>Allerlingo</title>
 <meta name="description" content="Allerlingo – deine Allergiekarte für Restaurants, automatisch in der Sprache der Küche.">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -255,10 +256,10 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
         <button type="button" data-m="n" aria-pressed="false">🚑 Notfall</button>
       </div>
       <h2 id="lang-h">Sprache der Küche</h2>
-      <select id="langs" class="sel" aria-label="Sprache der Küche / Language"></select>
+      <select id="langs" class="sel notranslate" translate="no" aria-label="Sprache der Küche / Language"></select>
       <label class="check" id="cmp-row"><input id="in-cmp" type="checkbox"> Deutsch zum Vergleich anzeigen</label>
     </div>
-    <div class="cardwrap" id="cardwrap"><div id="card"></div></div>
+    <div class="cardwrap notranslate" id="cardwrap" translate="no"><div id="card" class="notranslate" translate="no"></div></div>
     <div class="tools">
       <button class="btn" id="b-qr" type="button">QR-Code zeigen</button>
       <button class="btn ghost" id="b-link" type="button">Link kopieren</button>
@@ -509,6 +510,7 @@ function setMode(m){
 $("modes").addEventListener("click",e=>{const b=e.target.closest("button[data-m]");if(b)setMode(b.dataset.m);});
 function renderCard(keepQr){
   const g=S.lang, max=maxLv();
+  try{document.documentElement.lang=VIEW?g:"de";}catch(e){}
   if(S.mode==="n"){const card=$("card");card.lang=g;card.dir=RTL.has(g)?"rtl":"ltr";renderEmergency(card,g);if(!keepQr){$("qr").hidden=true;$("b-qr").textContent="QR-Code zeigen";}return;}
   const card=$("card");card.lang=g;card.dir=RTL.has(g)?"rtl":"ltr";
   if(max===0){card.className="card";card.innerHTML=`<div class="empty">Noch keine Allergie ausgewählt. Wechsle zu „Bearbeiten“ und tippe bei einem Lebensmittel auf einen Schweregrad.</div>`;return;}
