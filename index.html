@@ -1,0 +1,477 @@
+<title>Allerlingo</title>
+<meta name="description" content="Allerlingo – deine Allergiekarte für Restaurants, automatisch in der Sprache der Küche.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: eine schmale Spalte wie ein Handy-Bildschirm; oben Tabs, darunter entweder das Formular oder die Karte für die Küche */
+:root{
+  --bg:#EEF2F4; --surface:#FFFFFF; --ink:#14202B; --muted:#56636F; --line:#D5DDE3;
+  --accent:#0B5D6B; --accent-ink:#FFFFFF; --accent-soft:#DDEEF0;
+  --danger:#C4161C; --danger-soft:#FBE3E3; --warn:#B85E00; --warn-soft:#FCEBD8; --caution:#8A6D00; --caution-soft:#F7F0CF;
+  --card-bg:#FFFFFF; --card-ink:#111418; --card-muted:#4A525A; --card-line:#E1E5E9;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E151B; --surface:#16212A; --ink:#E6EDF2; --muted:#9AA9B5; --line:#2A3843;
+  --accent:#55B8C6; --accent-ink:#06252B; --accent-soft:#173A41;
+  --danger:#FF6B6F; --danger-soft:#3A1A1C; --warn:#F2A04A; --warn-soft:#3A2814; --caution:#E3C653; --caution-soft:#332D12;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E151B; --surface:#16212A; --ink:#E6EDF2; --muted:#9AA9B5; --line:#2A3843;
+  --accent:#55B8C6; --accent-ink:#06252B; --accent-soft:#173A41;
+  --danger:#FF6B6F; --danger-soft:#3A1A1C; --warn:#F2A04A; --warn-soft:#3A2814; --caution:#E3C653; --caution-soft:#332D12;
+  color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.foot{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+.wrap{max-width:640px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:20px}
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+h1{font-family:var(--f-display);font-weight:800;font-size:1.6rem;margin:0;letter-spacing:-.01em}
+h1 span{color:var(--danger)}
+.tag{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.tabs button{font:inherit;font-weight:700;border:0;border-radius:9px;padding:10px;background:transparent;color:var(--muted);cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.panel{display:flex;flex-direction:column;gap:20px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.box h2{font-family:var(--f-display);font-weight:600;font-size:1.05rem;margin:0}
+.hint{font-size:.875rem;color:var(--muted);margin:0}
+label.field{display:flex;flex-direction:column;gap:4px;font-size:.875rem;font-weight:700}
+input[type=text],input[type=tel]{font:inherit;font-weight:400;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.presets{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font:inherit;font-size:.875rem;font-weight:700;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.legend{display:flex;gap:6px 12px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.alist{display:flex;flex-direction:column}
+.arow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.arow:first-child{border-top:0}
+.arow .an{font-weight:700;min-width:0;flex:1 1 140px}
+.seg{display:grid;grid-template-columns:repeat(4,auto);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{font:inherit;font-size:.75rem;font-weight:700;border:0;border-left:1px solid var(--line);padding:7px 8px;background:var(--surface);color:var(--muted);cursor:pointer;white-space:nowrap}
+.seg button:first-child{border-left:0}
+.seg button[aria-pressed="true"][data-l="0"]{background:var(--bg);color:var(--ink)}
+.seg button[aria-pressed="true"][data-l="1"]{background:var(--caution-soft);color:var(--caution)}
+.seg button[aria-pressed="true"][data-l="2"]{background:var(--warn-soft);color:var(--warn)}
+.seg button[aria-pressed="true"][data-l="3"]{background:var(--danger);color:#fff}
+.check{display:flex;gap:10px;align-items:center;font-weight:700}
+.check input{width:20px;height:20px;accent-color:var(--accent)}
+.note{border-left:4px solid var(--warn);background:var(--warn-soft);padding:12px 14px;border-radius:0 8px 8px 0;font-size:.875rem}
+.sel{font:inherit;font-weight:700;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%;min-width:0}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;padding:10px 14px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+/* Die Karte selbst bleibt in beiden Modi hell: maximaler Kontrast für Bedienung und Küche */
+.cardwrap{background:var(--card-bg);border-radius:14px;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.08),0 8px 24px rgba(10,30,40,.10)}
+.card{color:var(--card-ink);padding:20px;display:flex;flex-direction:column;gap:16px;font-size:1.05rem}
+.card .ch{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;border-bottom:3px solid var(--card-ink);padding-bottom:10px}
+.card .ct{font-family:var(--f-display);font-weight:800;font-size:2rem;line-height:1;letter-spacing:.02em}
+.card .cn{font-weight:700;font-size:1.05rem}
+.card p{margin:0}
+.card .intro{color:var(--card-muted)}
+.lvl{border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.lvl h3{margin:0;font-family:var(--f-display);font-weight:800;font-size:1.1rem;letter-spacing:.03em;text-transform:uppercase}
+.lvl ul{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:6px}
+.lvl li{font-weight:700;padding:5px 10px;border-radius:6px;background:#fff;border:1.5px solid currentColor}
+.lvl li small{display:block;font-weight:400;font-size:.75rem;color:var(--card-muted)}
+.lvl3{background:#C4161C;color:#fff}
+.lvl3 h3{color:#fff}
+.lvl3 li{color:#9E0E13;border-color:#fff}
+.lvl3 p{color:#fff}
+.lvl2{background:#FCEBD8;color:#5C2F00;border:2px solid #B85E00}
+.lvl1{background:#F7F0CF;color:#4A3B00;border:2px solid #A88700}
+.sub{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--card-line);padding-top:12px}
+.sub h4{margin:0;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--card-muted)}
+.sub ul{margin:0;padding-left:1.2em}
+.honest{font-weight:700;background:#EEF4F5;border-radius:8px;padding:12px}
+.emerg{border:2px solid #C4161C;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.emerg h4{margin:0;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:#C4161C}
+.emerg p{margin:0}
+.emerg .num{font-family:var(--f-display);font-weight:800;color:#C4161C}
+.contacts{font-variant-numeric:tabular-nums}
+.thanks{font-family:var(--f-display);font-weight:800;font-size:1.3rem;text-align:center}
+.empty{padding:32px 20px;text-align:center;color:var(--card-muted)}
+.qr{display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--card-bg);color:var(--card-ink);border-radius:14px;padding:16px}
+.qr svg,.qr img{width:100%;max-width:340px;height:auto}
+.qr p{font-size:.85rem;color:var(--card-muted);text-align:center;margin:0;max-width:44ch}
+:fullscreen .cardwrap,.cardwrap:fullscreen{overflow:auto;border-radius:0}
+@media (max-width:420px){.card .ct{font-size:1.7rem}.seg button{padding:7px 6px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Aller<span>lingo</span></h1>
+    <span class="tag" id="tagline">Testversion · Version 2</span>
+  </header>
+
+  <div class="tabs" role="tablist" id="tabs">
+    <button id="tab-edit" role="tab" aria-selected="true">Bearbeiten</button>
+    <button id="tab-show" role="tab" aria-selected="false">Karte zeigen</button>
+  </div>
+
+  <section id="p-edit" class="panel">
+    <div class="box">
+      <h2>Wer bist du?</h2>
+      <label class="field">Name (steht oben auf der Karte)
+        <input id="in-name" type="text" placeholder="z. B. Paul" autocomplete="off">
+      </label>
+    </div>
+
+    <div class="box">
+      <h2>Allergien und Schweregrad</h2>
+      <div class="presets">
+        <button class="chip" id="pre-egg" type="button">Beispiel: Hühnerei</button>
+        <button class="chip" id="pre-nuts" type="button">Beispiel: Cashew-Familie</button>
+        <button class="chip" id="pre-clear" type="button">Alles zurücksetzen</button>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--caution)"></i>Unverträglich</span>
+        <span><i style="background:var(--warn)"></i>Allergie</span>
+        <span><i style="background:var(--danger)"></i>Lebensgefährlich</span>
+      </div>
+      <div class="alist" id="alist"></div>
+    </div>
+
+    <div class="box">
+      <h2>Notfall</h2>
+      <label class="check"><input id="in-pen" type="checkbox"> Ich habe einen Adrenalin-Pen dabei</label>
+      <label class="field">Notrufnummer im Reiseland
+        <input id="in-num" type="tel" value="112">
+      </label>
+      <p class="hint">112 gilt in der ganzen EU und in der Türkei. Andere Länder haben eigene Nummern, z. B. Japan und Korea 119, China 120, Thailand 1669, USA 911. Vor der Reise nachschauen.</p>
+      <div class="row2"><input id="c1n" type="text" placeholder="Kontakt 1: Name"><input id="c1p" type="tel" placeholder="Telefon"></div>
+      <div class="row2"><input id="c2n" type="text" placeholder="Kontakt 2: Name"><input id="c2p" type="tel" placeholder="Telefon"></div>
+    </div>
+
+    <p class="note"><strong>Wichtig:</strong> Die Übersetzungen in dieser Testversion sind sorgfältig geschrieben, aber noch nicht von Muttersprachlern geprüft. Vor echter Nutzung bitte prüfen lassen.</p>
+    <button class="btn" id="go-show" type="button">Karte ansehen</button>
+  </section>
+
+  <section id="p-show" class="panel" hidden>
+    <div class="box">
+      <h2 id="lang-h">Sprache der Küche</h2>
+      <select id="langs" class="sel" aria-label="Sprache der Küche / Language"></select>
+      <label class="check" id="cmp-row"><input id="in-cmp" type="checkbox"> Deutsch zum Vergleich anzeigen</label>
+    </div>
+    <div class="cardwrap" id="cardwrap"><div id="card"></div></div>
+    <div class="tools">
+      <button class="btn" id="b-qr" type="button">QR-Code zeigen</button>
+      <button class="btn ghost" id="b-link" type="button">Link kopieren</button>
+      <button class="btn ghost" id="b-full" type="button">Vollbild</button>
+    </div>
+    <p class="hint" id="link-msg" hidden></p>
+    <div class="qr" id="qr" hidden></div>
+    <p class="hint" id="own-link" hidden><a href="./" id="own-a">Allerlingo – eigene Allergiekarte erstellen</a></p>
+  </section>
+  <p class="hint foot">Allerlingo ersetzt nicht das Gespräch mit dem Personal. Übersetzungen ohne Gewähr. Deine Angaben bleiben auf deinem Gerät bzw. im Link des QR-Codes und werden nicht auf einem Server gespeichert.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+const LANGS=[["de","Deutsch"],["en","English"],["fr","Français"],["es","Español"],["it","Italiano"],["tr","Türkçe"],["el","Ελληνικά"],["pl","Polski"]];
+const L=["de","en","fr","es","it","tr","el","pl"];
+const A={
+egg:["Hühnerei","Hen's egg","Œuf de poule","Huevo de gallina","Uovo di gallina","Tavuk yumurtası","Αυγό κότας","Jajo kurze"],
+peanut:["Erdnüsse","Peanuts","Arachides (cacahuètes)","Cacahuetes (maní)","Arachidi","Yer fıstığı","Φιστίκια αράπικα","Orzeszki ziemne"],
+cashew:["Cashewnüsse","Cashew nuts","Noix de cajou","Anacardos","Anacardi","Kaju","Κάσιους","Orzechy nerkowca"],
+pistachio:["Pistazien","Pistachios","Pistaches","Pistachos","Pistacchi","Antep fıstığı","Φιστίκια Αιγίνης","Pistacje"],
+pine:["Pinienkerne","Pine nuts","Pignons de pin","Piñones","Pinoli","Çam fıstığı","Κουκουνάρια","Orzeszki piniowe"],
+pinkpepper:["Rosa Pfeffer","Pink peppercorns","Baies roses","Pimienta rosa","Pepe rosa","Pembe biber","Ροζ πιπέρι","Różowy pieprz"],
+sumac:["Sumach (Gewürz)","Sumac (spice)","Sumac (épice)","Zumaque (especia)","Sommacco (spezia)","Sumak (baharat)","Σουμάκι (μπαχαρικό)","Sumak (przyprawa)"],
+treenuts:["Schalenfrüchte (Haselnuss, Walnuss, Mandel …)","Tree nuts (hazelnut, walnut, almond …)","Fruits à coque (noisette, noix, amande …)","Frutos de cáscara (avellana, nuez, almendra …)","Frutta a guscio (nocciola, noce, mandorla …)","Kabuklu yemişler (fındık, ceviz, badem …)","Ξηροί καρποί (φουντούκι, καρύδι, αμύγδαλο …)","Orzechy (laskowe, włoskie, migdały …)"],
+milk:["Milch (inkl. Laktose)","Milk (incl. lactose)","Lait (y compris lactose)","Leche (incluida la lactosa)","Latte (incluso il lattosio)","Süt (laktoz dahil)","Γάλα (και λακτόζη)","Mleko (w tym laktoza)"],
+gluten:["Gluten (Weizen, Roggen, Gerste)","Gluten (wheat, rye, barley)","Gluten (blé, seigle, orge)","Gluten (trigo, centeno, cebada)","Glutine (frumento, segale, orzo)","Gluten (buğday, çavdar, arpa)","Γλουτένη (σιτάρι, σίκαλη, κριθάρι)","Gluten (pszenica, żyto, jęczmień)"],
+fish:["Fisch","Fish","Poisson","Pescado","Pesce","Balık","Ψάρι","Ryby"],
+crust:["Krebstiere (Garnelen, Krabben)","Crustaceans (shrimp, crab)","Crustacés (crevettes, crabe)","Crustáceos (gambas, cangrejo)","Crostacei (gamberi, granchio)","Kabuklular (karides, yengeç)","Καρκινοειδή (γαρίδες, καβούρια)","Skorupiaki (krewetki, kraby)"],
+moll:["Weichtiere (Muscheln, Tintenfisch)","Molluscs (mussels, squid)","Mollusques (moules, calamar)","Moluscos (mejillones, calamar)","Molluschi (cozze, calamari)","Yumuşakçalar (midye, kalamar)","Μαλάκια (μύδια, καλαμάρι)","Mięczaki (małże, kałamarnice)"],
+soy:["Soja","Soy","Soja","Soja","Soia","Soya","Σόγια","Soja"],
+sesame:["Sesam","Sesame","Sésame","Sésamo","Sesamo","Susam","Σουσάμι","Sezam"],
+mustard:["Senf","Mustard","Moutarde","Mostaza","Senape","Hardal","Μουστάρδα","Gorczyca"],
+celery:["Sellerie","Celery","Céleri","Apio","Sedano","Kereviz","Σέλινο","Seler"]
+};
+const ORDER=Object.keys(A);
+const T={
+title:["ALLERGIE","ALLERGY","ALLERGIE","ALERGIA","ALLERGIA","ALERJİ","ΑΛΛΕΡΓΙΑ","ALERGIA"],
+intro:["Bitte zeigen Sie diese Karte der Küche.","Please show this card to the kitchen.","Merci de montrer cette carte en cuisine.","Por favor, muestre esta tarjeta en la cocina.","Per favore, mostri questa scheda in cucina.","Lütfen bu kartı mutfağa gösterin.","Παρακαλώ δείξτε αυτή την κάρτα στην κουζίνα.","Proszę pokazać tę kartę w kuchni."],
+h3:["Lebensgefährlich","Life-threatening","Danger de mort","Peligro de muerte","Pericolo di vita","Hayati tehlike","Θανάσιμος κίνδυνος","Zagrożenie życia"],
+t3:["Ich habe eine lebensgefährliche Allergie gegen die folgenden Lebensmittel. Schon kleinste Spuren können in wenigen Minuten einen allergischen Schock auslösen, der tödlich sein kann.",
+"I have a life-threatening allergy to the following foods. Even the smallest traces can cause anaphylactic shock within minutes, which can be fatal.",
+"J'ai une allergie mortelle aux aliments suivants. Même des traces infimes peuvent provoquer en quelques minutes un choc anaphylactique potentiellement mortel.",
+"Tengo una alergia potencialmente mortal a los siguientes alimentos. Incluso trazas mínimas pueden provocar en pocos minutos un shock anafiláctico que puede ser mortal.",
+"Ho un'allergia potenzialmente mortale ai seguenti alimenti. Anche tracce minime possono provocare in pochi minuti uno shock anafilattico, che può essere letale.",
+"Aşağıdaki gıdalara karşı hayati tehlike oluşturan bir alerjim var. En küçük izler bile birkaç dakika içinde ölümcül olabilecek anafilaktik şoka yol açabilir.",
+"Έχω απειλητική για τη ζωή αλλεργία στις παρακάτω τροφές. Ακόμη και ελάχιστα ίχνη μπορούν μέσα σε λίγα λεπτά να προκαλέσουν αναφυλακτικό σοκ, που μπορεί να είναι θανατηφόρο.",
+"Mam zagrażającą życiu alergię na poniższe produkty. Nawet najmniejsze śladowe ilości mogą w ciągu kilku minut wywołać wstrząs anafilaktyczny, który może być śmiertelny."],
+h2:["Allergie","Allergy","Allergie","Alergia","Allergia","Alerji","Αλλεργία","Alergia"],
+t2:["Ich bin allergisch gegen die folgenden Lebensmittel. Bitte achten Sie darauf, dass mein Essen nichts davon enthält.",
+"I am allergic to the following foods. Please make sure my meal contains none of them.",
+"Je suis allergique aux aliments suivants. Veillez à ce que mon plat n'en contienne aucun.",
+"Soy alérgico/a a los siguientes alimentos. Por favor, asegúrese de que mi plato no contenga ninguno de ellos.",
+"Sono allergico/a ai seguenti alimenti. Per favore, si assicuri che il mio piatto non ne contenga nessuno.",
+"Aşağıdaki gıdalara alerjim var. Lütfen yemeğimde bunlardan hiçbirinin olmamasına dikkat edin.",
+"Είμαι αλλεργικός/ή στις παρακάτω τροφές. Παρακαλώ βεβαιωθείτε ότι το φαγητό μου δεν περιέχει καμία από αυτές.",
+"Mam alergię na poniższe produkty. Proszę upewnić się, że moje danie nie zawiera żadnego z nich."],
+h1:["Unverträglichkeit","Intolerance","Intolérance","Intolerancia","Intolleranza","Gıda intoleransı","Δυσανεξία","Nietolerancja"],
+t1:["Diese Lebensmittel vertrage ich nicht. Bitte lassen Sie sie nach Möglichkeit weg.",
+"I cannot tolerate these foods. Please leave them out if possible.",
+"Je ne tolère pas ces aliments. Merci de les retirer si possible.",
+"No tolero estos alimentos. Por favor, retírelos si es posible.",
+"Non tollero questi alimenti. Per favore, li ometta se possibile.",
+"Bu gıdaları tolere edemiyorum. Mümkünse lütfen bunları çıkarın.",
+"Δεν ανέχομαι αυτές τις τροφές. Παρακαλώ αφαιρέστε τις αν είναι δυνατόν.",
+"Nie toleruję tych produktów. Proszę je pominąć, jeśli to możliwe."],
+eggh:["Ei steckt oft in","Egg is often hidden in","L'œuf se cache souvent dans","El huevo suele estar en","L'uovo si trova spesso in","Yumurta sıklıkla şunlarda bulunur","Αυγό υπάρχει συχνά σε","Jajka często są w"],
+eggt:["Mayonnaise, Aioli, Panade, frischen Nudeln, Backteig, Glasur auf Gebäck, Desserts, Eischaum in Cocktails",
+"mayonnaise, aioli, breadcrumb coating, fresh pasta, batter, glaze on pastries, desserts, egg-white foam in cocktails",
+"mayonnaise, aïoli, panure, pâtes fraîches, pâte à frire, dorure des pâtisseries, desserts, mousse de blanc d'œuf dans les cocktails",
+"mayonesa, alioli, rebozado, pasta fresca, masas, glaseado de bollería, postres, espuma de clara en cócteles",
+"maionese, aioli, impanatura, pasta fresca all'uovo, pastella, doratura dei prodotti da forno, dolci, schiuma d'albume nei cocktail",
+"mayonez, aioli, pane harcı, taze makarna, hamur, hamur işi üzerindeki yumurta sürmesi, tatlılar, kokteyllerde yumurta akı köpüğü",
+"μαγιονέζα, αϊόλι, πανάρισμα, φρέσκα ζυμαρικά, κουρκούτι, γλάσο σε αρτοσκευάσματα, γλυκά, αφρός ασπραδιού σε κοκτέιλ",
+"majonez, aioli, panierka, świeży makaron, ciasto do smażenia, glazura na wypiekach, desery, piana z białka w koktajlach"],
+kh:["Bitte in der Küche beachten","Please, in the kitchen","En cuisine, merci de","En la cocina, por favor","In cucina, per favore","Mutfakta lütfen","Στην κουζίνα, παρακαλώ","W kuchni prosimy"],
+k1:["Saubere Pfanne, sauberes Besteck und saubere Arbeitsfläche verwenden","Use a clean pan, clean utensils and a clean work surface","Utiliser une poêle, des ustensiles et un plan de travail propres","Usar una sartén, utensilios y una superficie de trabajo limpios","Usare una padella, utensili e un piano di lavoro puliti","Temiz tava, temiz mutfak aletleri ve temiz tezgâh kullanın","Χρησιμοποιήστε καθαρό τηγάνι, καθαρά σκεύη και καθαρό πάγκο εργασίας","Używać czystej patelni, czystych przyborów i czystego blatu"],
+k2:["Kein Frittierfett, in dem auch andere Speisen frittiert wurden","No frying oil that has been used for other food","Pas d'huile de friture ayant servi pour d'autres plats","No usar aceite de freír que se haya usado para otros alimentos","Niente olio di frittura già usato per altri cibi","Başka yiyecekler için kullanılmış kızartma yağı kullanmayın","Όχι λάδι τηγανίσματος που έχει χρησιμοποιηθεί για άλλα φαγητά","Nie używać oleju, w którym smażono inne potrawy"],
+k3:["Auch Soßen, Dressings, Gewürzmischungen und Brot prüfen","Please also check sauces, dressings, spice mixes and bread","Vérifier aussi les sauces, vinaigrettes, mélanges d'épices et le pain","Revisar también salsas, aliños, mezclas de especias y pan","Controllare anche salse, condimenti, miscele di spezie e pane","Sosları, salata soslarını, baharat karışımlarını ve ekmeği de kontrol edin","Ελέγξτε επίσης σάλτσες, ντρέσινγκ, μείγματα μπαχαρικών και ψωμί","Sprawdzić też sosy, dressingi, mieszanki przypraw i pieczywo"],
+honest:["Wenn Sie nicht sicher sind, sagen Sie es mir bitte ehrlich. Ich bestelle dann gern etwas anderes.","If you are not sure, please tell me honestly. I will gladly order something else.","Si vous n'êtes pas sûr, dites-le-moi franchement. Je commanderai volontiers autre chose.","Si no está seguro, dígamelo con sinceridad. Pediré otra cosa con mucho gusto.","Se non è sicuro, me lo dica sinceramente. Ordinerò volentieri qualcos'altro.","Emin değilseniz lütfen bunu dürüstçe söyleyin. Memnuniyetle başka bir şey sipariş ederim.","Αν δεν είστε σίγουροι, πείτε μου ειλικρινά. Θα παραγγείλω ευχαρίστως κάτι άλλο.","Jeśli nie są Państwo pewni, proszę mi szczerze powiedzieć. Chętnie zamówię coś innego."],
+eh:["Im Notfall","In an emergency","En cas d'urgence","En caso de emergencia","In caso di emergenza","Acil durumda","Σε περίπτωση έκτακτης ανάγκης","W nagłym wypadku"],
+et:["Bei Symptomen (Atemnot, Schwellung, Kreislaufprobleme) sofort den Notruf {n} rufen.","If symptoms appear (difficulty breathing, swelling, collapse), call {n} immediately.","En cas de symptômes (difficultés respiratoires, gonflement, malaise), appelez immédiatement le {n}.","Si aparecen síntomas (dificultad para respirar, hinchazón, desmayo), llame inmediatamente al {n}.","In caso di sintomi (difficoltà respiratorie, gonfiore, svenimento), chiamare subito il {n}.","Belirtiler görülürse (nefes darlığı, şişme, bayılma) hemen {n} numarasını arayın.","Αν εμφανιστούν συμπτώματα (δύσπνοια, πρήξιμο, λιποθυμία), καλέστε αμέσως το {n}.","W razie objawów (duszność, obrzęk, omdlenie) proszę natychmiast zadzwonić pod numer {n}."],
+pen:["Ich trage ein Notfallset (Adrenalin-Pen) bei mir.","I carry an emergency kit (adrenaline auto-injector).","J'ai sur moi une trousse d'urgence (stylo d'adrénaline).","Llevo un kit de emergencia (autoinyector de adrenalina).","Porto con me un kit di emergenza (penna di adrenalina).","Yanımda acil durum seti (adrenalin kalemi) taşıyorum.","Έχω μαζί μου σετ έκτακτης ανάγκης (στυλό αδρεναλίνης).","Mam przy sobie zestaw ratunkowy (autostrzykawkę z adrenaliną)."],
+ct:["Notfallkontakte","Emergency contacts","Contacts d'urgence","Contactos de emergencia","Contatti di emergenza","Acil durum kişileri","Επαφές έκτακτης ανάγκης","Kontakty alarmowe"],
+thanks:["Vielen Dank!","Thank you very much!","Merci beaucoup !","¡Muchas gracias!","Grazie mille!","Çok teşekkürler!","Ευχαριστώ πολύ!","Dziękuję bardzo!"]
+};
+const tr=(k,lang)=>T[k][L.indexOf(lang)];
+const an=(k,lang)=>A[k][L.indexOf(lang)];
+const LV=["Aus","Unverträglich","Allergie","Lebensgefährlich"];
+const KEY="allergiekarte-v1";
+let S={name:"",levels:{egg:3},pen:true,num:"112",c:[["",""],["",""]],lang:"en",cmp:false};
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.levels)S=Object.assign(S,s);}catch(e){}
+let VIEW=false;
+const save=()=>{if(VIEW)return;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function renderList(){
+  $("alist").innerHTML=ORDER.map(k=>{
+    const v=S.levels[k]||0;
+    return `<div class="arow"><span class="an">${esc(A[k][0])}</span><div class="seg" role="group" aria-label="${esc(A[k][0])}">${LV.map((t,i)=>`<button type="button" data-k="${k}" data-l="${i}" aria-pressed="${v===i}">${t}</button>`).join("")}</div></div>`;
+  }).join("");
+}
+$("alist").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-k]");if(!b)return;
+  S.levels[b.dataset.k]=+b.dataset.l;save();renderList();
+});
+function bindInputs(){
+  $("in-name").value=S.name;$("in-pen").checked=S.pen;$("in-num").value=S.num;
+  $("c1n").value=S.c[0][0];$("c1p").value=S.c[0][1];$("c2n").value=S.c[1][0];$("c2p").value=S.c[1][1];
+  $("in-cmp").checked=S.cmp;
+}
+["in-name","in-num","c1n","c1p","c2n","c2p"].forEach(id=>$(id).addEventListener("input",()=>{
+  S.name=$("in-name").value;S.num=$("in-num").value||"112";
+  S.c=[[$("c1n").value,$("c1p").value],[$("c2n").value,$("c2p").value]];save();
+}));
+$("in-pen").addEventListener("change",()=>{S.pen=$("in-pen").checked;save();});
+$("in-cmp").addEventListener("change",()=>{S.cmp=$("in-cmp").checked;save();renderCard();});
+$("pre-egg").onclick=()=>{S.levels={egg:3};save();renderList();};
+$("pre-nuts").onclick=()=>{S.levels={cashew:3,pistachio:3,pine:3,pinkpepper:3,sumac:3};save();renderList();};
+$("pre-clear").onclick=()=>{S.levels={};save();renderList();};
+
+function byLevel(l){return ORDER.filter(k=>(S.levels[k]||0)===l);}
+function renderCard(){
+  const g=S.lang, max=Math.max(0,...ORDER.map(k=>S.levels[k]||0));
+  const card=$("card");card.lang=g;card.dir=RTL.has(g)?"rtl":"ltr";
+  if(max===0){card.className="card";card.innerHTML=`<div class="empty">Noch keine Allergie ausgewählt. Wechsle zu „Bearbeiten“ und tippe bei einem Lebensmittel auf einen Schweregrad.</div>`;return;}
+  const item=k=>`<li>${esc(an(k,g))}${S.cmp&&g!=="de"?`<small>${esc(A[k][0])}</small>`:""}</li>`;
+  let h=`<div class="ch"><span class="ct">${tr("title",g)}</span>${S.name?`<span class="cn">${esc(S.name)}</span>`:""}</div>
+  <p class="intro">${tr("intro",g)}</p>`;
+  [3,2,1].forEach(l=>{const ks=byLevel(l);if(!ks.length)return;
+    h+=`<div class="lvl lvl${l}"><h3>${tr("h"+l,g)}</h3><p>${tr("t"+l,g)}</p><ul>${ks.map(item).join("")}</ul></div>`;});
+  if((S.levels.egg||0)>=2) h+=`<div class="sub"><h4>${tr("eggh",g)}</h4><p>${tr("eggt",g)}</p></div>`;
+  if(max>=2){
+    h+=`<div class="sub"><h4>${tr("kh",g)}</h4><ul><li>${tr("k1",g)}</li><li>${tr("k2",g)}</li><li>${tr("k3",g)}</li></ul></div>`;
+    h+=`<p class="honest">${tr("honest",g)}</p>`;
+  }
+  if(max>=2){
+    const cs=S.c.filter(c=>c[0]||c[1]);
+    h+=`<div class="emerg"><h4>${tr("eh",g)}</h4>
+    <p>${esc(tr("et",g)).replace("{n}",`<span class="num">${esc(S.num||"112")}</span>`)}</p>
+    ${S.pen&&max===3?`<p>${tr("pen",g)}</p>`:""}
+    ${cs.length?`<p class="contacts"><strong>${tr("ct",g)}:</strong><br>${cs.map(c=>esc(c[0])+" · "+esc(c[1])).join("<br>")}</p>`:""}</div>`;
+  }
+  h+=`<p class="thanks">${tr("thanks",g)}</p>`;
+  card.className="card";card.innerHTML=h;
+  $("qr").hidden=true;
+}
+function cardText(){
+  const g=S.lang, max=Math.max(0,...ORDER.map(k=>S.levels[k]||0));
+  let t=[tr("title",g)+(S.name?" – "+S.name:""),tr("intro",g),""];
+  [3,2,1].forEach(l=>{const ks=byLevel(l);if(!ks.length)return;
+    t.push("!!! "+tr("h"+l,g).toUpperCase()+" !!!",tr("t"+l,g),...ks.map(k=>"• "+an(k,g)),"");});
+  if((S.levels.egg||0)>=2) t.push(tr("eggh",g)+": "+tr("eggt",g),"");
+  if(max>=2) t.push(tr("kh",g)+":","- "+tr("k1",g),"- "+tr("k2",g),"- "+tr("k3",g),"",tr("honest",g),"",tr("eh",g)+": "+tr("et",g).replace("{n}",S.num||"112"));
+  if(S.pen&&max===3) t.push(tr("pen",g));
+  S.c.filter(c=>c[0]||c[1]).forEach(c=>t.push(c[0]+" "+c[1]));
+  t.push("",tr("thanks",g));
+  return t.join("\n");
+}
+function renderLangs(){
+  $("langs").innerHTML=LANGS.map(([c,n])=>`<option value="${c}"${S.lang===c?" selected":""}>${n}${DEN[c]&&DEN[c]!==n?" – "+DEN[c]:""}</option>`).join("");
+}
+$("langs").addEventListener("change",e=>{S.lang=e.target.value;save();renderCard();});
+
+/* ===== Karten-Link: alle Angaben stecken im Link (#c=...), nichts liegt auf einem Server ===== */
+const BASE=(location.protocol.startsWith("http")&&location.hostname.endsWith("github.io"))?location.origin+location.pathname:"https://allerlingo.github.io/";
+function b64e(str){const b=new TextEncoder().encode(str);let s="";b.forEach(x=>s+=String.fromCharCode(x));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
+function b64d(t){t=t.replace(/-/g,"+").replace(/_/g,"/");while(t.length%4)t+="=";const s=atob(t);return new TextDecoder().decode(Uint8Array.from(s,c=>c.charCodeAt(0)));}
+function cardLink(){
+  const lv={};ORDER.forEach(k=>{if(S.levels[k])lv[k]=S.levels[k];});
+  const d={v:1,n:S.name||"",l:lv,p:S.pen?1:0,u:S.num||"112",c:S.c.filter(c=>c[0]||c[1])};
+  return BASE+"#c="+b64e(JSON.stringify(d));
+}
+function detectLang(){
+  const prefs=(navigator.languages&&navigator.languages.length?navigator.languages:[navigator.language||"en"]).map(x=>String(x).toLowerCase());
+  const alias={nb:"no",nn:"no",iw:"he",in:"id",tl:"en",fil:"en",bs:"hr",sr:"hr",ms:"id"};
+  for(const p of prefs){const b=p.split("-")[0];const c=alias[b]||b;if(L.includes(c))return c;}
+  return "en";
+}
+$("b-qr").onclick=()=>{
+  const box=$("qr");
+  if(!box.hidden){box.hidden=true;$("b-qr").textContent="QR-Code zeigen";return;}
+  try{
+    const q=qrcode(0,"M");
+    q.addData(cardLink(),"Byte");q.make();
+    box.innerHTML=q.createSvgTag({cellSize:4,margin:4,scalable:true})+`<p>Mit der Handykamera scannen: Die Karte öffnet sich automatisch in der Sprache, die auf dem Handy der Bedienung oder des Kochs eingestellt ist. Die Sprache lässt sich dort jederzeit ändern.</p>`;
+  }catch(err){box.innerHTML=`<p>Der QR-Code konnte nicht erstellt werden. Bitte Seite neu laden und es noch einmal versuchen.</p>`;}
+  box.hidden=false;$("b-qr").textContent="QR-Code ausblenden";
+};
+$("b-link").onclick=()=>{
+  const url=cardLink(),m=$("link-msg");
+  const show=t=>{m.textContent=t;m.hidden=false;};
+  try{navigator.clipboard.writeText(url).then(()=>show("Link kopiert. Du kannst ihn z. B. per WhatsApp verschicken."),()=>show(url));}catch(e){show(url);}
+};
+$("b-full").onclick=()=>{const w=$("cardwrap");try{(w.requestFullscreen||w.webkitRequestFullscreen).call(w);}catch(e){}};
+
+function tab(show){
+  $("tab-edit").setAttribute("aria-selected",!show);$("tab-show").setAttribute("aria-selected",show);
+  $("p-edit").hidden=show;$("p-show").hidden=!show;
+  if(show){renderLangs();renderCard();}
+  window.scrollTo(0,0);
+}
+$("tab-edit").onclick=()=>tab(false);$("tab-show").onclick=()=>tab(true);$("go-show").onclick=()=>tab(true);
+/* ===== Weitere Sprachen: [Code, Eigenname, deutscher Name, Schreibrichtung, 17 Allergene, 20 Sätze] ===== */
+const TK=["title","intro","h3","t3","h2","t2","h1","t1","eggh","eggt","kh","k1","k2","k3","honest","eh","et","pen","ct","thanks"];
+const DEN={de:"Deutsch",en:"Englisch",fr:"Französisch",es:"Spanisch",it:"Italienisch",tr:"Türkisch",el:"Griechisch",pl:"Polnisch"};
+const RTL=new Set();
+const MORE=[
+["nl","Nederlands","Niederländisch","ltr",
+["Kippenei","Pinda's","Cashewnoten","Pistachenoten","Pijnboompitten","Roze peper","Sumak (specerij)","Noten (hazelnoot, walnoot, amandel …)","Melk (incl. lactose)","Gluten (tarwe, rogge, gerst)","Vis","Schaaldieren (garnalen, krab)","Weekdieren (mosselen, inktvis)","Soja","Sesam","Mosterd","Selderij"],
+["ALLERGIE","Laat deze kaart alstublieft aan de keuken zien.","Levensgevaarlijk","Ik heb een levensgevaarlijke allergie voor de volgende voedingsmiddelen. Zelfs de kleinste sporen kunnen binnen enkele minuten een anafylactische shock veroorzaken, die dodelijk kan zijn.","Allergie","Ik ben allergisch voor de volgende voedingsmiddelen. Zorg er alstublieft voor dat mijn gerecht er niets van bevat.","Intolerantie","Ik verdraag deze voedingsmiddelen niet. Laat ze alstublieft weg als dat kan.","Ei zit vaak in","mayonaise, aioli, paneerlaag, verse pasta, beslag, glazuur op gebak, desserts, eiwitschuim in cocktails","In de keuken graag","Een schone pan, schoon keukengerei en een schoon werkblad gebruiken","Geen frituurvet dat ook voor ander eten is gebruikt","Ook sauzen, dressings, kruidenmengsels en brood controleren","Als u het niet zeker weet, zeg het me dan eerlijk. Ik bestel graag iets anders.","In geval van nood","Bij symptomen (ademnood, zwelling, flauwvallen) direct het alarmnummer {n} bellen.","Ik heb een noodset (adrenalinepen) bij me.","Noodcontacten","Hartelijk dank!"]],
+["pt","Português","Portugiesisch","ltr",
+["Ovo de galinha","Amendoins","Castanhas de caju","Pistácios","Pinhões","Pimenta-rosa","Sumagre (especiaria)","Frutos de casca rija (avelã, noz, amêndoa …)","Leite (incl. lactose)","Glúten (trigo, centeio, cevada)","Peixe","Crustáceos (camarão, caranguejo)","Moluscos (mexilhões, lulas)","Soja","Sésamo","Mostarda","Aipo"],
+["ALERGIA","Por favor, mostre este cartão na cozinha.","Risco de vida","Tenho uma alergia potencialmente fatal aos seguintes alimentos. Mesmo vestígios mínimos podem provocar, em poucos minutos, um choque anafilático que pode ser mortal.","Alergia","Sou alérgico/a aos seguintes alimentos. Por favor, certifique-se de que a minha refeição não contém nenhum deles.","Intolerância","Não tolero estes alimentos. Por favor, retire-os se possível.","O ovo está muitas vezes em","maionese, aioli, panados, massa fresca, polme, pincelado em pastelaria, sobremesas, espuma de clara em cocktails","Na cozinha, por favor","Usar frigideira, utensílios e bancada limpos","Não usar óleo de fritura já usado para outros alimentos","Verificar também molhos, temperos, misturas de especiarias e pão","Se não tiver a certeza, diga-me com sinceridade. Peço outra coisa com todo o gosto.","Em caso de emergência","Em caso de sintomas (falta de ar, inchaço, desmaio), ligue imediatamente para o {n}.","Tenho comigo um kit de emergência (caneta de adrenalina).","Contactos de emergência","Muito obrigado/a!"]],
+["sv","Svenska","Schwedisch","ltr",
+["Hönsägg","Jordnötter","Cashewnötter","Pistaschmandlar","Pinjenötter","Rosépeppar","Sumak (krydda)","Nötter (hasselnöt, valnöt, mandel …)","Mjölk (inkl. laktos)","Gluten (vete, råg, korn)","Fisk","Kräftdjur (räkor, krabba)","Blötdjur (musslor, bläckfisk)","Soja","Sesam","Senap","Selleri"],
+["ALLERGI","Var vänlig visa detta kort i köket.","Livshotande","Jag har en livshotande allergi mot följande livsmedel. Redan de minsta spår kan inom några minuter orsaka en anafylaktisk chock, som kan vara dödlig.","Allergi","Jag är allergisk mot följande livsmedel. Se till att min mat inte innehåller något av dem.","Intolerans","Jag tål inte dessa livsmedel. Utelämna dem om möjligt.","Ägg finns ofta i","majonnäs, aioli, panering, färsk pasta, smet, glasyr på bakverk, efterrätter, äggviteskum i drinkar","I köket, tack","Använd ren stekpanna, rena redskap och ren arbetsyta","Ingen frityrolja som använts till annan mat","Kontrollera även såser, dressingar, kryddblandningar och bröd","Om ni inte är säkra, säg det ärligt. Jag beställer gärna något annat.","I nödfall","Vid symtom (andnöd, svullnad, kollaps) ring genast {n}.","Jag har ett akutkit (adrenalinpenna) med mig.","Nödkontakter","Tack så mycket!"]],
+["da","Dansk","Dänisch","ltr",
+["Hønseæg","Jordnødder","Cashewnødder","Pistacienødder","Pinjekerner","Lyserød peber","Sumak (krydderi)","Nødder (hasselnød, valnød, mandel …)","Mælk (inkl. laktose)","Gluten (hvede, rug, byg)","Fisk","Krebsdyr (rejer, krabbe)","Bløddyr (muslinger, blæksprutte)","Soja","Sesam","Sennep","Selleri"],
+["ALLERGI","Vis venligst dette kort til køkkenet.","Livstruende","Jeg har en livstruende allergi over for følgende fødevarer. Selv de mindste spor kan inden for få minutter udløse et anafylaktisk chok, som kan være dødeligt.","Allergi","Jeg er allergisk over for følgende fødevarer. Sørg venligst for, at min mad ikke indeholder noget af dem.","Intolerance","Jeg tåler ikke disse fødevarer. Udelad dem venligst, hvis det er muligt.","Æg findes ofte i","mayonnaise, aioli, panering, frisk pasta, dej til friturestegning, glasur på bagværk, desserter, æggehvideskum i cocktails","I køkkenet, venligst","Brug en ren pande, rene redskaber og en ren arbejdsflade","Ingen friturefedt, der er brugt til anden mad","Kontrollér også saucer, dressinger, krydderiblandinger og brød","Hvis I ikke er sikre, så sig det ærligt. Jeg bestiller gerne noget andet.","I nødstilfælde","Ved symptomer (åndenød, hævelse, kollaps) ring straks {n}.","Jeg har et nødsæt (adrenalinpen) med mig.","Nødkontakter","Mange tak!"]],
+["no","Norsk","Norwegisch","ltr",
+["Hønseegg","Peanøtter","Cashewnøtter","Pistasjnøtter","Pinjekjerner","Rosépepper","Sumak (krydder)","Nøtter (hasselnøtt, valnøtt, mandel …)","Melk (inkl. laktose)","Gluten (hvete, rug, bygg)","Fisk","Skalldyr (reker, krabbe)","Bløtdyr (blåskjell, blekksprut)","Soya","Sesam","Sennep","Selleri"],
+["ALLERGI","Vennligst vis dette kortet til kjøkkenet.","Livstruende","Jeg har en livstruende allergi mot følgende matvarer. Selv de minste spor kan i løpet av få minutter utløse et anafylaktisk sjokk, som kan være dødelig.","Allergi","Jeg er allergisk mot følgende matvarer. Vennligst sørg for at maten min ikke inneholder noe av dem.","Intoleranse","Jeg tåler ikke disse matvarene. Vennligst utelat dem hvis mulig.","Egg finnes ofte i","majones, aioli, panering, fersk pasta, røre, glasur på bakverk, desserter, eggehviteskum i cocktailer","På kjøkkenet, vennligst","Bruk ren panne, rene redskaper og ren arbeidsbenk","Ikke frityrolje som er brukt til annen mat","Sjekk også sauser, dressinger, krydderblandinger og brød","Hvis dere ikke er sikre, si det ærlig. Jeg bestiller gjerne noe annet.","I nødstilfelle","Ved symptomer (pustebesvær, hevelse, kollaps) ring straks {n}.","Jeg har et nødsett (adrenalinpenn) med meg.","Nødkontakter","Tusen takk!"]],
+["fi","Suomi","Finnisch","ltr",
+["Kananmuna","Maapähkinät","Cashewpähkinät","Pistaasipähkinät","Pinjansiemenet","Roosapippuri","Sumakki (mauste)","Pähkinät (hasselpähkinä, saksanpähkinä, manteli …)","Maito (myös laktoosi)","Gluteeni (vehnä, ruis, ohra)","Kala","Äyriäiset (katkaravut, rapu)","Nilviäiset (simpukat, kalmari)","Soija","Seesami","Sinappi","Selleri"],
+["ALLERGIA","Näyttäkää tämä kortti keittiöön.","Hengenvaarallinen","Minulla on hengenvaarallinen allergia seuraaville ruoka-aineille. Pienimmätkin jäämät voivat muutamassa minuutissa aiheuttaa anafylaktisen sokin, joka voi olla kuolettava.","Allergia","Olen allerginen seuraaville ruoka-aineille. Varmistakaa, ettei ruoassani ole mitään niistä.","Intoleranssi","En siedä näitä ruoka-aineita. Jättäkää ne pois, jos mahdollista.","Kananmunaa on usein","majoneesissa, aiolissa, leivitteessä, tuoreessa pastassa, taikinassa, leivonnaisten voitelussa, jälkiruoissa, cocktailien valkuaisvaahdossa","Keittiössä, olkaa hyvä","Käyttäkää puhdasta pannua, puhtaita välineitä ja puhdasta työtasoa","Ei friteerausöljyä, jossa on paistettu muuta ruokaa","Tarkistakaa myös kastikkeet, salaatinkastikkeet, maustesekoitukset ja leipä","Jos ette ole varmoja, sanokaa se rehellisesti. Tilaan mielelläni jotain muuta.","Hätätilanteessa","Jos ilmenee oireita (hengenahdistus, turvotus, pyörtyminen), soittakaa heti numeroon {n}.","Minulla on mukana ensiapusetti (adrenaliinikynä).","Hätäyhteystiedot","Kiitos paljon!"]],
+["cs","Čeština","Tschechisch","ltr",
+["Slepičí vejce","Arašídy","Kešu ořechy","Pistácie","Piniové oříšky","Růžový pepř","Škumpa (koření)","Skořápkové plody (lískový ořech, vlašský ořech, mandle …)","Mléko (vč. laktózy)","Lepek (pšenice, žito, ječmen)","Ryby","Korýši (krevety, krabi)","Měkkýši (slávky, kalamáry)","Sója","Sezam","Hořčice","Celer"],
+["ALERGIE","Prosím, ukažte tuto kartu v kuchyni.","Ohrožení života","Mám život ohrožující alergii na následující potraviny. I nejmenší stopy mohou během několika minut vyvolat anafylaktický šok, který může být smrtelný.","Alergie","Jsem alergický/á na následující potraviny. Prosím, ujistěte se, že moje jídlo nic z toho neobsahuje.","Nesnášenlivost","Tyto potraviny nesnáším. Pokud možno je prosím vynechte.","Vejce bývá často v","majonéze, aioli, trojobalu, čerstvých těstovinách, těstíčku, potírání pečiva, dezertech, pěně z bílků v koktejlech","V kuchyni prosím","Použijte čistou pánev, čisté náčiní a čistou pracovní plochu","Žádný fritovací olej, ve kterém se smažila jiná jídla","Zkontrolujte také omáčky, dresinky, směsi koření a pečivo","Pokud si nejste jistí, řekněte mi to prosím upřímně. Rád/a si objednám něco jiného.","V naléhavém případě","Při příznacích (dušnost, otok, kolaps) ihned volejte {n}.","Mám u sebe pohotovostní sadu (adrenalinové pero).","Nouzové kontakty","Děkuji mnohokrát!"]],
+["sk","Slovenčina","Slowakisch","ltr",
+["Slepačie vajce","Arašidy","Kešu orechy","Pistácie","Píniové oriešky","Ružové korenie","Sumak (korenie)","Orechy (lieskové, vlašské, mandle …)","Mlieko (vr. laktózy)","Lepok (pšenica, raž, jačmeň)","Ryby","Kôrovce (krevety, kraby)","Mäkkýše (mušle, kalamáre)","Sója","Sezam","Horčica","Zeler"],
+["ALERGIA","Prosím, ukážte túto kartu v kuchyni.","Ohrozenie života","Mám život ohrozujúcu alergiu na nasledujúce potraviny. Už najmenšie stopy môžu v priebehu niekoľkých minút vyvolať anafylaktický šok, ktorý môže byť smrteľný.","Alergia","Som alergický/á na nasledujúce potraviny. Prosím, uistite sa, že moje jedlo nič z toho neobsahuje.","Neznášanlivosť","Tieto potraviny neznášam. Ak je to možné, prosím vynechajte ich.","Vajce býva často v","majonéze, aioli, trojobale, čerstvých cestovinách, cestíčku, potieraní pečiva, dezertoch, pene z bielkov v kokteiloch","V kuchyni prosím","Použite čistú panvicu, čisté náčinie a čistú pracovnú plochu","Žiadny fritovací olej, v ktorom sa vyprážali iné jedlá","Skontrolujte aj omáčky, dresingy, zmesi korenia a pečivo","Ak si nie ste istí, povedzte mi to prosím úprimne. Rád/a si objednám niečo iné.","V núdzi","Pri príznakoch (dýchavičnosť, opuch, kolaps) okamžite volajte {n}.","Mám pri sebe núdzovú súpravu (adrenalínové pero).","Núdzové kontakty","Ďakujem veľmi pekne!"]],
+["hu","Magyar","Ungarisch","ltr",
+["Tyúktojás","Földimogyoró","Kesudió","Pisztácia","Fenyőmag","Rózsabors","Szömörce (fűszer)","Diófélék (mogyoró, dió, mandula …)","Tej (laktózzal együtt)","Glutén (búza, rozs, árpa)","Hal","Rákfélék (garnélarák, tarisznyarák)","Puhatestűek (kagyló, tintahal)","Szója","Szezámmag","Mustár","Zeller"],
+["ALLERGIA","Kérem, mutassa meg ezt a kártyát a konyhán.","Életveszélyes","Életveszélyes allergiám van az alábbi élelmiszerekre. Már a legkisebb nyomok is néhány percen belül anafilaxiás sokkot okozhatnak, amely halálos lehet.","Allergia","Allergiás vagyok az alábbi élelmiszerekre. Kérem, ügyeljen arra, hogy az ételem egyiket se tartalmazza.","Intolerancia","Ezeket az élelmiszereket nem tolerálom. Kérem, lehetőség szerint hagyja ki őket.","A tojás gyakran megtalálható ezekben","majonéz, aioli, panír, friss tészta, bundázó tészta, péksütemények tojásos kenése, desszertek, tojásfehérjehab koktélokban","A konyhában kérjük","Tiszta serpenyőt, tiszta eszközöket és tiszta munkafelületet használjanak","Ne használjanak olyan sütőolajat, amelyben más ételt is sütöttek","Ellenőrizzék a szószokat, öntetet, fűszerkeverékeket és a kenyeret is","Ha nem biztosak benne, kérem, mondják meg őszintén. Szívesen rendelek mást.","Vészhelyzetben","Tünetek esetén (légszomj, duzzanat, ájulás) azonnal hívják a {n} számot.","Van nálam vészhelyzeti készlet (adrenalin injekciós toll).","Vészhelyzeti kapcsolattartók","Köszönöm szépen!"]],
+["ro","Română","Rumänisch","ltr",
+["Ou de găină","Arahide","Nuci caju","Fistic","Semințe de pin","Piper roz","Sumac (condiment)","Fructe cu coajă lemnoasă (alune de pădure, nuci, migdale …)","Lapte (inclusiv lactoză)","Gluten (grâu, secară, orz)","Pește","Crustacee (creveți, crab)","Moluște (midii, calamar)","Soia","Susan","Muștar","Țelină"],
+["ALERGIE","Vă rog să arătați acest card la bucătărie.","Pericol de moarte","Am o alergie care îmi pune viața în pericol la următoarele alimente. Chiar și cele mai mici urme pot provoca în câteva minute un șoc anafilactic, care poate fi fatal.","Alergie","Sunt alergic/ă la următoarele alimente. Vă rog să vă asigurați că mâncarea mea nu conține niciunul dintre ele.","Intoleranță","Nu tolerez aceste alimente. Vă rog să le omiteți, dacă este posibil.","Oul se găsește adesea în","maioneză, aioli, pane, paste proaspete, aluat de prăjit, glazură pe produse de patiserie, deserturi, spumă de albuș în cocktailuri","În bucătărie, vă rog","Folosiți o tigaie, ustensile și o suprafață de lucru curate","Fără ulei de prăjit folosit și pentru alte alimente","Verificați și sosurile, dressingurile, amestecurile de condimente și pâinea","Dacă nu sunteți sigur, vă rog să-mi spuneți sincer. Comand cu plăcere altceva.","În caz de urgență","La apariția simptomelor (dificultăți de respirație, umflături, leșin), sunați imediat la {n}.","Am la mine un kit de urgență (stilou cu adrenalină).","Contacte de urgență","Vă mulțumesc mult!"]],
+["hr","Hrvatski","Kroatisch","ltr",
+["Kokošje jaje","Kikiriki","Indijski oraščići","Pistacije","Pinjoli","Ružičasti papar","Sumak (začin)","Orašasti plodovi (lješnjak, orah, badem …)","Mlijeko (uklj. laktozu)","Gluten (pšenica, raž, ječam)","Riba","Rakovi (kozice, rakovice)","Mekušci (dagnje, lignje)","Soja","Sezam","Gorušica","Celer"],
+["ALERGIJA","Molim vas, pokažite ovu karticu u kuhinji.","Opasno po život","Imam po život opasnu alergiju na sljedeće namirnice. Već i najmanji tragovi mogu u nekoliko minuta izazvati anafilaktički šok, koji može biti smrtonosan.","Alergija","Alergičan/alergična sam na sljedeće namirnice. Molim vas, pobrinite se da moje jelo ne sadrži ništa od toga.","Nepodnošljivost","Ne podnosim ove namirnice. Molim vas, izostavite ih ako je moguće.","Jaja se često nalaze u","majonezi, aioliju, pohanju, svježoj tjestenini, tijestu za prženje, premazu na pecivu, desertima, pjeni od bjelanjaka u koktelima","U kuhinji molimo","Koristite čistu tavu, čisti pribor i čistu radnu površinu","Bez ulja za prženje u kojem se prželo drugo jelo","Provjerite i umake, preljeve, mješavine začina i kruh","Ako niste sigurni, molim vas, recite mi iskreno. Rado ću naručiti nešto drugo.","U hitnom slučaju","Kod simptoma (otežano disanje, oticanje, kolaps) odmah nazovite {n}.","Imam kod sebe hitni komplet (adrenalinsku olovku).","Kontakti za hitne slučajeve","Hvala lijepa!"]],
+["sl","Slovenščina","Slowenisch","ltr",
+["Kokošje jajce","Arašidi","Indijski oreščki","Pistacije","Pinjole","Rožnati poper","Sumak (začimba)","Lupinasto sadje (lešnik, oreh, mandelj …)","Mleko (vklj. laktozo)","Gluten (pšenica, rž, ječmen)","Ribe","Raki (kozice, rakovice)","Mehkužci (klapavice, lignji)","Soja","Sezam","Gorčica","Zelena"],
+["ALERGIJA","Prosim, pokažite to kartico v kuhinji.","Smrtno nevarno","Imam življenjsko nevarno alergijo na naslednja živila. Že najmanjše sledi lahko v nekaj minutah povzročijo anafilaktični šok, ki je lahko smrten.","Alergija","Alergičen/alergična sem na naslednja živila. Prosim, poskrbite, da moja jed ne vsebuje ničesar od tega.","Nestrpnost","Teh živil ne prenašam. Prosim, izpustite jih, če je mogoče.","Jajca so pogosto v","majonezi, aioliju, paniranju, sveži testenini, testu za cvrtje, premazu na pecivu, sladicah, peni iz beljakov v koktajlih","V kuhinji prosimo","Uporabite čisto ponev, čist pribor in čisto delovno površino","Brez olja za cvrtje, v katerem so cvrli druge jedi","Preverite tudi omake, prelive, mešanice začimb in kruh","Če niste prepričani, mi prosim iskreno povejte. Z veseljem naročim kaj drugega.","V nujnem primeru","Ob simptomih (težko dihanje, oteklina, kolaps) takoj pokličite {n}.","S seboj imam komplet za nujne primere (adrenalinski peresnik).","Kontakti za nujne primere","Najlepša hvala!"]],
+["bg","Български","Bulgarisch","ltr",
+["Кокоше яйце","Фъстъци","Кашу","Шам фъстък","Кедрови ядки","Розов пипер","Сумак (подправка)","Ядки (лешник, орех, бадем …)","Мляко (вкл. лактоза)","Глутен (пшеница, ръж, ечемик)","Риба","Ракообразни (скариди, раци)","Мекотели (миди, калмари)","Соя","Сусам","Горчица","Целина"],
+["АЛЕРГИЯ","Моля, покажете тази карта в кухнята.","Опасно за живота","Имам опасна за живота алергия към следните храни. Дори най-малките следи могат за няколко минути да предизвикат анафилактичен шок, който може да бъде смъртоносен.","Алергия","Алергичен/алергична съм към следните храни. Моля, уверете се, че ястието ми не съдържа нищо от тях.","Непоносимост","Не понасям тези храни. Моля, пропуснете ги, ако е възможно.","Яйца често има в","майонеза, айоли, панировка, прясна паста, тесто за пържене, намазка на тестени изделия, десерти, пяна от белтък в коктейли","В кухнята, моля","Използвайте чист тиган, чисти прибори и чист работен плот","Без олио за пържене, в което са пържени други храни","Проверете също сосовете, дресингите, смесите от подправки и хляба","Ако не сте сигурни, моля, кажете ми честно. С удоволствие ще поръчам нещо друго.","При спешен случай","При симптоми (затруднено дишане, подуване, колапс) веднага се обадете на {n}.","Нося спешен комплект (адреналинова писалка).","Контакти при спешност","Много благодаря!"]],
+["ru","Русский","Russisch","ltr",
+["Куриное яйцо","Арахис","Кешью","Фисташки","Кедровые орехи","Розовый перец","Сумах (специя)","Орехи (фундук, грецкий орех, миндаль …)","Молоко (вкл. лактозу)","Глютен (пшеница, рожь, ячмень)","Рыба","Ракообразные (креветки, крабы)","Моллюски (мидии, кальмары)","Соя","Кунжут","Горчица","Сельдерей"],
+["АЛЛЕРГИЯ","Пожалуйста, покажите эту карточку на кухне.","Опасно для жизни","У меня опасная для жизни аллергия на следующие продукты. Даже малейшие следы могут за несколько минут вызвать анафилактический шок, который может привести к смерти.","Аллергия","У меня аллергия на следующие продукты. Пожалуйста, убедитесь, что в моём блюде нет ничего из этого.","Непереносимость","Я не переношу эти продукты. Пожалуйста, по возможности уберите их.","Яйцо часто содержится в","майонезе, айоли, панировке, свежей пасте, кляре, смазке выпечки, десертах, пене из белка в коктейлях","На кухне, пожалуйста","Используйте чистую сковороду, чистые приборы и чистую рабочую поверхность","Не используйте фритюрное масло, в котором жарили другие блюда","Проверьте также соусы, заправки, смеси специй и хлеб","Если вы не уверены, пожалуйста, скажите мне честно. Я с удовольствием закажу что-нибудь другое.","В экстренном случае","При симптомах (затруднённое дыхание, отёк, потеря сознания) немедленно звоните {n}.","У меня с собой аптечка для экстренных случаев (адреналиновый автоинжектор).","Экстренные контакты","Большое спасибо!"]],
+["uk","Українська","Ukrainisch","ltr",
+["Куряче яйце","Арахіс","Кеш'ю","Фісташки","Кедрові горіхи","Рожевий перець","Сумах (спеція)","Горіхи (фундук, волоський горіх, мигдаль …)","Молоко (вкл. лактозу)","Глютен (пшениця, жито, ячмінь)","Риба","Ракоподібні (креветки, краби)","Молюски (мідії, кальмари)","Соя","Кунжут","Гірчиця","Селера"],
+["АЛЕРГІЯ","Будь ласка, покажіть цю картку на кухні.","Небезпечно для життя","У мене небезпечна для життя алергія на такі продукти. Навіть найменші сліди можуть за кілька хвилин спричинити анафілактичний шок, який може бути смертельним.","Алергія","У мене алергія на такі продукти. Будь ласка, переконайтеся, що в моїй страві немає нічого з цього.","Непереносимість","Я не переношу ці продукти. Будь ласка, по можливості приберіть їх.","Яйце часто міститься в","майонезі, айолі, паніруванні, свіжій пасті, клярі, змащуванні випічки, десертах, піні з білка в коктейлях","На кухні, будь ласка","Використовуйте чисту сковороду, чисте приладдя та чисту робочу поверхню","Не використовуйте олію для фритюру, в якій смажили інші страви","Перевірте також соуси, заправки, суміші спецій і хліб","Якщо ви не впевнені, будь ласка, скажіть мені чесно. Я із задоволенням замовлю щось інше.","У надзвичайній ситуації","При симптомах (утруднене дихання, набряк, втрата свідомості) негайно телефонуйте {n}.","Я маю з собою аптечку для екстрених випадків (адреналінову ручку).","Екстрені контакти","Щиро дякую!"]],
+["sq","Shqip","Albanisch","ltr",
+["Vezë pule","Kikirikë","Shqeme (kaju)","Fëstëkë","Fara pishe","Piper rozë","Sumak (erëz)","Fruta me lëvozhgë (lajthi, arra, bajame …)","Qumësht (përfshirë laktozën)","Gluten (grurë, thekër, elb)","Peshk","Krustace (karkaleca, gaforre)","Molusqe (midhje, kallamarë)","Soje","Susam","Mustardë","Selino"],
+["ALERGJI","Ju lutem tregojani këtë kartë kuzhinës.","Rrezik për jetën","Kam një alergji që rrezikon jetën ndaj ushqimeve të mëposhtme. Edhe gjurmët më të vogla mund të shkaktojnë brenda pak minutash shok anafilaktik, i cili mund të jetë vdekjeprurës.","Alergji","Jam alergjik/e ndaj ushqimeve të mëposhtme. Ju lutem sigurohuni që ushqimi im të mos përmbajë asnjë prej tyre.","Intolerancë","Nuk i toleroj këto ushqime. Ju lutem hiqini nëse është e mundur.","Veza gjendet shpesh në","majonezë, aioli, panim, makarona të freskëta, brumë për skuqje, lyerje të pastave, ëmbëlsira, shkumë të bardhës së vezës në kokteje","Në kuzhinë, ju lutem","Përdorni tigan, vegla dhe sipërfaqe pune të pastra","Mos përdorni vaj skuqjeje që është përdorur për ushqime të tjera","Kontrolloni edhe salcat, salcat e sallatës, përzierjet e erëzave dhe bukën","Nëse nuk jeni të sigurt, ju lutem më thoni sinqerisht. Me kënaqësi porosis diçka tjetër.","Në rast urgjence","Në rast simptomash (vështirësi në frymëmarrje, ënjtje, të fikët) telefononi menjëherë {n}.","Kam me vete një komplet urgjence (stilolaps adrenaline).","Kontaktet e urgjencës","Faleminderit shumë!"]],
+["ar","العربية","Arabisch","rtl",
+["بيض الدجاج","الفول السوداني","الكاجو","الفستق الحلبي","الصنوبر","الفلفل الوردي","السماق (بهار)","المكسرات (البندق، الجوز، اللوز …)","الحليب (بما في ذلك اللاكتوز)","الغلوتين (القمح، الجاودار، الشعير)","السمك","القشريات (الروبيان، السلطعون)","الرخويات (بلح البحر، الحبار)","الصويا","السمسم","الخردل","الكرفس"],
+["حساسية","يرجى عرض هذه البطاقة على المطبخ.","خطر على الحياة","لدي حساسية تهدد حياتي من الأطعمة التالية. حتى أصغر الآثار يمكن أن تسبب خلال دقائق صدمة تحسسية قد تكون قاتلة.","حساسية","لدي حساسية من الأطعمة التالية. يرجى التأكد من أن طعامي لا يحتوي على أي منها.","عدم تحمّل","لا أتحمل هذه الأطعمة. يرجى حذفها إن أمكن.","يوجد البيض غالبًا في","المايونيز، الأيولي، التغليف بالبقسماط، المعكرونة الطازجة، عجينة القلي، دهن المعجنات، الحلويات، رغوة بياض البيض في الكوكتيلات","في المطبخ، يرجى","استخدام مقلاة وأدوات وسطح عمل نظيفة","عدم استخدام زيت قلي استُخدم لأطعمة أخرى","التحقق أيضًا من الصلصات والتتبيلات وخلطات البهارات والخبز","إذا لم تكن متأكدًا، يرجى إخباري بصراحة. سأطلب شيئًا آخر بكل سرور.","في حالة الطوارئ","عند ظهور أعراض (صعوبة في التنفس، تورم، إغماء) اتصلوا فورًا بالرقم {n}.","أحمل معي حقيبة طوارئ (قلم أدرينالين).","جهات الاتصال في حالات الطوارئ","شكرًا جزيلًا!"]],
+["fa","فارسی","Persisch","rtl",
+["تخم‌مرغ","بادام‌زمینی","بادام هندی","پسته","دانه کاج","فلفل صورتی","سماق (ادویه)","مغزها (فندق، گردو، بادام …)","شیر (شامل لاکتوز)","گلوتن (گندم، چاودار، جو)","ماهی","سخت‌پوستان (میگو، خرچنگ)","نرم‌تنان (صدف، ماهی مرکب)","سویا","کنجد","خردل","کرفس"],
+["حساسیت","لطفاً این کارت را به آشپزخانه نشان دهید.","خطر جانی","من به مواد غذایی زیر حساسیتی دارم که برای جانم خطرناک است. حتی کوچک‌ترین مقدار می‌تواند در چند دقیقه شوک آنافیلاکسی ایجاد کند که ممکن است کشنده باشد.","حساسیت","من به مواد غذایی زیر حساسیت دارم. لطفاً مطمئن شوید که غذای من هیچ‌کدام از آن‌ها را ندارد.","عدم تحمل","من این مواد غذایی را تحمل نمی‌کنم. لطفاً در صورت امکان آن‌ها را حذف کنید.","تخم‌مرغ اغلب در این‌ها هست","سس مایونز، آیولی، پوشش سوخاری، پاستای تازه، خمیر سرخ‌کردنی، رویه شیرینی‌ها، دسرها، کف سفیده تخم‌مرغ در کوکتل‌ها","در آشپزخانه لطفاً","از تابه، وسایل و سطح کار تمیز استفاده کنید","از روغن سرخ‌کردنی که برای غذاهای دیگر استفاده شده استفاده نکنید","سس‌ها، سس سالاد، مخلوط ادویه‌ها و نان را هم بررسی کنید","اگر مطمئن نیستید، لطفاً صادقانه به من بگویید. با کمال میل چیز دیگری سفارش می‌دهم.","در شرایط اضطراری","در صورت بروز علائم (تنگی نفس، تورم، غش) فوراً با {n} تماس بگیرید.","من کیت اضطراری (قلم آدرنالین) همراه دارم.","تماس‌های اضطراری","خیلی ممنون!"]],
+["he","עברית","Hebräisch","rtl",
+["ביצי תרנגולת","בוטנים","קשיו","פיסטוקים","צנוברים","פלפל ורוד","סומק (תבלין)","אגוזים (אגוז לוז, אגוז מלך, שקד …)","חלב (כולל לקטוז)","גלוטן (חיטה, שיפון, שעורה)","דגים","סרטנאים (שרימפס, סרטנים)","רכיכות (מולים, קלמרי)","סויה","שומשום","חרדל","סלרי"],
+["אלרגיה","נא להראות את הכרטיס הזה במטבח.","סכנת חיים","יש לי אלרגיה מסכנת חיים למזונות הבאים. אפילו עקבות זעירים עלולים לגרום תוך דקות להלם אנפילקטי, שעלול להיות קטלני.","אלרגיה","אני אלרגי/ת למזונות הבאים. נא לוודא שהמנה שלי לא מכילה אף אחד מהם.","רגישות","אני לא סובל/ת את המזונות האלה. נא להוציא אותם אם אפשר.","ביצים נמצאות לעיתים קרובות במאכלים הבאים","מיונז, איולי, ציפוי פירורי לחם, פסטה טרייה, בלילה, הברשה על מאפים, קינוחים, קצף חלבון בקוקטיילים","במטבח, בבקשה","להשתמש במחבת, בכלים ובמשטח עבודה נקיים","לא להשתמש בשמן טיגון ששימש למזון אחר","לבדוק גם רטבים, רוטבי סלט, תערובות תבלינים ולחם","אם אינכם בטוחים, נא לומר לי בכנות. אזמין בשמחה משהו אחר.","במקרה חירום","במקרה של תסמינים (קוצר נשימה, נפיחות, התמוטטות) יש להתקשר מיד ל-{n}.","יש לי ערכת חירום (מזרק אדרנלין) אצלי.","אנשי קשר לחירום","תודה רבה!"]],
+["hi","हिन्दी","Hindi","ltr",
+["मुर्गी का अंडा","मूंगफली","काजू","पिस्ता","चिलगोजा (पाइन नट्स)","गुलाबी मिर्च (पिंक पेपरकॉर्न)","सुमैक (मसाला)","मेवे (हेज़लनट, अखरोट, बादाम …)","दूध (लैक्टोज़ सहित)","ग्लूटेन (गेहूँ, राई, जौ)","मछली","क्रस्टेशियन (झींगा, केकड़ा)","मोलस्क (सीप, स्क्विड)","सोया","तिल","सरसों","सेलेरी (अजवाइन की डंडी)"],
+["एलर्जी","कृपया यह कार्ड रसोई में दिखाएँ।","जानलेवा","मुझे नीचे दी गई खाद्य वस्तुओं से जानलेवा एलर्जी है। इनकी बहुत थोड़ी-सी मात्रा भी कुछ ही मिनटों में एनाफिलेक्टिक शॉक पैदा कर सकती है, जो जानलेवा हो सकता है।","एलर्जी","मुझे नीचे दी गई खाद्य वस्तुओं से एलर्जी है। कृपया सुनिश्चित करें कि मेरे खाने में इनमें से कुछ भी न हो।","असहिष्णुता","मैं ये खाद्य वस्तुएँ सहन नहीं कर पाता/पाती। कृपया संभव हो तो इन्हें न डालें।","अंडा अक्सर इनमें होता है","मेयोनेज़, आयोली, ब्रेडक्रम्ब कोटिंग, ताज़ा पास्ता, घोल (बैटर), बेकरी उत्पादों पर लेप, मिठाइयाँ, कॉकटेल में अंडे की सफ़ेदी का झाग","रसोई में कृपया","साफ़ पैन, साफ़ बर्तन और साफ़ काम की सतह इस्तेमाल करें","ऐसा तलने का तेल इस्तेमाल न करें जिसमें दूसरा खाना तला गया हो","सॉस, ड्रेसिंग, मसाला मिश्रण और ब्रेड भी जाँचें","अगर आपको पक्का पता नहीं है, तो कृपया मुझे ईमानदारी से बताएँ। मैं ख़ुशी से कुछ और मँगा लूँगा/लूँगी।","आपात स्थिति में","लक्षण दिखने पर (साँस लेने में तकलीफ़, सूजन, बेहोशी) तुरंत {n} पर कॉल करें।","मेरे पास आपातकालीन किट (एड्रेनालिन पेन) है।","आपातकालीन संपर्क","बहुत धन्यवाद!"]],
+["zh","中文（简体）","Chinesisch","ltr",
+["鸡蛋","花生","腰果","开心果","松子","粉红胡椒","漆树粉（香料，Sumac）","坚果（榛子、核桃、杏仁……）","牛奶（含乳糖）","麸质（小麦、黑麦、大麦）","鱼类","甲壳类（虾、蟹）","软体动物（贻贝、鱿鱼）","大豆","芝麻","芥末（黄芥末）","芹菜"],
+["过敏","请把这张卡片给厨房看。","危及生命","我对以下食物有危及生命的过敏。即使极微量也可能在几分钟内引起过敏性休克，可能致命。","过敏","我对以下食物过敏。请确保我的菜里不含任何这些成分。","不耐受","我不耐受这些食物。如果可以，请不要放。","鸡蛋常见于","蛋黄酱、蒜泥蛋黄酱、面包糠裹粉、新鲜意面、面糊、糕点表面刷蛋液、甜点、鸡尾酒中的蛋白泡沫","请厨房注意","使用干净的锅、干净的厨具和干净的操作台","不要使用炸过其他食物的油","也请检查酱汁、调料、混合香料和面包","如果您不确定，请如实告诉我。我很乐意点别的菜。","紧急情况","如出现症状（呼吸困难、肿胀、昏倒），请立即拨打 {n}。","我随身携带急救包（肾上腺素笔）。","紧急联系人","非常感谢！"]],
+["ja","日本語","Japanisch","ltr",
+["鶏卵（たまご）","落花生（ピーナッツ）","カシューナッツ","ピスタチオ","松の実","ピンクペッパー","スマック（香辛料）","ナッツ類（ヘーゼルナッツ、くるみ、アーモンドなど）","牛乳（乳糖を含む）","グルテン（小麦、ライ麦、大麦）","魚","甲殻類（えび、かに）","軟体動物（ムール貝、いか）","大豆","ごま","マスタード（からし）","セロリ"],
+["アレルギー","このカードを厨房の方にお見せください。","命に関わります","私は以下の食品に命に関わるアレルギーがあります。ごく微量でも数分以内にアナフィラキシーショックを起こし、死に至る可能性があります。","アレルギー","私は以下の食品にアレルギーがあります。料理にこれらが一切含まれないようお願いします。","不耐症","私は以下の食品が体に合いません。可能であれば除いてください。","卵がよく含まれるもの","マヨネーズ、アイオリ、パン粉の衣、生パスタ、天ぷらなどの衣、焼き菓子のつや出し、デザート、カクテルの卵白の泡","厨房でのお願い","清潔なフライパン、調理器具、調理台を使ってください","他の料理を揚げた油は使わないでください","ソース、ドレッシング、ミックススパイス、パンも確認してください","確かでない場合は、正直に教えてください。喜んで別の料理を注文します。","緊急時","症状（呼吸困難、腫れ、意識が遠のく）が出たら、すぐに {n} に電話してください。","緊急用キット（アドレナリン自己注射薬）を持っています。","緊急連絡先","ありがとうございます！"]],
+["ko","한국어","Koreanisch","ltr",
+["달걀(계란)","땅콩","캐슈너트","피스타치오","잣","핑크 페퍼","수막(향신료)","견과류(헤이즐넛, 호두, 아몬드 등)","우유(유당 포함)","글루텐(밀, 호밀, 보리)","생선","갑각류(새우, 게)","연체동물(홍합, 오징어)","대두","참깨","머스터드(겨자)","셀러리"],
+["알레르기","이 카드를 주방에 보여 주세요.","생명 위험","저는 아래 식품에 생명을 위협하는 알레르기가 있습니다. 아주 적은 양이라도 몇 분 안에 아나필락시스 쇼크를 일으킬 수 있으며, 이는 치명적일 수 있습니다.","알레르기","저는 아래 식품에 알레르기가 있습니다. 제 음식에 이 중 어떤 것도 들어가지 않도록 해 주세요.","불내증","저는 이 식품들을 잘 소화하지 못합니다. 가능하면 빼 주세요.","달걀이 자주 들어가는 음식","마요네즈, 아이올리, 빵가루 튀김옷, 생파스타, 반죽, 빵·과자 겉면에 바르는 달걀물, 디저트, 칵테일의 달걀흰자 거품","주방에 부탁드립니다","깨끗한 팬, 깨끗한 조리 도구, 깨끗한 조리대를 사용해 주세요","다른 음식을 튀긴 기름은 사용하지 말아 주세요","소스, 드레싱, 혼합 향신료, 빵도 확인해 주세요","확실하지 않으면 솔직하게 말씀해 주세요. 기꺼이 다른 메뉴를 주문하겠습니다.","응급 상황 시","증상(호흡 곤란, 부기, 실신)이 나타나면 즉시 {n}에 전화해 주세요.","응급 키트(에피네프린 펜)를 가지고 있습니다.","비상 연락처","정말 감사합니다!"]],
+["th","ไทย","Thailändisch","ltr",
+["ไข่ไก่","ถั่วลิสง","เม็ดมะม่วงหิมพานต์","ถั่วพิสตาชิโอ","เมล็ดสน","พริกไทยสีชมพู","ซูแมค (เครื่องเทศ)","ถั่วเปลือกแข็ง (เฮเซลนัท วอลนัท อัลมอนด์ ฯลฯ)","นม (รวมถึงแลคโตส)","กลูเตน (ข้าวสาลี ข้าวไรย์ ข้าวบาร์เลย์)","ปลา","สัตว์มีเปลือก (กุ้ง ปู)","หอยและปลาหมึก (หอยแมลงภู่ ปลาหมึก)","ถั่วเหลือง","งา","มัสตาร์ด","ขึ้นฉ่ายฝรั่ง (เซเลอรี)"],
+["แพ้อาหาร","กรุณาแสดงบัตรนี้ให้ห้องครัวดู","อันตรายถึงชีวิต","ฉันแพ้อาหารต่อไปนี้อย่างรุนแรงถึงขั้นอันตรายต่อชีวิต แม้ปริมาณเพียงเล็กน้อยก็อาจทำให้เกิดภาวะช็อกจากการแพ้รุนแรงภายในไม่กี่นาที ซึ่งอาจทำให้เสียชีวิตได้","แพ้อาหาร","ฉันแพ้อาหารต่อไปนี้ กรุณาตรวจสอบให้แน่ใจว่าอาหารของฉันไม่มีส่วนผสมเหล่านี้เลย","ไม่ทนต่ออาหาร","ร่างกายฉันรับอาหารเหล่านี้ไม่ได้ ถ้าเป็นไปได้กรุณาไม่ใส่","มักมีไข่อยู่ใน","มายองเนส อาโยลี เกล็ดขนมปังชุบทอด พาสต้าสด แป้งชุบทอด การทาหน้าขนมอบ ของหวาน ฟองไข่ขาวในค็อกเทล","สำหรับห้องครัว","กรุณาใช้กระทะ อุปกรณ์ และพื้นที่ทำอาหารที่สะอาด","กรุณาไม่ใช้น้ำมันทอดที่ใช้ทอดอาหารอื่นแล้ว","กรุณาตรวจสอบซอส น้ำสลัด เครื่องเทศผสม และขนมปังด้วย","ถ้าไม่แน่ใจ กรุณาบอกฉันตามตรง ฉันยินดีสั่งอย่างอื่นแทน","กรณีฉุกเฉิน","หากมีอาการ (หายใจลำบาก บวม หมดสติ) กรุณาโทร {n} ทันที","ฉันพกชุดฉุกเฉิน (ปากกาอะดรีนาลีน) ติดตัว","ผู้ติดต่อกรณีฉุกเฉิน","ขอบคุณมาก"]],
+["vi","Tiếng Việt","Vietnamesisch","ltr",
+["Trứng gà","Đậu phộng","Hạt điều","Hạt dẻ cười","Hạt thông","Tiêu hồng","Sumac (gia vị)","Các loại hạt (hạt phỉ, óc chó, hạnh nhân …)","Sữa (kể cả lactose)","Gluten (lúa mì, lúa mạch đen, lúa mạch)","Cá","Giáp xác (tôm, cua)","Nhuyễn thể (vẹm, mực)","Đậu nành","Mè (vừng)","Mù tạt","Cần tây"],
+["DỊ ỨNG","Vui lòng cho nhà bếp xem thẻ này.","Nguy hiểm đến tính mạng","Tôi bị dị ứng nguy hiểm đến tính mạng với các thực phẩm sau. Chỉ một lượng rất nhỏ cũng có thể gây sốc phản vệ trong vài phút và có thể gây tử vong.","Dị ứng","Tôi bị dị ứng với các thực phẩm sau. Vui lòng đảm bảo món ăn của tôi không có bất kỳ thứ nào trong số này.","Không dung nạp","Tôi không dung nạp được các thực phẩm này. Nếu được, vui lòng bỏ chúng ra.","Trứng thường có trong","sốt mayonnaise, aioli, lớp bột chiên xù, mì Ý tươi, bột chiên, lớp phết trên bánh nướng, món tráng miệng, bọt lòng trắng trứng trong cocktail","Lưu ý cho nhà bếp","Dùng chảo, dụng cụ và mặt bàn sạch","Không dùng dầu chiên đã chiên món khác","Kiểm tra cả nước sốt, nước trộn salad, gia vị trộn sẵn và bánh mì","Nếu không chắc chắn, xin hãy nói thật với tôi. Tôi sẵn lòng gọi món khác.","Trường hợp khẩn cấp","Nếu có triệu chứng (khó thở, sưng, ngất), hãy gọi ngay {n}.","Tôi có mang theo bộ cấp cứu (bút tiêm adrenaline).","Liên hệ khẩn cấp","Xin cảm ơn rất nhiều!"]],
+["id","Bahasa Indonesia","Indonesisch","ltr",
+["Telur ayam","Kacang tanah","Kacang mete","Kacang pistachio","Kacang pinus","Lada merah muda","Sumac (rempah)","Kacang-kacangan (hazelnut, kenari, almond …)","Susu (termasuk laktosa)","Gluten (gandum, gandum hitam, jelai)","Ikan","Krustasea (udang, kepiting)","Moluska (kerang, cumi-cumi)","Kedelai","Wijen","Mustard","Seledri"],
+["ALERGI","Mohon tunjukkan kartu ini ke dapur.","Mengancam jiwa","Saya memiliki alergi yang mengancam jiwa terhadap makanan berikut. Bahkan sedikit sekali pun dapat menyebabkan syok anafilaksis dalam beberapa menit, yang bisa berakibat fatal.","Alergi","Saya alergi terhadap makanan berikut. Mohon pastikan makanan saya tidak mengandung satu pun dari bahan ini.","Intoleransi","Saya tidak bisa mentoleransi makanan ini. Jika memungkinkan, mohon tidak digunakan.","Telur sering ada di","mayones, aioli, lapisan tepung roti, pasta segar, adonan gorengan, olesan pada kue, makanan penutup, busa putih telur dalam koktail","Mohon di dapur","Gunakan wajan, peralatan, dan meja kerja yang bersih","Jangan gunakan minyak goreng yang sudah dipakai untuk makanan lain","Periksa juga saus, dressing, campuran bumbu, dan roti","Jika Anda tidak yakin, mohon katakan dengan jujur. Saya dengan senang hati memesan yang lain.","Dalam keadaan darurat","Jika muncul gejala (sesak napas, bengkak, pingsan), segera hubungi {n}.","Saya membawa perlengkapan darurat (pena adrenalin).","Kontak darurat","Terima kasih banyak!"]]
+];
+MORE.forEach(([c,n,dn,dir,a,t])=>{
+  if(a.length!==ORDER.length||t.length!==TK.length){console.warn("Sprache unvollständig:",c);return;}
+  L.push(c);LANGS.push([c,n]);DEN[c]=dn;if(dir==="rtl")RTL.add(c);
+  ORDER.forEach((k,i)=>A[k].push(a[i]));TK.forEach((k,i)=>T[k].push(t[i]));
+});
+if(!L.includes(S.lang))S.lang="en";
+/* Küchen-Ansicht: Wurde die Seite über einen Karten-Link geöffnet? */
+(function(){
+  const h=location.hash||"";
+  if(!h.startsWith("#c="))return;
+  try{
+    const d=JSON.parse(b64d(h.slice(3)));
+    VIEW=true;
+    S={name:String(d.n||""),levels:{},pen:!!d.p,num:String(d.u||"112"),c:Array.isArray(d.c)?d.c.slice(0,2).map(x=>[String(x[0]||""),String(x[1]||"")]):[],lang:detectLang(),cmp:false};
+    while(S.c.length<2)S.c.push(["",""]);
+    Object.keys(d.l||{}).forEach(k=>{if(ORDER.includes(k))S.levels[k]=Math.max(0,Math.min(3,+d.l[k]||0));});
+  }catch(e){VIEW=false;}
+})();
+bindInputs();renderList();
+if(VIEW){
+  ["tabs","b-qr","b-link","cmp-row"].forEach(id=>$(id).hidden=true);
+  $("tagline").textContent="Allergy card";
+  $("lang-h").textContent="🌐";
+  $("own-link").hidden=false;
+  tab(true);
+}
+</script>
