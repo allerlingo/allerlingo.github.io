@@ -187,7 +187,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tag" id="tagline">Testversion · Version 8</span>
+    <span class="tag" id="tagline">Testversion · Version 9</span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -213,7 +213,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
       <div class="legend">
         <span><i style="background:var(--caution)"></i>Unverträglich</span>
         <span><i style="background:var(--warn)"></i>Allergie</span>
-        <span><i style="background:var(--danger)"></i>Lebensgefährlich</span>
+        <span><i style="background:var(--danger)"></i>Anaphylaxie (lebensbedrohlich: Kreislaufreaktion oder Atemnot)</span>
       </div>
       <p class="hint">Tippe auf eine Kategorie, um sie aufzuklappen. Was nicht in der Liste steht, kannst du unten unter „Anderes“ selbst eintragen.</p>
       <input id="in-q" type="search" placeholder="Suchen, z. B. Tomate oder Fructose" autocomplete="off" aria-label="Lebensmittel suchen">
@@ -353,7 +353,7 @@ thanks:["Vielen Dank!","Thank you very much!","Merci beaucoup !","¡Muchas graci
 };
 const tr=(k,lang)=>T[k][L.indexOf(lang)];
 const an=(k,lang)=>A[k][L.indexOf(lang)];
-const LV=["Aus","Unverträg\u00ADlich","Allergie","Lebens\u00ADgefährlich"];
+const LV=["Aus","Unverträg\u00ADlich","Allergie","Ana\u00ADphylaxie"];
 const KEY="allergiekarte-v1";
 let S={name:"",levels:{},custom:[],pen:false,num:"112",c:[["",""],["",""]],lang:"en",cmp:false};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.levels)S=Object.assign(S,s);}catch(e){}
@@ -379,26 +379,27 @@ const CATS=[
  {id:"meat",n:"Fleisch",i:"🍗",k:["pork","beef","poultry"]},
  {id:"sugar",n:"Zucker & Süßstoffe",i:"🍬",k:["fructose","sweetener","sugaralc"]},
  {id:"spice",n:"Gewürze & Zusatzstoffe",i:"🌶️",k:["mustard","pinkpepper","sumac","sulfite"]},
- {id:"meds",n:"Medikamente",i:"💊",med:1,k:["penicillin","cephalo","sulfa","nsaid","metamizol","localan","contrast"]},
+ {id:"meds",n:"Medikamente",i:"💊",med:1,k:["penicillin","cephalo","sulfa","nsaid","paracetamol","metamizol","localan","contrast"]},
  {id:"contact",n:"Insektenstiche & Latex",i:"🐝",med:1,k:["bee","wasp","latex"]},
  {id:"air",n:"Pollen, Staub & Tiere",i:"🌼",med:1,k:["pollen","dust","animal","mould"]}
 ];
 const OPEN=new Set();let Q="";
 const seg=(attr,v,label)=>`<div class="seg" role="group" aria-label="${esc(label)}">${LV.map((t,i)=>`<button type="button" ${attr} data-l="${i}" aria-pressed="${v===i}">${t}</button>`).join("")}</div>`;
 const cntTxt=n=>n?`${n} gewählt`:"";
-function catCount(c){return c.id==="other"?S.custom.filter(x=>x[1]).length:c.k.filter(k=>S.levels[k]).length;}
+function catCount(c){if(c.id==="other")return S.custom.filter(x=>x[1]&&!x[2]).length;return c.k.filter(k=>S.levels[k]).length+(c.id==="meds"?S.custom.filter(x=>x[1]&&x[2]).length:0);}
+const xrow=(x,i)=>`<div class="arow"><span class="an">${esc(x[0])}</span>${seg(`data-x="${i}"`,x[1]||0,x[0])}<button type="button" class="xdel" data-del="${i}" aria-label="${esc(x[0])} löschen">×</button></div>`;
 function renderList(){
   const q=Q.trim().toLowerCase();let hits=0;
   let h=CATS.map(c=>{
     const ks=c.k.filter(k=>!q||A[k][0].toLowerCase().includes(q)||c.n.toLowerCase().includes(q));
     if(q&&!ks.length)return "";
     hits+=ks.length;const n=catCount(c);
-    return (c.id==="meds"&&!q?`<p class="catsep">Nicht zum Essen – steht auf der Notfall-Karte</p>`:"")+`<details class="cat" data-c="${c.id}" style="--h:var(--c-${c.id}-soft);--hs:var(--c-${c.id})"${q||OPEN.has(c.id)?" open":""}><summary><span class="ico" aria-hidden="true">${c.i}</span><span class="cname">${c.n}<small>${c.k.length} Einträge</small></span><span class="cnt" data-cnt="${c.id}"${n?"":" hidden"}>${cntTxt(n)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">${ks.map(k=>`<div class="arow"><span class="an">${esc(A[k][0])}</span>${seg(`data-k="${k}"`,S.levels[k]||0,A[k][0])}</div>`).join("")}</div></details>`;
+    return (c.id==="meds"&&!q?`<p class="catsep">Nicht zum Essen – steht auf der Notfall-Karte</p>`:"")+`<details class="cat" data-c="${c.id}" style="--h:var(--c-${c.id}-soft);--hs:var(--c-${c.id})"${q||OPEN.has(c.id)?" open":""}><summary><span class="ico" aria-hidden="true">${c.i}</span><span class="cname">${c.n}<small>${c.k.length} Einträge</small></span><span class="cnt" data-cnt="${c.id}"${n?"":" hidden"}>${cntTxt(n)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">${ks.map(k=>`<div class="arow"><span class="an">${esc(A[k][0])}</span>${seg(`data-k="${k}"`,S.levels[k]||0,A[k][0])}</div>`).join("")}${c.id==="meds"?S.custom.map((x,i)=>x[2]?xrow(x,i):"").join("")+`<div class="xadd"><input id="in-xm" type="text" maxlength="40" placeholder="Anderes Medikament, z. B. Codein" autocomplete="off" aria-label="Eigenes Medikament eingeben"><button type="button" class="btn" id="b-addxm">Hinzufügen</button></div>`:""}</div></details>`;
   }).join("");
   const nx=catCount({id:"other"});
   h+=`<details class="cat" data-c="other" style="--h:var(--c-other-soft);--hs:var(--c-other)"${OPEN.has("other")||q?" open":""}><summary><span class="ico" aria-hidden="true">✏️</span><span class="cname">Anderes<small>Selbst eintragen, was fehlt</small></span><span class="cnt" data-cnt="other"${nx?"":" hidden"}>${cntTxt(nx)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">
     ${q&&!hits?`<p class="nohit">„${esc(Q.trim())}“ steht nicht in der Liste. <button type="button" class="chip" data-addq="1">Als eigenen Eintrag hinzufügen</button></p>`:""}
-    ${S.custom.map((x,i)=>`<div class="arow"><span class="an">${esc(x[0])}</span>${seg(`data-x="${i}"`,x[1]||0,x[0])}<button type="button" class="xdel" data-del="${i}" aria-label="${esc(x[0])} löschen">×</button></div>`).join("")}
+    ${S.custom.map((x,i)=>x[2]?"":xrow(x,i)).join("")}
     <div class="xadd"><input id="in-x" type="text" maxlength="40" placeholder="z. B. Kokos, Koriander, Zimt" autocomplete="off" aria-label="Eigenen Eintrag eingeben"><button type="button" class="btn" id="b-addx">Hinzufügen</button></div>
     <p class="xnote">Eigene Einträge werden auf der Karte automatisch in die Sprache der Küche übersetzt (maschinelle Übersetzung, braucht Internet). Darunter steht immer dein Originaltext.</p>
   </div></details>`;
@@ -407,13 +408,13 @@ function renderList(){
 function updateCounts(){
   [...CATS,{id:"other"}].forEach(c=>{const el=document.querySelector(`[data-cnt="${c.id}"]`);if(!el)return;const n=catCount(c);el.textContent=cntTxt(n);el.hidden=!n;});
 }
-function addCustom(t){
+function addCustom(t,med){
   t=String(t||"").trim().slice(0,40);if(!t)return;
-  if(!S.custom.some(x=>x[0].toLowerCase()===t.toLowerCase())){
-    if(S.custom.length>=10)return;
-    S.custom.push([t,2]);
+  if(!S.custom.some(x=>x[0].toLowerCase()===t.toLowerCase()&&!!x[2]===!!med)){
+    if(S.custom.length>=12)return;
+    S.custom.push(med?[t,2,"m"]:[t,2]);
   }
-  Q="";$("in-q").value="";OPEN.add("other");save();renderList();
+  Q="";$("in-q").value="";OPEN.add(med?"meds":"other");save();renderList();
 }
 $("alist").addEventListener("click",e=>{
   const b=e.target.closest("button");if(!b)return;
@@ -425,9 +426,10 @@ $("alist").addEventListener("click",e=>{
   }
   if(b.dataset.del!=null){S.custom.splice(+b.dataset.del,1);save();renderList();return;}
   if(b.id==="b-addx"){addCustom($("in-x").value);return;}
+  if(b.id==="b-addxm"){addCustom($("in-xm").value,1);return;}
   if(b.dataset.addq){addCustom(Q);return;}
 });
-$("alist").addEventListener("keydown",e=>{if(e.target.id==="in-x"&&e.key==="Enter"){e.preventDefault();addCustom(e.target.value);}});
+$("alist").addEventListener("keydown",e=>{if((e.target.id==="in-x"||e.target.id==="in-xm")&&e.key==="Enter"){e.preventDefault();addCustom(e.target.value,e.target.id==="in-xm");}});
 $("alist").addEventListener("toggle",e=>{const d=e.target;if(Q||!d.dataset||!d.dataset.c)return;d.open?OPEN.add(d.dataset.c):OPEN.delete(d.dataset.c);},true);
 $("in-q").addEventListener("input",()=>{Q=$("in-q").value;renderList();});
 function bindInputs(){
@@ -472,9 +474,9 @@ function needTr(t,g){
     }).catch(()=>{});
 }
 function trCustom(t,g){if(g==="de")return t;const x=TRC[g+"|"+t];if(!x)needTr(t,g);return x||"";}
-function maxLv(){return Math.max(0,...ORDER.map(k=>S.levels[k]||0),...S.custom.map(x=>x[1]||0));}
+function maxLv(){return Math.max(0,...ORDER.map(k=>S.levels[k]||0),...S.custom.filter(x=>!x[2]).map(x=>x[1]||0));}
 function byLevel(l){return ORDER.filter(k=>(S.levels[k]||0)===l);}
-function byLevelX(l){return S.custom.filter(x=>(x[1]||0)===l);}
+function byLevelX(l,all){return S.custom.filter(x=>(x[1]||0)===l&&(all||!x[2]));}
 const xitemFor=g=>([t])=>{const x=trCustom(t,g);return x&&x.toLowerCase()!==t.toLowerCase()?`<li>${esc(x)}<small>Original: ${esc(t)}</small></li>`:`<li>${esc(t)}</li>`;};
 function maxAll(){return Math.max(0,...ALLK.map(k=>S.levels[k]||0),...S.custom.map(x=>x[1]||0));}
 function renderEmergency(card,g){
@@ -491,7 +493,7 @@ function renderEmergency(card,g){
   }
   h+=`<div class="helpbox"><h4>${tr("nhelp",g)}</h4><ul>${S.meds.pen.on?`<li>${tr("nh1",g)}</li>`:""}<li>${tr("nh2",g)}</li><li>${tr("nh3",g)}</li></ul></div>`;
   h+=`<div class="lvln">`;
-  [3,2,1].forEach(l=>{const ks=ALLK.filter(k=>(S.levels[k]||0)===l),xs=byLevelX(l);if(!ks.length&&!xs.length)return;
+  [3,2,1].forEach(l=>{const ks=ALLK.filter(k=>(S.levels[k]||0)===l),xs=byLevelX(l,1);if(!ks.length&&!xs.length)return;
     h+=`<div class="lvl lvl${l}"><h3>${tr("h"+l,g)}</h3><ul>${ks.map(item).join("")}${xs.map(xitemFor(g)).join("")}</ul></div>`;});
   h+=`</div>`;
   const cs=S.c.filter(c=>c[0]||c[1]);
@@ -561,7 +563,7 @@ function b64d(t){t=t.replace(/-/g,"+").replace(/_/g,"/");while(t.length%4)t+="="
 function cardLink(){
   const lv={};ALLK.forEach(k=>{if(S.levels[k])lv[k]=S.levels[k];});
   const d={v:1,n:S.name||"",l:lv,p:S.meds.pen.on?1:0,u:S.num||"112",c:S.c.filter(c=>c[0]||c[1])};
-  const xs=S.custom.filter(x=>x[1]);if(xs.length)d.x=xs.map(x=>[x[0],x[1]]);
+  const xs=S.custom.filter(x=>x[1]);if(xs.length)d.x=xs.map(x=>x[2]?[x[0],x[1],1]:[x[0],x[1]]);
   const md=MEDS.filter(m=>S.meds[m].on).map(m=>[m,S.meds[m].n.trim()]);if(md.length)d.md=md;
   if(S.where.trim())d.w=S.where.trim();if(S.asthma)d.a=1;if(S.mode==="n")d.m="n";
   return BASE+"#c="+b64e(JSON.stringify(d));
@@ -858,6 +860,9 @@ de:["Laktase-Tabletten (bei Laktoseintoleranz)","Laktose (Milchzucker)"],en:["La
 };
 T.m_lact=L.map(c=>(LACT[c]||LACT.en)[0]);
 A.lactose=L.map(c=>(LACT[c]||LACT.en)[1]);ORDER.push("lactose");
+const PARA={de:"Paracetamol",en:"Paracetamol (acetaminophen)",fr:"Paracétamol",es:"Paracetamol",it:"Paracetamolo",tr:"Parasetamol",el:"Παρακεταμόλη",pl:"Paracetamol",nl:"Paracetamol",pt:"Paracetamol",sv:"Paracetamol",da:"Paracetamol",no:"Paracetamol",fi:"Parasetamoli",cs:"Paracetamol",sk:"Paracetamol",hu:"Paracetamol",ro:"Paracetamol",hr:"Paracetamol",sl:"Paracetamol",bg:"Парацетамол",ru:"Парацетамол",uk:"Парацетамол",sq:"Paracetamol",ar:"الباراسيتامول",fa:"استامینوفن (پاراستامول)",he:"פרצטמול (אקמול)",hi:"पैरासिटामोल",zh:"对乙酰氨基酚（扑热息痛）",ja:"アセトアミノフェン（パラセタモール）",ko:"아세트아미노펜(파라세타몰)",th:"พาราเซตามอล",vi:"Paracetamol",id:"Parasetamol",ka:"პარაცეტამოლი"};
+A.paracetamol=L.map(c=>PARA[c]||PARA.en);MEDK.push("paracetamol");
+A.nsaid[0]="NSAR-Schmerzmittel (Ibuprofen, Aspirin, Diclofenac)";
 const ALLK=ORDER.concat(MEDK);
 if(!L.includes(S.lang))S.lang="en";
 /* Küchen-Ansicht: Wurde die Seite über einen Karten-Link geöffnet? */
@@ -867,7 +872,7 @@ if(!L.includes(S.lang))S.lang="en";
   try{
     const d=JSON.parse(b64d(h.slice(3)));
     VIEW=true;
-    S={name:String(d.n||""),levels:{},custom:Array.isArray(d.x)?d.x.slice(0,10).map(x=>[String((x&&x[0])||"").slice(0,40),Math.max(0,Math.min(3,+(x&&x[1])||0))]).filter(x=>x[0]):[],meds:{},where:String(d.w||"").slice(0,60),asthma:!!d.a,mode:d.m==="n"?"n":"r",num:String(d.u||"112"),c:Array.isArray(d.c)?d.c.slice(0,2).map(x=>[String(x[0]||""),String(x[1]||"")]):[],lang:detectLang(),cmp:false};
+    S={name:String(d.n||""),levels:{},custom:Array.isArray(d.x)?d.x.slice(0,12).map(x=>{const r=[String((x&&x[0])||"").slice(0,40),Math.max(0,Math.min(3,+(x&&x[1])||0))];if(x&&x[2])r.push("m");return r;}).filter(x=>x[0]):[],meds:{},where:String(d.w||"").slice(0,60),asthma:!!d.a,mode:d.m==="n"?"n":"r",num:String(d.u||"112"),c:Array.isArray(d.c)?d.c.slice(0,2).map(x=>[String(x[0]||""),String(x[1]||"")]):[],lang:detectLang(),cmp:false};
     MEDS.forEach(m=>S.meds[m]={on:false,n:""});
     if(d.p)S.meds.pen.on=true;
     if(Array.isArray(d.md))d.md.forEach(x=>{if(x&&MEDS.includes(x[0]))S.meds[x[0]]={on:true,n:String(x[1]||"").slice(0,40)};});
