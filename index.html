@@ -1,3 +1,5 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Allerlingo</title>
 <meta name="description" content="Allerlingo – deine Allergiekarte für Restaurants, automatisch in der Sprache der Küche.">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -16,6 +18,9 @@
   --accent:#0B5D6B; --accent-ink:#FFFFFF; --accent-soft:#DDEEF0;
   --danger:#C4161C; --danger-soft:#FBE3E3; --warn:#B85E00; --warn-soft:#FCEBD8; --caution:#8A6D00; --caution-soft:#F7F0CF;
   --card-bg:#FFFFFF; --card-ink:#111418; --card-muted:#4A525A; --card-line:#E1E5E9;
+  --c-nuts:#9A5B13; --c-nuts-soft:#F6E7D3; --c-basics:#8A6D00; --c-basics-soft:#FBF1C7; --c-sea:#1F6E9C; --c-sea-soft:#D8ECF7;
+  --c-fruit:#B3263E; --c-fruit-soft:#FBE0E4; --c-veg:#2E7D32; --c-veg-soft:#DDF1DC; --c-meat:#9C3B2B; --c-meat-soft:#F6DEDA;
+  --c-sugar:#7B3FA8; --c-sugar-soft:#EEE2F7; --c-spice:#C0501A; --c-spice-soft:#FDE5D4; --c-other:#0B5D6B; --c-other-soft:#DDEEF0; --badge-ink:#FFFFFF;
   --f-display:"Helvetica Neue",Arial,system-ui,sans-serif;
   --f-body:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 }
@@ -23,11 +28,17 @@
   --bg:#0E151B; --surface:#16212A; --ink:#E6EDF2; --muted:#9AA9B5; --line:#2A3843;
   --accent:#55B8C6; --accent-ink:#06252B; --accent-soft:#173A41;
   --danger:#FF6B6F; --danger-soft:#3A1A1C; --warn:#F2A04A; --warn-soft:#3A2814; --caution:#E3C653; --caution-soft:#332D12;
+  --c-nuts:#E0A35A; --c-nuts-soft:#3A2A17; --c-basics:#E3C653; --c-basics-soft:#352E10; --c-sea:#6CB8E6; --c-sea-soft:#14303F;
+  --c-fruit:#F08A9B; --c-fruit-soft:#3B1A20; --c-veg:#7BC67E; --c-veg-soft:#183319; --c-meat:#E58C7A; --c-meat-soft:#3A1D18;
+  --c-sugar:#C49AE6; --c-sugar-soft:#2E1E3A; --c-spice:#F29A62; --c-spice-soft:#3D2214; --c-other:#55B8C6; --c-other-soft:#173A41; --badge-ink:#10161B;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0E151B; --surface:#16212A; --ink:#E6EDF2; --muted:#9AA9B5; --line:#2A3843;
   --accent:#55B8C6; --accent-ink:#06252B; --accent-soft:#173A41;
   --danger:#FF6B6F; --danger-soft:#3A1A1C; --warn:#F2A04A; --warn-soft:#3A2814; --caution:#E3C653; --caution-soft:#332D12;
+  --c-nuts:#E0A35A; --c-nuts-soft:#3A2A17; --c-basics:#E3C653; --c-basics-soft:#352E10; --c-sea:#6CB8E6; --c-sea-soft:#14303F;
+  --c-fruit:#F08A9B; --c-fruit-soft:#3B1A20; --c-veg:#7BC67E; --c-veg-soft:#183319; --c-meat:#E58C7A; --c-meat-soft:#3A1D18;
+  --c-sugar:#C49AE6; --c-sugar-soft:#2E1E3A; --c-spice:#F29A62; --c-spice-soft:#3D2214; --c-other:#55B8C6; --c-other-soft:#173A41; --badge-ink:#10161B;
   color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -107,13 +118,38 @@ input[type=text],input[type=tel]{font:inherit;font-weight:400;padding:10px 12px;
 .qr p{font-size:.85rem;color:var(--card-muted);text-align:center;margin:0;max-width:44ch}
 :fullscreen .cardwrap,.cardwrap:fullscreen{overflow:auto;border-radius:0}
 @media (max-width:420px){.card .ct{font-size:1.7rem}.seg button{padding:7px 6px}}
+/* Kategorien zum Aufklappen */
+input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var(--line);border-radius:10px;background:var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2378858F' stroke-width='2.4' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E") no-repeat 12px center;color:var(--ink);width:100%;min-width:0}
+.cats{display:flex;flex-direction:column;gap:8px}
+.cat{border:1px solid var(--line);border-radius:12px;background:var(--surface);overflow:hidden}
+.cat summary{display:flex;align-items:center;gap:12px;padding:10px 12px;cursor:pointer;list-style:none;transition:background .15s}
+.cat summary::-webkit-details-marker{display:none}
+.cat summary:focus-visible{outline:3px solid var(--accent);outline-offset:-3px}
+.cat[open] summary{background:var(--h)}
+.cat .ico{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-size:1.3rem;background:var(--h);border:2px solid var(--hs)}
+.cat .cname{flex:1;min-width:0;font-weight:700;line-height:1.25}
+.cat .cname small{display:block;font-weight:400;font-size:.78rem;color:var(--muted)}
+.cat .cnt{flex:none;font-size:.75rem;font-weight:800;padding:3px 9px;border-radius:999px;background:var(--hs);color:var(--badge-ink)}
+.cat .chev{flex:none;width:10px;height:10px;border-right:2.5px solid var(--muted);border-bottom:2.5px solid var(--muted);transform:rotate(45deg);margin:0 4px 4px 0;transition:transform .2s}
+.cat[open] .chev{transform:rotate(-135deg);margin:4px 4px 0 0}
+.cat .rows{padding:0 12px 6px}
+.cat .rows .arow:first-child{border-top:0}
+.cat .arow .an{flex:1 1 100%}
+.cat .seg{flex:1 1 auto;max-width:100%;grid-template-columns:repeat(4,minmax(0,auto))}
+.cat .seg button{padding:7px 5px;white-space:normal;hyphens:manual;line-height:1.2}
+.xdel{font:inherit;font-size:1.1rem;line-height:1;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer;padding:6px 10px}
+.xadd{display:flex;gap:8px;padding:10px 0 6px;flex-wrap:wrap}
+.xadd input{flex:1 1 180px}
+.xnote{font-size:.8rem;color:var(--muted);margin:0 0 8px}
+.nohit{font-size:.875rem;margin:0;padding:10px 0 0}
+.lvl li small{direction:ltr}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tag" id="tagline">Testversion · Version 4</span>
+    <span class="tag" id="tagline">Testversion · Version 5</span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -141,7 +177,9 @@ input[type=text],input[type=tel]{font:inherit;font-weight:400;padding:10px 12px;
         <span><i style="background:var(--warn)"></i>Allergie</span>
         <span><i style="background:var(--danger)"></i>Lebensgefährlich</span>
       </div>
-      <div class="alist" id="alist"></div>
+      <p class="hint">Tippe auf eine Kategorie, um sie aufzuklappen. Was nicht in der Liste steht, kannst du unten unter „Anderes“ selbst eintragen.</p>
+      <input id="in-q" type="search" placeholder="Suchen, z. B. Tomate oder Fructose" autocomplete="off" aria-label="Lebensmittel suchen">
+      <div class="cats" id="alist"></div>
     </div>
 
     <div class="box">
@@ -175,7 +213,7 @@ input[type=text],input[type=tel]{font:inherit;font-weight:400;padding:10px 12px;
     <div class="qr" id="qr" hidden></div>
     <p class="hint" id="own-link" hidden><a href="./" id="own-a">Allerlingo – eigene Allergiekarte erstellen</a></p>
   </section>
-  <p class="hint foot"><span id="foot">Allerlingo ersetzt nicht das Gespräch mit dem Personal. Übersetzungen ohne Gewähr. Deine Angaben bleiben auf deinem Gerät bzw. im Link des QR-Codes und werden nicht auf einem Server gespeichert.</span><br><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
+  <p class="hint foot"><span id="foot">Allerlingo ersetzt nicht das Gespräch mit dem Personal. Übersetzungen ohne Gewähr. Deine Angaben bleiben auf deinem Gerät bzw. im Link des QR-Codes und werden nicht auf einem Server gespeichert. Selbst eingetragene Begriffe („Anderes“) werden zum Übersetzen an den Dienst MyMemory geschickt.</span><br><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -254,25 +292,74 @@ thanks:["Vielen Dank!","Thank you very much!","Merci beaucoup !","¡Muchas graci
 };
 const tr=(k,lang)=>T[k][L.indexOf(lang)];
 const an=(k,lang)=>A[k][L.indexOf(lang)];
-const LV=["Aus","Unverträglich","Allergie","Lebensgefährlich"];
+const LV=["Aus","Unverträg\u00ADlich","Allergie","Lebens\u00ADgefährlich"];
 const KEY="allergiekarte-v1";
-let S={name:"",levels:{},pen:false,num:"112",c:[["",""],["",""]],lang:"en",cmp:false};
+let S={name:"",levels:{},custom:[],pen:false,num:"112",c:[["",""],["",""]],lang:"en",cmp:false};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.levels)S=Object.assign(S,s);}catch(e){}
+if(!Array.isArray(S.custom))S.custom=[];
 let VIEW=false;
 const save=()=>{if(VIEW)return;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
+/* Kategorien: jede Allergie steht in genau einer Kategorie */
+const CATS=[
+ {id:"nuts",n:"Nüsse & Samen",i:"🥜",k:["peanut","treenuts","cashew","pistachio","pine","sesame"]},
+ {id:"basics",n:"Ei, Milch & Getreide",i:"🥚",k:["egg","milk","gluten","soy"]},
+ {id:"sea",n:"Fisch & Meerestiere",i:"🐟",k:["fish","crust","moll","algae"]},
+ {id:"fruit",n:"Obst",i:"🍓",k:["apple","kiwi","strawberry","stonefruit","citrus","banana"]},
+ {id:"veg",n:"Gemüse & Hülsenfrüchte",i:"🥕",k:["tomato","paprika","onion","garlic","carrot","mushroom","celery","legumes","lupine"]},
+ {id:"meat",n:"Fleisch",i:"🍗",k:["pork","beef","poultry"]},
+ {id:"sugar",n:"Zucker & Süßstoffe",i:"🍬",k:["fructose","sweetener","sugaralc"]},
+ {id:"spice",n:"Gewürze & Zusatzstoffe",i:"🌶️",k:["mustard","pinkpepper","sumac","sulfite"]}
+];
+const OPEN=new Set();let Q="";
+const seg=(attr,v,label)=>`<div class="seg" role="group" aria-label="${esc(label)}">${LV.map((t,i)=>`<button type="button" ${attr} data-l="${i}" aria-pressed="${v===i}">${t}</button>`).join("")}</div>`;
+const cntTxt=n=>n?`${n} gewählt`:"";
+function catCount(c){return c.id==="other"?S.custom.filter(x=>x[1]).length:c.k.filter(k=>S.levels[k]).length;}
 function renderList(){
-  $("alist").innerHTML=ORDER.map(k=>{
-    const v=S.levels[k]||0;
-    return `<div class="arow"><span class="an">${esc(A[k][0])}</span><div class="seg" role="group" aria-label="${esc(A[k][0])}">${LV.map((t,i)=>`<button type="button" data-k="${k}" data-l="${i}" aria-pressed="${v===i}">${t}</button>`).join("")}</div></div>`;
+  const q=Q.trim().toLowerCase();let hits=0;
+  let h=CATS.map(c=>{
+    const ks=c.k.filter(k=>!q||A[k][0].toLowerCase().includes(q)||c.n.toLowerCase().includes(q));
+    if(q&&!ks.length)return "";
+    hits+=ks.length;const n=catCount(c);
+    return `<details class="cat" data-c="${c.id}" style="--h:var(--c-${c.id}-soft);--hs:var(--c-${c.id})"${q||OPEN.has(c.id)?" open":""}><summary><span class="ico" aria-hidden="true">${c.i}</span><span class="cname">${c.n}<small>${c.k.length} Einträge</small></span><span class="cnt" data-cnt="${c.id}"${n?"":" hidden"}>${cntTxt(n)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">${ks.map(k=>`<div class="arow"><span class="an">${esc(A[k][0])}</span>${seg(`data-k="${k}"`,S.levels[k]||0,A[k][0])}</div>`).join("")}</div></details>`;
   }).join("");
+  const nx=catCount({id:"other"});
+  h+=`<details class="cat" data-c="other" style="--h:var(--c-other-soft);--hs:var(--c-other)"${OPEN.has("other")||q?" open":""}><summary><span class="ico" aria-hidden="true">✏️</span><span class="cname">Anderes<small>Selbst eintragen, was fehlt</small></span><span class="cnt" data-cnt="other"${nx?"":" hidden"}>${cntTxt(nx)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">
+    ${q&&!hits?`<p class="nohit">„${esc(Q.trim())}“ steht nicht in der Liste. <button type="button" class="chip" data-addq="1">Als eigenen Eintrag hinzufügen</button></p>`:""}
+    ${S.custom.map((x,i)=>`<div class="arow"><span class="an">${esc(x[0])}</span>${seg(`data-x="${i}"`,x[1]||0,x[0])}<button type="button" class="xdel" data-del="${i}" aria-label="${esc(x[0])} löschen">×</button></div>`).join("")}
+    <div class="xadd"><input id="in-x" type="text" maxlength="40" placeholder="z. B. Kokos, Koriander, Zimt" autocomplete="off" aria-label="Eigenen Eintrag eingeben"><button type="button" class="btn" id="b-addx">Hinzufügen</button></div>
+    <p class="xnote">Eigene Einträge werden auf der Karte automatisch in die Sprache der Küche übersetzt (maschinelle Übersetzung, braucht Internet). Darunter steht immer dein Originaltext.</p>
+  </div></details>`;
+  $("alist").innerHTML=h;
+}
+function updateCounts(){
+  [...CATS,{id:"other"}].forEach(c=>{const el=document.querySelector(`[data-cnt="${c.id}"]`);if(!el)return;const n=catCount(c);el.textContent=cntTxt(n);el.hidden=!n;});
+}
+function addCustom(t){
+  t=String(t||"").trim().slice(0,40);if(!t)return;
+  if(!S.custom.some(x=>x[0].toLowerCase()===t.toLowerCase())){
+    if(S.custom.length>=10)return;
+    S.custom.push([t,2]);
+  }
+  Q="";$("in-q").value="";OPEN.add("other");save();renderList();
 }
 $("alist").addEventListener("click",e=>{
-  const b=e.target.closest("button[data-k]");if(!b)return;
-  S.levels[b.dataset.k]=+b.dataset.l;save();renderList();
+  const b=e.target.closest("button");if(!b)return;
+  if(b.dataset.l!=null){
+    if(b.dataset.k)S.levels[b.dataset.k]=+b.dataset.l;
+    else if(b.dataset.x!=null&&S.custom[+b.dataset.x])S.custom[+b.dataset.x][1]=+b.dataset.l;
+    b.parentNode.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+    save();updateCounts();return;
+  }
+  if(b.dataset.del!=null){S.custom.splice(+b.dataset.del,1);save();renderList();return;}
+  if(b.id==="b-addx"){addCustom($("in-x").value);return;}
+  if(b.dataset.addq){addCustom(Q);return;}
 });
+$("alist").addEventListener("keydown",e=>{if(e.target.id==="in-x"&&e.key==="Enter"){e.preventDefault();addCustom(e.target.value);}});
+$("alist").addEventListener("toggle",e=>{const d=e.target;if(Q||!d.dataset||!d.dataset.c)return;d.open?OPEN.add(d.dataset.c):OPEN.delete(d.dataset.c);},true);
+$("in-q").addEventListener("input",()=>{Q=$("in-q").value;renderList();});
 function bindInputs(){
   $("in-name").value=S.name;$("in-pen").checked=S.pen;$("in-num").value=S.num;
   $("c1n").value=S.c[0][0];$("c1p").value=S.c[0][1];$("c2n").value=S.c[1][0];$("c2p").value=S.c[1][1];
@@ -284,20 +371,44 @@ function bindInputs(){
 }));
 $("in-pen").addEventListener("change",()=>{S.pen=$("in-pen").checked;save();});
 $("in-cmp").addEventListener("change",()=>{S.cmp=$("in-cmp").checked;save();renderCard();});
-$("pre-egg").onclick=()=>{S.levels={egg:3};save();renderList();};
-$("pre-nuts").onclick=()=>{S.levels={cashew:3,pistachio:3,pine:3,pinkpepper:3,sumac:3};save();renderList();};
-$("pre-clear").onclick=()=>{S.levels={};save();renderList();};
+const openSelected=()=>{CATS.forEach(c=>{if(catCount(c))OPEN.add(c.id);});if(S.custom.length)OPEN.add("other");};
+$("pre-egg").onclick=()=>{S.levels={egg:3};OPEN.add("basics");save();renderList();};
+$("pre-nuts").onclick=()=>{S.levels={cashew:3,pistachio:3,pine:3,pinkpepper:3,sumac:3};OPEN.add("nuts");OPEN.add("spice");save();renderList();};
+$("pre-clear").onclick=()=>{S.levels={};S.custom=[];OPEN.clear();save();renderList();};
 
+/* Übersetzung eigener Einträge über MyMemory (kostenlos, ohne Konto); Ergebnis wird im Speicher zwischengespeichert */
+const TRC={},PEND=new Set();
+const MMCODE={zh:"zh-CN"};
+function needTr(t,g){
+  const key=g+"|"+t;if(PEND.has(key))return;PEND.add(key);
+  fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(t)+"&langpair=de|"+(MMCODE[g]||g))
+    .then(r=>r.json()).then(d=>{
+      let x=d&&+d.responseStatus===200&&d.responseData&&d.responseData.translatedText;
+      /* Manchmal liefert MyMemory nur den Originaltext zurück: dann den besten echten Treffer nehmen */
+      if(x&&x.trim().toLowerCase()===t.toLowerCase()&&Array.isArray(d.matches)){
+        const alt=d.matches.filter(m=>m&&m.translation&&m.translation.trim().toLowerCase()!==t.toLowerCase())
+          .sort((a,b)=>((+b.match>=1)-(+a.match>=1))||((+b.quality||0)-(+a.quality||0)))[0];
+        if(alt)x=alt.translation;
+      }
+      if(!x||/MYMEMORY|QUERY LENGTH|INVALID/i.test(x))return;
+      TRC[key]=new DOMParser().parseFromString(x,"text/html").documentElement.textContent.trim();
+      if(S.lang===g&&!$("p-show").hidden)renderCard(true);
+    }).catch(()=>{});
+}
+function trCustom(t,g){if(g==="de")return t;const x=TRC[g+"|"+t];if(!x)needTr(t,g);return x||"";}
+function maxLv(){return Math.max(0,...ORDER.map(k=>S.levels[k]||0),...S.custom.map(x=>x[1]||0));}
 function byLevel(l){return ORDER.filter(k=>(S.levels[k]||0)===l);}
-function renderCard(){
-  const g=S.lang, max=Math.max(0,...ORDER.map(k=>S.levels[k]||0));
+function byLevelX(l){return S.custom.filter(x=>(x[1]||0)===l);}
+function renderCard(keepQr){
+  const g=S.lang, max=maxLv();
   const card=$("card");card.lang=g;card.dir=RTL.has(g)?"rtl":"ltr";
   if(max===0){card.className="card";card.innerHTML=`<div class="empty">Noch keine Allergie ausgewählt. Wechsle zu „Bearbeiten“ und tippe bei einem Lebensmittel auf einen Schweregrad.</div>`;return;}
   const item=k=>`<li>${esc(an(k,g))}${S.cmp&&g!=="de"?`<small>${esc(A[k][0])}</small>`:""}</li>`;
+  const xitem=([t])=>{const x=trCustom(t,g);return x&&x.toLowerCase()!==t.toLowerCase()?`<li>${esc(x)}<small>Original: ${esc(t)}</small></li>`:`<li>${esc(t)}</li>`;};
   let h=`<div class="ch"><span class="ct">${tr("title",g)}</span>${S.name?`<span class="cn">${esc(S.name)}</span>`:""}</div>
   <p class="intro">${tr("intro",g)}</p>`;
-  [3,2,1].forEach(l=>{const ks=byLevel(l);if(!ks.length)return;
-    h+=`<div class="lvl lvl${l}"><h3>${tr("h"+l,g)}</h3><p>${tr("t"+l,g)}</p><ul>${ks.map(item).join("")}</ul></div>`;});
+  [3,2,1].forEach(l=>{const ks=byLevel(l),xs=byLevelX(l);if(!ks.length&&!xs.length)return;
+    h+=`<div class="lvl lvl${l}"><h3>${tr("h"+l,g)}</h3><p>${tr("t"+l,g)}</p><ul>${ks.map(item).join("")}${xs.map(xitem).join("")}</ul></div>`;});
   if((S.levels.egg||0)>=2) h+=`<div class="sub"><h4>${tr("eggh",g)}</h4><p>${tr("eggt",g)}</p></div>`;
   if(max>=2){
     h+=`<div class="sub"><h4>${tr("kh",g)}</h4><ul><li>${tr("k1",g)}</li><li>${tr("k2",g)}</li><li>${tr("k3",g)}</li></ul></div>`;
@@ -312,13 +423,13 @@ function renderCard(){
   }
   h+=`<p class="thanks">${tr("thanks",g)}</p>`;
   card.className="card";card.innerHTML=h;
-  $("qr").hidden=true;
+  if(!keepQr){$("qr").hidden=true;$("b-qr").textContent="QR-Code zeigen";}
 }
 function cardText(){
-  const g=S.lang, max=Math.max(0,...ORDER.map(k=>S.levels[k]||0));
+  const g=S.lang, max=maxLv();
   let t=[tr("title",g)+(S.name?" – "+S.name:""),tr("intro",g),""];
-  [3,2,1].forEach(l=>{const ks=byLevel(l);if(!ks.length)return;
-    t.push("!!! "+tr("h"+l,g).toUpperCase()+" !!!",tr("t"+l,g),...ks.map(k=>"• "+an(k,g)),"");});
+  [3,2,1].forEach(l=>{const ks=byLevel(l),xs=byLevelX(l);if(!ks.length&&!xs.length)return;
+    t.push("!!! "+tr("h"+l,g).toUpperCase()+" !!!",tr("t"+l,g),...ks.map(k=>"• "+an(k,g)),...xs.map(x=>"• "+(trCustom(x[0],g)||x[0])),"");});
   if((S.levels.egg||0)>=2) t.push(tr("eggh",g)+": "+tr("eggt",g),"");
   if(max>=2) t.push(tr("kh",g)+":","- "+tr("k1",g),"- "+tr("k2",g),"- "+tr("k3",g),"",tr("honest",g),"",tr("eh",g)+": "+tr("et",g).replace("{n}",S.num||"112"));
   if(S.pen&&max===3) t.push(tr("pen",g));
@@ -338,6 +449,7 @@ function b64d(t){t=t.replace(/-/g,"+").replace(/_/g,"/");while(t.length%4)t+="="
 function cardLink(){
   const lv={};ORDER.forEach(k=>{if(S.levels[k])lv[k]=S.levels[k];});
   const d={v:1,n:S.name||"",l:lv,p:S.pen?1:0,u:S.num||"112",c:S.c.filter(c=>c[0]||c[1])};
+  const xs=S.custom.filter(x=>x[1]);if(xs.length)d.x=xs.map(x=>[x[0],x[1]]);
   return BASE+"#c="+b64e(JSON.stringify(d));
 }
 function detectLang(){
@@ -459,6 +571,45 @@ MORE.forEach(([c,n,dn,dir,a,t])=>{
   L.push(c);LANGS.push([c,n]);DEN[c]=dn;if(dir==="rtl")RTL.add(c);
   ORDER.forEach((k,i)=>A[k].push(a[i]));TK.forEach((k,i)=>T[k].push(t[i]));
 });
+/* ===== Version 5: neue Einträge (Obst, Gemüse, Zucker, Fleisch, Algen …) in allen Sprachen ===== */
+const NEWK=["apple","kiwi","strawberry","stonefruit","citrus","banana","tomato","paprika","onion","garlic","carrot","mushroom","legumes","lupine","fructose","sweetener","sugaralc","sulfite","pork","beef","poultry","algae"];
+const NEWA={
+de:["Apfel","Kiwi","Erdbeeren","Steinobst (Pfirsich, Kirsche, Pflaume …)","Zitrusfrüchte (Orange, Zitrone …)","Banane","Tomaten","Paprika","Zwiebeln","Knoblauch","Karotten","Pilze","Hülsenfrüchte (Erbsen, Bohnen, Linsen)","Lupine","Fruchtzucker (Fructose)","Stevia und Süßstoffe","Zuckeralkohole (Sorbit, Xylit, Erythrit …)","Sulfite (Schwefel)","Schweinefleisch","Rindfleisch","Geflügel","Algen (Nori, Spirulina …)"],
+en:["Apple","Kiwi","Strawberries","Stone fruit (peach, cherry, plum …)","Citrus fruit (orange, lemon …)","Banana","Tomatoes","Bell pepper","Onions","Garlic","Carrots","Mushrooms","Legumes (peas, beans, lentils)","Lupin","Fructose (fruit sugar)","Stevia and sweeteners","Sugar alcohols (sorbitol, xylitol, erythritol …)","Sulphites","Pork","Beef","Poultry","Seaweed / algae (nori, spirulina …)"],
+fr:["Pomme","Kiwi","Fraises","Fruits à noyau (pêche, cerise, prune …)","Agrumes (orange, citron …)","Banane","Tomates","Poivron","Oignons","Ail","Carottes","Champignons","Légumineuses (pois, haricots, lentilles)","Lupin","Fructose (sucre des fruits)","Stévia et édulcorants","Polyols (sorbitol, xylitol, érythritol …)","Sulfites","Porc","Bœuf","Volaille","Algues (nori, spiruline …)"],
+es:["Manzana","Kiwi","Fresas","Fruta de hueso (melocotón, cereza, ciruela …)","Cítricos (naranja, limón …)","Plátano","Tomates","Pimiento","Cebolla","Ajo","Zanahorias","Setas y champiñones","Legumbres (guisantes, judías, lentejas)","Altramuz","Fructosa (azúcar de la fruta)","Stevia y edulcorantes","Polialcoholes (sorbitol, xilitol, eritritol …)","Sulfitos","Cerdo","Ternera","Aves (pollo, pavo)","Algas (nori, espirulina …)"],
+it:["Mela","Kiwi","Fragole","Frutta a nocciolo (pesca, ciliegia, prugna …)","Agrumi (arancia, limone …)","Banana","Pomodori","Peperoni","Cipolla","Aglio","Carote","Funghi","Legumi (piselli, fagioli, lenticchie)","Lupini","Fruttosio (zucchero della frutta)","Stevia e dolcificanti","Polioli (sorbitolo, xilitolo, eritritolo …)","Solfiti","Carne di maiale","Carne di manzo","Pollame","Alghe (nori, spirulina …)"],
+tr:["Elma","Kivi","Çilek","Çekirdekli meyveler (şeftali, kiraz, erik …)","Narenciye (portakal, limon …)","Muz","Domates","Dolmalık biber","Soğan","Sarımsak","Havuç","Mantar","Baklagiller (bezelye, fasulye, mercimek)","Acı bakla (lupin)","Fruktoz (meyve şekeri)","Stevia ve tatlandırıcılar","Şeker alkolleri (sorbitol, ksilitol, eritritol …)","Sülfitler","Domuz eti","Sığır eti","Kümes hayvanları (tavuk, hindi)","Deniz yosunu (nori, spirulina …)"],
+el:["Μήλο","Ακτινίδιο","Φράουλες","Πυρηνόκαρπα (ροδάκινο, κεράσι, δαμάσκηνο …)","Εσπεριδοειδή (πορτοκάλι, λεμόνι …)","Μπανάνα","Ντομάτες","Πιπεριά","Κρεμμύδι","Σκόρδο","Καρότα","Μανιτάρια","Όσπρια (αρακάς, φασόλια, φακές)","Λούπινο","Φρουκτόζη (ζάχαρη φρούτων)","Στέβια και γλυκαντικά","Πολυόλες (σορβιτόλη, ξυλιτόλη, ερυθριτόλη …)","Θειώδη","Χοιρινό","Μοσχάρι","Πουλερικά","Φύκια (νόρι, σπιρουλίνα …)"],
+pl:["Jabłko","Kiwi","Truskawki","Owoce pestkowe (brzoskwinia, wiśnia, śliwka …)","Owoce cytrusowe (pomarańcza, cytryna …)","Banan","Pomidory","Papryka","Cebula","Czosnek","Marchew","Grzyby","Rośliny strączkowe (groch, fasola, soczewica)","Łubin","Fruktoza (cukier owocowy)","Stewia i słodziki","Poliole (sorbitol, ksylitol, erytrytol …)","Siarczyny","Wieprzowina","Wołowina","Drób","Algi (nori, spirulina …)"],
+nl:["Appel","Kiwi","Aardbeien","Steenvruchten (perzik, kers, pruim …)","Citrusvruchten (sinaasappel, citroen …)","Banaan","Tomaten","Paprika","Uien","Knoflook","Wortels","Paddenstoelen","Peulvruchten (erwten, bonen, linzen)","Lupine","Fructose (vruchtensuiker)","Stevia en zoetstoffen","Suikeralcoholen (sorbitol, xylitol, erythritol …)","Sulfieten","Varkensvlees","Rundvlees","Gevogelte","Zeewier (nori, spirulina …)"],
+pt:["Maçã","Kiwi","Morangos","Frutos de caroço (pêssego, cereja, ameixa …)","Citrinos (laranja, limão …)","Banana","Tomate","Pimento","Cebola","Alho","Cenoura","Cogumelos","Leguminosas (ervilhas, feijão, lentilhas)","Tremoço","Frutose (açúcar da fruta)","Stevia e adoçantes","Polióis (sorbitol, xilitol, eritritol …)","Sulfitos","Carne de porco","Carne de vaca","Aves (frango, peru)","Algas (nori, espirulina …)"],
+sv:["Äpple","Kiwi","Jordgubbar","Stenfrukter (persika, körsbär, plommon …)","Citrusfrukter (apelsin, citron …)","Banan","Tomater","Paprika","Lök","Vitlök","Morötter","Svamp","Baljväxter (ärter, bönor, linser)","Lupin","Fruktos (fruktsocker)","Stevia och sötningsmedel","Sockeralkoholer (sorbitol, xylitol, erytritol …)","Sulfiter","Fläskkött","Nötkött","Fågel (kyckling, kalkon)","Alger (nori, spirulina …)"],
+da:["Æble","Kiwi","Jordbær","Stenfrugter (fersken, kirsebær, blomme …)","Citrusfrugter (appelsin, citron …)","Banan","Tomater","Peberfrugt","Løg","Hvidløg","Gulerødder","Svampe","Bælgfrugter (ærter, bønner, linser)","Lupin","Fruktose (frugtsukker)","Stevia og sødestoffer","Sukkeralkoholer (sorbitol, xylitol, erythritol …)","Sulfitter","Svinekød","Oksekød","Fjerkræ","Tang og alger (nori, spirulina …)"],
+no:["Eple","Kiwi","Jordbær","Steinfrukt (fersken, kirsebær, plomme …)","Sitrusfrukter (appelsin, sitron …)","Banan","Tomater","Paprika","Løk","Hvitløk","Gulrøtter","Sopp","Belgfrukter (erter, bønner, linser)","Lupin","Fruktose (fruktsukker)","Stevia og søtstoffer","Sukkeralkoholer (sorbitol, xylitol, erytritol …)","Sulfitter","Svinekjøtt","Storfekjøtt","Fjærfe","Tang og alger (nori, spirulina …)"],
+fi:["Omena","Kiivi","Mansikat","Kivihedelmät (persikka, kirsikka, luumu …)","Sitrushedelmät (appelsiini, sitruuna …)","Banaani","Tomaatit","Paprika","Sipuli","Valkosipuli","Porkkanat","Sienet","Palkokasvit (herneet, pavut, linssit)","Lupiini","Fruktoosi (hedelmäsokeri)","Stevia ja makeutusaineet","Sokerialkoholit (sorbitoli, ksylitoli, erytritoli …)","Sulfiitit","Sianliha","Naudanliha","Siipikarja (kana, kalkkuna)","Merilevä (nori, spirulina …)"],
+cs:["Jablko","Kiwi","Jahody","Peckové ovoce (broskev, třešeň, švestka …)","Citrusové plody (pomeranč, citron …)","Banán","Rajčata","Paprika","Cibule","Česnek","Mrkev","Houby","Luštěniny (hrách, fazole, čočka)","Vlčí bob (lupina)","Fruktóza (ovocný cukr)","Stévie a sladidla","Cukerné alkoholy (sorbitol, xylitol, erythritol …)","Siřičitany","Vepřové maso","Hovězí maso","Drůbež","Mořské řasy (nori, spirulina …)"],
+sk:["Jablko","Kivi","Jahody","Kôstkové ovocie (broskyňa, čerešňa, slivka …)","Citrusové plody (pomaranč, citrón …)","Banán","Paradajky","Paprika","Cibuľa","Cesnak","Mrkva","Huby","Strukoviny (hrach, fazuľa, šošovica)","Vlčí bôb (lupina)","Fruktóza (ovocný cukor)","Stévia a sladidlá","Cukrové alkoholy (sorbitol, xylitol, erytritol …)","Siričitany","Bravčové mäso","Hovädzie mäso","Hydina","Morské riasy (nori, spirulina …)"],
+hu:["Alma","Kivi","Eper","Csonthéjas gyümölcsök (őszibarack, cseresznye, szilva …)","Citrusfélék (narancs, citrom …)","Banán","Paradicsom","Paprika","Hagyma","Fokhagyma","Sárgarépa","Gomba","Hüvelyesek (borsó, bab, lencse)","Csillagfürt","Fruktóz (gyümölcscukor)","Stevia és édesítőszerek","Cukoralkoholok (szorbit, xilit, eritrit …)","Szulfitok","Sertéshús","Marhahús","Szárnyas (csirke, pulyka)","Algák (nori, spirulina …)"],
+ro:["Măr","Kiwi","Căpșuni","Fructe cu sâmbure (piersică, cireașă, prună …)","Citrice (portocală, lămâie …)","Banană","Roșii","Ardei gras","Ceapă","Usturoi","Morcovi","Ciuperci","Leguminoase (mazăre, fasole, linte)","Lupin","Fructoză (zahărul din fructe)","Stevia și îndulcitori","Polioli (sorbitol, xilitol, eritritol …)","Sulfiți","Carne de porc","Carne de vită","Carne de pasăre","Alge (nori, spirulină …)"],
+hr:["Jabuka","Kivi","Jagode","Koštičavo voće (breskva, trešnja, šljiva …)","Agrumi (naranča, limun …)","Banana","Rajčica","Paprika","Luk","Češnjak","Mrkva","Gljive","Mahunarke (grašak, grah, leća)","Lupina","Fruktoza (voćni šećer)","Stevija i sladila","Šećerni alkoholi (sorbitol, ksilitol, eritritol …)","Sulfiti","Svinjetina","Govedina","Perad","Alge (nori, spirulina …)"],
+sl:["Jabolko","Kivi","Jagode","Koščičasto sadje (breskev, češnja, sliva …)","Citrusi (pomaranča, limona …)","Banana","Paradižnik","Paprika","Čebula","Česen","Korenje","Gobe","Stročnice (grah, fižol, leča)","Volčji bob","Fruktoza (sadni sladkor)","Stevia in sladila","Sladkorni alkoholi (sorbitol, ksilitol, eritritol …)","Sulfiti","Svinjina","Govedina","Perutnina","Alge (nori, spirulina …)"],
+bg:["Ябълка","Киви","Ягоди","Костилкови плодове (праскова, череша, слива …)","Цитрусови плодове (портокал, лимон …)","Банан","Домати","Чушки","Лук","Чесън","Моркови","Гъби","Бобови (грах, боб, леща)","Лупина","Фруктоза (плодова захар)","Стевия и подсладители","Захарни алкохоли (сорбитол, ксилитол, еритритол …)","Сулфити","Свинско месо","Говеждо месо","Птиче месо","Водорасли (нори, спирулина …)"],
+ru:["Яблоко","Киви","Клубника","Косточковые фрукты (персик, вишня, слива …)","Цитрусовые (апельсин, лимон …)","Банан","Помидоры","Сладкий перец","Лук","Чеснок","Морковь","Грибы","Бобовые (горох, фасоль, чечевица)","Люпин","Фруктоза (фруктовый сахар)","Стевия и подсластители","Сахарные спирты (сорбит, ксилит, эритрит …)","Сульфиты","Свинина","Говядина","Птица (курица, индейка)","Водоросли (нори, спирулина …)"],
+uk:["Яблуко","Ківі","Полуниця","Кісточкові фрукти (персик, вишня, слива …)","Цитрусові (апельсин, лимон …)","Банан","Помідори","Солодкий перець","Цибуля","Часник","Морква","Гриби","Бобові (горох, квасоля, сочевиця)","Люпин","Фруктоза (фруктовий цукор)","Стевія та підсолоджувачі","Цукрові спирти (сорбіт, ксиліт, еритрит …)","Сульфіти","Свинина","Яловичина","Птиця (курка, індичка)","Водорості (норі, спіруліна …)"],
+sq:["Mollë","Kivi","Luleshtrydhe","Fruta me bërthamë (pjeshkë, qershi, kumbull …)","Agrume (portokall, limon …)","Banane","Domate","Speca","Qepë","Hudhër","Karota","Kërpudha","Bishtajore (bizele, fasule, thjerrëza)","Lupin","Fruktozë (sheqer i frutave)","Stevia dhe ëmbëlsues","Alkoole sheqeri (sorbitol, ksilitol, eritritol …)","Sulfite","Mish derri","Mish viçi","Shpendë (pulë, gjeldeti)","Alga deti (nori, spirulinë …)"],
+ar:["التفاح","الكيوي","الفراولة","الفواكه ذات النواة (الخوخ، الكرز، البرقوق …)","الحمضيات (البرتقال، الليمون …)","الموز","الطماطم","الفلفل الحلو","البصل","الثوم","الجزر","الفطر","البقوليات (البازلاء، الفاصولياء، العدس)","الترمس","الفركتوز (سكر الفاكهة)","ستيفيا والمحليات","كحولات السكر (السوربيتول، الزيليتول، الإريثريتول …)","الكبريتيت","لحم الخنزير","لحم البقر","الدواجن","الطحالب البحرية (نوري، سبيرولينا …)"],
+fa:["سیب","کیوی","توت‌فرنگی","میوه‌های هسته‌دار (هلو، گیلاس، آلو …)","مرکبات (پرتقال، لیمو …)","موز","گوجه‌فرنگی","فلفل دلمه‌ای","پیاز","سیر","هویج","قارچ","حبوبات (نخود فرنگی، لوبیا، عدس)","لوپین (باقلای گرگی)","فروکتوز (قند میوه)","استویا و شیرین‌کننده‌ها","قندهای الکلی (سوربیتول، زایلیتول، اریتریتول …)","سولفیت‌ها","گوشت خوک","گوشت گاو","مرغ و ماکیان","جلبک دریایی (نوری، اسپیرولینا …)"],
+he:["תפוח","קיווי","תותים","פירות עם גלעין (אפרסק, דובדבן, שזיף …)","פירות הדר (תפוז, לימון …)","בננה","עגבניות","פלפל","בצל","שום","גזר","פטריות","קטניות (אפונה, שעועית, עדשים)","תורמוס","פרוקטוז (סוכר פירות)","סטיביה וממתיקים","כוהלי סוכר (סורביטול, קסיליטול, אריתריטול …)","סולפיטים","בשר חזיר","בשר בקר","עוף והודו","אצות (נורי, ספירולינה …)"],
+hi:["सेब","कीवी","स्ट्रॉबेरी","गुठली वाले फल (आड़ू, चेरी, आलूबुखारा …)","खट्टे फल (संतरा, नींबू …)","केला","टमाटर","शिमला मिर्च","प्याज़","लहसुन","गाजर","मशरूम","दालें और फलियाँ (मटर, राजमा, मसूर)","ल्यूपिन","फ्रुक्टोज़ (फलों की शक्कर)","स्टीविया और कृत्रिम मिठास","शुगर अल्कोहल (सोर्बिटोल, ज़ाइलिटोल, एरिथ्रिटोल …)","सल्फ़ाइट","सूअर का मांस","गाय का मांस (बीफ़)","मुर्गी और अन्य पक्षियों का मांस","समुद्री शैवाल (नोरी, स्पिरुलिना …)"],
+zh:["苹果","猕猴桃","草莓","核果（桃、樱桃、李子……）","柑橘类（橙子、柠檬……）","香蕉","番茄","甜椒","洋葱","大蒜","胡萝卜","蘑菇","豆类（豌豆、菜豆、扁豆）","羽扇豆","果糖","甜菊糖和代糖","糖醇（山梨糖醇、木糖醇、赤藓糖醇……）","亚硫酸盐","猪肉","牛肉","禽肉（鸡肉、火鸡）","海藻（紫菜、螺旋藻……）"],
+ja:["りんご","キウイ","いちご","核果類（桃、さくらんぼ、すもも など）","柑橘類（オレンジ、レモン など）","バナナ","トマト","パプリカ・ピーマン","玉ねぎ","にんにく","にんじん","きのこ","豆類（えんどう豆、いんげん豆、レンズ豆）","ルピナス","果糖（フルクトース）","ステビア・甘味料","糖アルコール（ソルビトール、キシリトール、エリスリトール など）","亜硫酸塩","豚肉","牛肉","鶏肉などの家禽","海藻（のり、スピルリナ など）"],
+ko:["사과","키위","딸기","씨 있는 과일(복숭아, 체리, 자두 등)","감귤류(오렌지, 레몬 등)","바나나","토마토","파프리카","양파","마늘","당근","버섯","콩류(완두콩, 강낭콩, 렌틸콩)","루핀","과당","스테비아 및 감미료","당알코올(소르비톨, 자일리톨, 에리스리톨 등)","아황산염","돼지고기","소고기","가금류(닭고기, 칠면조)","해조류(김, 스피루리나 등)"],
+th:["แอปเปิล","กีวี","สตรอว์เบอร์รี","ผลไม้เมล็ดแข็ง (พีช เชอร์รี พลัม ฯลฯ)","ผลไม้ตระกูลส้ม (ส้ม มะนาว ฯลฯ)","กล้วย","มะเขือเทศ","พริกหวาน","หอมหัวใหญ่","กระเทียม","แครอท","เห็ด","พืชตระกูลถั่ว (ถั่วลันเตา ถั่วแดง ถั่วเลนทิล)","ลูพิน","ฟรุกโตส (น้ำตาลผลไม้)","หญ้าหวานและสารให้ความหวาน","น้ำตาลแอลกอฮอล์ (ซอร์บิทอล ไซลิทอล อิริทริทอล ฯลฯ)","ซัลไฟต์","เนื้อหมู","เนื้อวัว","เนื้อสัตว์ปีก (ไก่ ไก่งวง)","สาหร่าย (โนริ สไปรูลินา ฯลฯ)"],
+vi:["Táo","Kiwi","Dâu tây","Quả có hạt cứng (đào, anh đào, mận …)","Cam quýt (cam, chanh …)","Chuối","Cà chua","Ớt chuông","Hành tây","Tỏi","Cà rốt","Nấm","Các loại đậu (đậu Hà Lan, đậu đỗ, đậu lăng)","Đậu lupin","Fructose (đường trái cây)","Cỏ ngọt stevia và chất tạo ngọt","Rượu đường (sorbitol, xylitol, erythritol …)","Sulfit","Thịt heo","Thịt bò","Thịt gia cầm (gà, gà tây)","Rong biển (nori, tảo spirulina …)"],
+id:["Apel","Kiwi","Stroberi","Buah berbiji keras (persik, ceri, plum …)","Jeruk-jerukan (jeruk, lemon …)","Pisang","Tomat","Paprika","Bawang bombai","Bawang putih","Wortel","Jamur","Kacang-kacangan polong (kacang polong, buncis, lentil)","Lupin","Fruktosa (gula buah)","Stevia dan pemanis","Gula alkohol (sorbitol, xilitol, eritritol …)","Sulfit","Daging babi","Daging sapi","Unggas (ayam, kalkun)","Rumput laut (nori, spirulina …)"]
+};
+NEWK.forEach((k,i)=>{A[k]=L.map(c=>{const r=NEWA[c]&&NEWA[c].length===NEWK.length?NEWA[c]:NEWA.en;return r[i];});ORDER.push(k);});
 if(!L.includes(S.lang))S.lang="en";
 /* Küchen-Ansicht: Wurde die Seite über einen Karten-Link geöffnet? */
 (function(){
@@ -467,18 +618,18 @@ if(!L.includes(S.lang))S.lang="en";
   try{
     const d=JSON.parse(b64d(h.slice(3)));
     VIEW=true;
-    S={name:String(d.n||""),levels:{},pen:!!d.p,num:String(d.u||"112"),c:Array.isArray(d.c)?d.c.slice(0,2).map(x=>[String(x[0]||""),String(x[1]||"")]):[],lang:detectLang(),cmp:false};
+    S={name:String(d.n||""),levels:{},custom:Array.isArray(d.x)?d.x.slice(0,10).map(x=>[String((x&&x[0])||"").slice(0,40),Math.max(0,Math.min(3,+(x&&x[1])||0))]).filter(x=>x[0]):[],pen:!!d.p,num:String(d.u||"112"),c:Array.isArray(d.c)?d.c.slice(0,2).map(x=>[String(x[0]||""),String(x[1]||"")]):[],lang:detectLang(),cmp:false};
     while(S.c.length<2)S.c.push(["",""]);
     Object.keys(d.l||{}).forEach(k=>{if(ORDER.includes(k))S.levels[k]=Math.max(0,Math.min(3,+d.l[k]||0));});
   }catch(e){VIEW=false;}
 })();
-bindInputs();renderList();
+bindInputs();openSelected();renderList();
 if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
 if(VIEW){
   ["tabs","b-qr","b-link","cmp-row"].forEach(id=>$(id).hidden=true);
   $("b-full").textContent="⛶";$("b-full").setAttribute("aria-label","Fullscreen");
   $("own-a").textContent="Allerlingo – create your own allergy card";
-  $("foot").textContent="Allerlingo does not replace talking to the staff. Translations without guarantee. The card data is stored only in this link, not on a server.";
+  $("foot").textContent="Allerlingo does not replace talking to the staff. Translations without guarantee. The card data is stored only in this link, not on a server. Entries marked \"Original\" are machine-translated via MyMemory.";
   $("tagline").textContent="Allergy card";
   $("lang-h").textContent="🌐";
   $("own-link").hidden=false;
