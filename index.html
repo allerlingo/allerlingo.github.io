@@ -21,6 +21,7 @@
   --c-nuts:#9A5B13; --c-nuts-soft:#F6E7D3; --c-basics:#8A6D00; --c-basics-soft:#FBF1C7; --c-sea:#1F6E9C; --c-sea-soft:#D8ECF7;
   --c-fruit:#B3263E; --c-fruit-soft:#FBE0E4; --c-veg:#2E7D32; --c-veg-soft:#DDF1DC; --c-meat:#9C3B2B; --c-meat-soft:#F6DEDA;
   --c-sugar:#7B3FA8; --c-sugar-soft:#EEE2F7; --c-spice:#C0501A; --c-spice-soft:#FDE5D4; --c-other:#0B5D6B; --c-other-soft:#DDEEF0; --badge-ink:#FFFFFF;
+  --c-meds:#1D5FB8; --c-meds-soft:#DCE8F8; --c-contact:#A86A00; --c-contact-soft:#FBEBC8; --c-air:#5E7F12; --c-air-soft:#E8F2D2;
   --f-display:"Helvetica Neue",Arial,system-ui,sans-serif;
   --f-body:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
 }
@@ -31,6 +32,7 @@
   --c-nuts:#E0A35A; --c-nuts-soft:#3A2A17; --c-basics:#E3C653; --c-basics-soft:#352E10; --c-sea:#6CB8E6; --c-sea-soft:#14303F;
   --c-fruit:#F08A9B; --c-fruit-soft:#3B1A20; --c-veg:#7BC67E; --c-veg-soft:#183319; --c-meat:#E58C7A; --c-meat-soft:#3A1D18;
   --c-sugar:#C49AE6; --c-sugar-soft:#2E1E3A; --c-spice:#F29A62; --c-spice-soft:#3D2214; --c-other:#55B8C6; --c-other-soft:#173A41; --badge-ink:#10161B;
+  --c-meds:#7FB0F0; --c-meds-soft:#16283F; --c-contact:#EBB84F; --c-contact-soft:#362812; --c-air:#AFCF6A; --c-air-soft:#232F12;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0E151B; --surface:#16212A; --ink:#E6EDF2; --muted:#9AA9B5; --line:#2A3843;
@@ -39,6 +41,7 @@
   --c-nuts:#E0A35A; --c-nuts-soft:#3A2A17; --c-basics:#E3C653; --c-basics-soft:#352E10; --c-sea:#6CB8E6; --c-sea-soft:#14303F;
   --c-fruit:#F08A9B; --c-fruit-soft:#3B1A20; --c-veg:#7BC67E; --c-veg-soft:#183319; --c-meat:#E58C7A; --c-meat-soft:#3A1D18;
   --c-sugar:#C49AE6; --c-sugar-soft:#2E1E3A; --c-spice:#F29A62; --c-spice-soft:#3D2214; --c-other:#55B8C6; --c-other-soft:#173A41; --badge-ink:#10161B;
+  --c-meds:#7FB0F0; --c-meds-soft:#16283F; --c-contact:#EBB84F; --c-contact-soft:#362812; --c-air:#AFCF6A; --c-air-soft:#232F12;
   color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -143,13 +146,47 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 .xnote{font-size:.8rem;color:var(--muted);margin:0 0 8px}
 .nohit{font-size:.875rem;margin:0;padding:10px 0 0}
 .lvl li small{direction:ltr}
+.catsep{margin:10px 0 0;font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.medrow{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+.medrow:first-of-type{border-top:0}
+.medrow input[type=text]{font-size:.9rem}
+.medrow input[type=text]:disabled{opacity:.45}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px}
+.modes button{font:inherit;font-size:.9rem;font-weight:700;border:0;border-radius:8px;padding:9px 6px;background:transparent;color:var(--muted);cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.modes button[data-m="n"][aria-pressed="true"]{background:var(--danger);color:#fff}
+/* Notfall-Karte */
+.card.ncard .ch{border-bottom-color:#C4161C}
+.card.ncard .ct{color:#C4161C}
+.card .nintro{font-weight:700;font-size:1.1rem}
+.callbox{background:#C4161C;color:#fff;border-radius:10px;padding:14px;font-family:var(--f-display);font-weight:800;font-size:1.25rem;line-height:1.3}
+.callbox .num{font-size:1.7rem;letter-spacing:.03em}
+.medbox{border:2px solid #1D5FB8;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.medbox h4,.helpbox h4{margin:0;font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:#1D5FB8}
+.medbox ul,.helpbox ul{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px}
+.medbox .mn{font-weight:400;color:var(--card-muted)}
+.helpbox{background:#EEF4F5;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.helpbox h4{color:#0B5D6B}
+.asthma{font-weight:800;background:#FBE3E3;color:#9E0E13;border-radius:8px;padding:10px 12px}
+.lvln{display:flex;flex-direction:column;gap:8px}
+.lockout{display:flex;flex-direction:column;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.lockout img{width:100%;max-width:260px;border-radius:18px;border:1px solid var(--line)}
+.lockout ol{margin:0;padding-left:1.2em;font-size:.875rem;align-self:stretch}
+@media print{
+  @page{margin:12mm}
+  body{background:#fff!important}
+  header.top,.tabs,#p-edit,#p-show>.box,.tools,#link-msg,#own-link,.foot,#lockout,.note{display:none!important}
+  .cardwrap{box-shadow:none;border:1px solid #999;break-inside:avoid}
+  #qr{display:flex!important;break-inside:avoid}
+  #qr svg{max-width:200px}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tag" id="tagline">Testversion · Version 5</span>
+    <span class="tag" id="tagline">Testversion · Version 6</span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -183,8 +220,22 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
     </div>
 
     <div class="box">
-      <h2>Notfall</h2>
-      <label class="check"><input id="in-pen" type="checkbox"> Ich habe einen Adrenalin-Pen dabei</label>
+      <h2>Notfallset</h2>
+      <p class="hint">Was hast du für den Notfall dabei? Trag gern den Namen des Medikaments ein, z. B. „Cetirizin 10 mg“. Was genau in dein Notfallset gehört, besprichst du am besten mit deinem Arzt.</p>
+      <div>
+        <div class="medrow"><label class="check"><input id="md-pen" type="checkbox"> Adrenalin-Pen (Notfall-Pen)</label><input id="mn-pen" type="text" maxlength="40" placeholder="Name, z. B. Emerade 300, Jext, EpiPen" aria-label="Name des Adrenalin-Pens"></div>
+        <div class="medrow"><label class="check"><input id="md-anti" type="checkbox"> Allergietabletten (Antihistaminikum)</label><input id="mn-anti" type="text" maxlength="40" placeholder="Name, z. B. Cetirizin 10 mg" aria-label="Name der Allergietabletten"></div>
+        <div class="medrow"><label class="check"><input id="md-cort" type="checkbox"> Kortison (Tabletten, Saft oder Zäpfchen)</label><input id="mn-cort" type="text" maxlength="40" placeholder="Name, z. B. Prednisolon 50 mg" aria-label="Name des Kortisons"></div>
+        <div class="medrow"><label class="check"><input id="md-spray" type="checkbox"> Asthma-Spray</label><input id="mn-spray" type="text" maxlength="40" placeholder="Name, z. B. Salbutamol" aria-label="Name des Asthma-Sprays"></div>
+      </div>
+      <label class="field">Wo hast du es dabei?
+        <input id="in-where" type="text" maxlength="60" placeholder="z. B. Rucksack, Seitenfach" autocomplete="off">
+      </label>
+      <label class="check"><input id="in-asthma" type="checkbox"> Ich habe Asthma</label>
+    </div>
+
+    <div class="box">
+      <h2>Notruf und Kontakte</h2>
       <label class="field">Notrufnummer im Reiseland
         <input id="in-num" type="tel" value="112">
       </label>
@@ -199,6 +250,10 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 
   <section id="p-show" class="panel" hidden>
     <div class="box">
+      <div class="modes" id="modes" role="group" aria-label="Welche Karte?">
+        <button type="button" data-m="r" aria-pressed="true">🍽️ Restaurant</button>
+        <button type="button" data-m="n" aria-pressed="false">🚑 Notfall</button>
+      </div>
       <h2 id="lang-h">Sprache der Küche</h2>
       <select id="langs" class="sel" aria-label="Sprache der Küche / Language"></select>
       <label class="check" id="cmp-row"><input id="in-cmp" type="checkbox"> Deutsch zum Vergleich anzeigen</label>
@@ -208,12 +263,16 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
       <button class="btn" id="b-qr" type="button">QR-Code zeigen</button>
       <button class="btn ghost" id="b-link" type="button">Link kopieren</button>
       <button class="btn ghost" id="b-full" type="button">Vollbild</button>
+      <button class="btn ghost" id="b-print" type="button">Drucken</button>
+      <button class="btn ghost" id="b-lock" type="button" hidden>Bild für den Sperrbildschirm</button>
     </div>
     <p class="hint" id="link-msg" hidden></p>
     <div class="qr" id="qr" hidden></div>
+    <div class="lockout" id="lockout" hidden></div>
+    <p class="hint" id="pass-tip" hidden><strong>Tipp:</strong> Fülle zusätzlich den Notfallpass in deinem Handy aus (iPhone: App „Health“ → Notfallpass, Android: Einstellungen → „Sicherheit und Notfall“ bzw. „Notfallinformationen“). Den können Rettungskräfte auch bei gesperrtem Handy öffnen.</p>
     <p class="hint" id="own-link" hidden><a href="./" id="own-a">Allerlingo – eigene Allergiekarte erstellen</a></p>
   </section>
-  <p class="hint foot"><span id="foot">Allerlingo ersetzt nicht das Gespräch mit dem Personal. Übersetzungen ohne Gewähr. Deine Angaben bleiben auf deinem Gerät bzw. im Link des QR-Codes und werden nicht auf einem Server gespeichert. Selbst eingetragene Begriffe („Anderes“) werden zum Übersetzen an den Dienst MyMemory geschickt.</span><br><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
+  <p class="hint foot"><span id="foot">Allerlingo ersetzt nicht das Gespräch mit dem Personal. Übersetzungen ohne Gewähr. Deine Angaben bleiben auf deinem Gerät bzw. im Link des QR-Codes und werden nicht auf einem Server gespeichert. Selbst eingetragene Begriffe („Anderes“ und der Aufbewahrungsort deines Notfallsets) werden zum Übersetzen an den Dienst MyMemory geschickt.</span><br><a href="impressum.html">Impressum</a> · <a href="datenschutz.html">Datenschutz</a></p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -297,6 +356,12 @@ const KEY="allergiekarte-v1";
 let S={name:"",levels:{},custom:[],pen:false,num:"112",c:[["",""],["",""]],lang:"en",cmp:false};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.levels)S=Object.assign(S,s);}catch(e){}
 if(!Array.isArray(S.custom))S.custom=[];
+const MEDS=["pen","anti","cort","spray"];
+if(!S.meds||typeof S.meds!=="object")S.meds={};
+MEDS.forEach(m=>{if(!S.meds[m])S.meds[m]={on:false,n:""};});
+if(S.pen&&!S.meds.pen.on)S.meds.pen.on=true;delete S.pen;
+if(typeof S.where!=="string")S.where="";
+S.asthma=!!S.asthma;if(S.mode!=="n")S.mode="r";
 let VIEW=false;
 const save=()=>{if(VIEW)return;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
 const $=id=>document.getElementById(id);
@@ -311,7 +376,10 @@ const CATS=[
  {id:"veg",n:"Gemüse & Hülsenfrüchte",i:"🥕",k:["tomato","paprika","onion","garlic","carrot","mushroom","celery","legumes","lupine"]},
  {id:"meat",n:"Fleisch",i:"🍗",k:["pork","beef","poultry"]},
  {id:"sugar",n:"Zucker & Süßstoffe",i:"🍬",k:["fructose","sweetener","sugaralc"]},
- {id:"spice",n:"Gewürze & Zusatzstoffe",i:"🌶️",k:["mustard","pinkpepper","sumac","sulfite"]}
+ {id:"spice",n:"Gewürze & Zusatzstoffe",i:"🌶️",k:["mustard","pinkpepper","sumac","sulfite"]},
+ {id:"meds",n:"Medikamente",i:"💊",med:1,k:["penicillin","cephalo","sulfa","nsaid","metamizol","localan","contrast"]},
+ {id:"contact",n:"Insektenstiche & Latex",i:"🐝",med:1,k:["bee","wasp","latex"]},
+ {id:"air",n:"Pollen, Staub & Tiere",i:"🌼",med:1,k:["pollen","dust","animal","mould"]}
 ];
 const OPEN=new Set();let Q="";
 const seg=(attr,v,label)=>`<div class="seg" role="group" aria-label="${esc(label)}">${LV.map((t,i)=>`<button type="button" ${attr} data-l="${i}" aria-pressed="${v===i}">${t}</button>`).join("")}</div>`;
@@ -323,7 +391,7 @@ function renderList(){
     const ks=c.k.filter(k=>!q||A[k][0].toLowerCase().includes(q)||c.n.toLowerCase().includes(q));
     if(q&&!ks.length)return "";
     hits+=ks.length;const n=catCount(c);
-    return `<details class="cat" data-c="${c.id}" style="--h:var(--c-${c.id}-soft);--hs:var(--c-${c.id})"${q||OPEN.has(c.id)?" open":""}><summary><span class="ico" aria-hidden="true">${c.i}</span><span class="cname">${c.n}<small>${c.k.length} Einträge</small></span><span class="cnt" data-cnt="${c.id}"${n?"":" hidden"}>${cntTxt(n)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">${ks.map(k=>`<div class="arow"><span class="an">${esc(A[k][0])}</span>${seg(`data-k="${k}"`,S.levels[k]||0,A[k][0])}</div>`).join("")}</div></details>`;
+    return (c.id==="meds"&&!q?`<p class="catsep">Nicht zum Essen – steht auf der Notfall-Karte</p>`:"")+`<details class="cat" data-c="${c.id}" style="--h:var(--c-${c.id}-soft);--hs:var(--c-${c.id})"${q||OPEN.has(c.id)?" open":""}><summary><span class="ico" aria-hidden="true">${c.i}</span><span class="cname">${c.n}<small>${c.k.length} Einträge</small></span><span class="cnt" data-cnt="${c.id}"${n?"":" hidden"}>${cntTxt(n)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">${ks.map(k=>`<div class="arow"><span class="an">${esc(A[k][0])}</span>${seg(`data-k="${k}"`,S.levels[k]||0,A[k][0])}</div>`).join("")}</div></details>`;
   }).join("");
   const nx=catCount({id:"other"});
   h+=`<details class="cat" data-c="other" style="--h:var(--c-other-soft);--hs:var(--c-other)"${OPEN.has("other")||q?" open":""}><summary><span class="ico" aria-hidden="true">✏️</span><span class="cname">Anderes<small>Selbst eintragen, was fehlt</small></span><span class="cnt" data-cnt="other"${nx?"":" hidden"}>${cntTxt(nx)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">
@@ -361,15 +429,21 @@ $("alist").addEventListener("keydown",e=>{if(e.target.id==="in-x"&&e.key==="Ente
 $("alist").addEventListener("toggle",e=>{const d=e.target;if(Q||!d.dataset||!d.dataset.c)return;d.open?OPEN.add(d.dataset.c):OPEN.delete(d.dataset.c);},true);
 $("in-q").addEventListener("input",()=>{Q=$("in-q").value;renderList();});
 function bindInputs(){
-  $("in-name").value=S.name;$("in-pen").checked=S.pen;$("in-num").value=S.num;
+  $("in-name").value=S.name;$("in-num").value=S.num;
   $("c1n").value=S.c[0][0];$("c1p").value=S.c[0][1];$("c2n").value=S.c[1][0];$("c2p").value=S.c[1][1];
   $("in-cmp").checked=S.cmp;
+  MEDS.forEach(m=>{$("md-"+m).checked=S.meds[m].on;$("mn-"+m).value=S.meds[m].n;$("mn-"+m).disabled=!S.meds[m].on;});
+  $("in-where").value=S.where;$("in-asthma").checked=S.asthma;
 }
-["in-name","in-num","c1n","c1p","c2n","c2p"].forEach(id=>$(id).addEventListener("input",()=>{
-  S.name=$("in-name").value;S.num=$("in-num").value||"112";
+["in-name","in-num","c1n","c1p","c2n","c2p","in-where"].forEach(id=>$(id).addEventListener("input",()=>{
+  S.name=$("in-name").value;S.num=$("in-num").value||"112";S.where=$("in-where").value;
   S.c=[[$("c1n").value,$("c1p").value],[$("c2n").value,$("c2p").value]];save();
 }));
-$("in-pen").addEventListener("change",()=>{S.pen=$("in-pen").checked;save();});
+MEDS.forEach(m=>{
+  $("md-"+m).addEventListener("change",()=>{S.meds[m].on=$("md-"+m).checked;$("mn-"+m).disabled=!S.meds[m].on;save();});
+  $("mn-"+m).addEventListener("input",()=>{S.meds[m].n=$("mn-"+m).value;save();});
+});
+$("in-asthma").addEventListener("change",()=>{S.asthma=$("in-asthma").checked;save();});
 $("in-cmp").addEventListener("change",()=>{S.cmp=$("in-cmp").checked;save();renderCard();});
 const openSelected=()=>{CATS.forEach(c=>{if(catCount(c))OPEN.add(c.id);});if(S.custom.length)OPEN.add("other");};
 $("pre-egg").onclick=()=>{S.levels={egg:3};OPEN.add("basics");save();renderList();};
@@ -399,8 +473,43 @@ function trCustom(t,g){if(g==="de")return t;const x=TRC[g+"|"+t];if(!x)needTr(t,
 function maxLv(){return Math.max(0,...ORDER.map(k=>S.levels[k]||0),...S.custom.map(x=>x[1]||0));}
 function byLevel(l){return ORDER.filter(k=>(S.levels[k]||0)===l);}
 function byLevelX(l){return S.custom.filter(x=>(x[1]||0)===l);}
+const xitemFor=g=>([t])=>{const x=trCustom(t,g);return x&&x.toLowerCase()!==t.toLowerCase()?`<li>${esc(x)}<small>Original: ${esc(t)}</small></li>`:`<li>${esc(t)}</li>`;};
+function maxAll(){return Math.max(0,...ALLK.map(k=>S.levels[k]||0),...S.custom.map(x=>x[1]||0));}
+function renderEmergency(card,g){
+  const anyMed=MEDS.some(m=>S.meds[m].on);
+  if(maxAll()===0&&!anyMed&&!S.asthma){card.className="card ncard";card.innerHTML=`<div class="empty">Noch nichts eingetragen. Wechsle zu „Bearbeiten“ und wähle deine Allergien und dein Notfallset aus.</div>`;return;}
+  const item=k=>`<li>${esc(an(k,g))}${S.cmp&&g!=="de"?`<small>${esc(A[k][0])}</small>`:""}</li>`;
+  let h=`<div class="ch"><span class="ct">${tr("ntitle",g)}</span>${S.name?`<span class="cn">${esc(S.name)}</span>`:""}</div>
+  <p class="nintro">${tr("nintro",g)}</p>
+  <div class="callbox">${esc(tr("ncall",g)).replace("{n}",`<span class="num">${esc(S.num||"112")}</span>`)}</div>`;
+  if(S.asthma)h+=`<p class="asthma">${tr("nasthma",g)}</p>`;
+  if(anyMed){
+    const w=S.where.trim(),wt=w?(trCustom(w,g)||w):"";
+    h+=`<div class="medbox"><h4>${tr("nmed",g)}</h4><ul>${MEDS.filter(m=>S.meds[m].on).map(m=>`<li><strong>${tr("m_"+m,g)}</strong>${S.meds[m].n.trim()?` <span class="mn">– ${esc(S.meds[m].n.trim())}</span>`:""}</li>`).join("")}</ul>${w?`<p><strong>${tr("nwhere",g)}</strong> ${esc(wt)}${wt!==w?` <small class="mn">(${esc(w)})</small>`:""}</p>`:""}</div>`;
+  }
+  h+=`<div class="helpbox"><h4>${tr("nhelp",g)}</h4><ul>${S.meds.pen.on?`<li>${tr("nh1",g)}</li>`:""}<li>${tr("nh2",g)}</li><li>${tr("nh3",g)}</li></ul></div>`;
+  h+=`<div class="lvln">`;
+  [3,2,1].forEach(l=>{const ks=ALLK.filter(k=>(S.levels[k]||0)===l),xs=byLevelX(l);if(!ks.length&&!xs.length)return;
+    h+=`<div class="lvl lvl${l}"><h3>${tr("h"+l,g)}</h3><ul>${ks.map(item).join("")}${xs.map(xitemFor(g)).join("")}</ul></div>`;});
+  h+=`</div>`;
+  const cs=S.c.filter(c=>c[0]||c[1]);
+  if(cs.length)h+=`<p class="contacts"><strong>${tr("ct",g)}:</strong><br>${cs.map(c=>esc(c[0])+" · "+esc(c[1])).join("<br>")}</p>`;
+  card.className="card ncard";card.innerHTML=h;
+}
+function setMode(m){
+  S.mode=m==="n"?"n":"r";save();
+  document.querySelectorAll("#modes button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.m===S.mode));
+  if(!VIEW){
+    $("lang-h").textContent=S.mode==="n"?"Sprache der Helfer":"Sprache der Küche";
+    $("b-lock").hidden=S.mode!=="n";$("pass-tip").hidden=S.mode!=="n";
+  }
+  $("lockout").hidden=true;
+  renderCard();
+}
+$("modes").addEventListener("click",e=>{const b=e.target.closest("button[data-m]");if(b)setMode(b.dataset.m);});
 function renderCard(keepQr){
   const g=S.lang, max=maxLv();
+  if(S.mode==="n"){const card=$("card");card.lang=g;card.dir=RTL.has(g)?"rtl":"ltr";renderEmergency(card,g);if(!keepQr){$("qr").hidden=true;$("b-qr").textContent="QR-Code zeigen";}return;}
   const card=$("card");card.lang=g;card.dir=RTL.has(g)?"rtl":"ltr";
   if(max===0){card.className="card";card.innerHTML=`<div class="empty">Noch keine Allergie ausgewählt. Wechsle zu „Bearbeiten“ und tippe bei einem Lebensmittel auf einen Schweregrad.</div>`;return;}
   const item=k=>`<li>${esc(an(k,g))}${S.cmp&&g!=="de"?`<small>${esc(A[k][0])}</small>`:""}</li>`;
@@ -418,7 +527,7 @@ function renderCard(keepQr){
     const cs=S.c.filter(c=>c[0]||c[1]);
     h+=`<div class="emerg"><h4>${tr("eh",g)}</h4>
     <p>${esc(tr("et",g)).replace("{n}",`<span class="num">${esc(S.num||"112")}</span>`)}</p>
-    ${S.pen&&max===3?`<p>${tr("pen",g)}</p>`:""}
+    ${S.meds.pen.on&&max===3?`<p>${tr("pen",g)}</p>`:""}
     ${cs.length?`<p class="contacts"><strong>${tr("ct",g)}:</strong><br>${cs.map(c=>esc(c[0])+" · "+esc(c[1])).join("<br>")}</p>`:""}</div>`;
   }
   h+=`<p class="thanks">${tr("thanks",g)}</p>`;
@@ -432,7 +541,7 @@ function cardText(){
     t.push("!!! "+tr("h"+l,g).toUpperCase()+" !!!",tr("t"+l,g),...ks.map(k=>"• "+an(k,g)),...xs.map(x=>"• "+(trCustom(x[0],g)||x[0])),"");});
   if((S.levels.egg||0)>=2) t.push(tr("eggh",g)+": "+tr("eggt",g),"");
   if(max>=2) t.push(tr("kh",g)+":","- "+tr("k1",g),"- "+tr("k2",g),"- "+tr("k3",g),"",tr("honest",g),"",tr("eh",g)+": "+tr("et",g).replace("{n}",S.num||"112"));
-  if(S.pen&&max===3) t.push(tr("pen",g));
+  if(S.meds.pen.on&&max===3) t.push(tr("pen",g));
   S.c.filter(c=>c[0]||c[1]).forEach(c=>t.push(c[0]+" "+c[1]));
   t.push("",tr("thanks",g));
   return t.join("\n");
@@ -447,9 +556,11 @@ const BASE=(location.protocol.startsWith("http")&&location.hostname.endsWith("gi
 function b64e(str){const b=new TextEncoder().encode(str);let s="";b.forEach(x=>s+=String.fromCharCode(x));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
 function b64d(t){t=t.replace(/-/g,"+").replace(/_/g,"/");while(t.length%4)t+="=";const s=atob(t);return new TextDecoder().decode(Uint8Array.from(s,c=>c.charCodeAt(0)));}
 function cardLink(){
-  const lv={};ORDER.forEach(k=>{if(S.levels[k])lv[k]=S.levels[k];});
-  const d={v:1,n:S.name||"",l:lv,p:S.pen?1:0,u:S.num||"112",c:S.c.filter(c=>c[0]||c[1])};
+  const lv={};ALLK.forEach(k=>{if(S.levels[k])lv[k]=S.levels[k];});
+  const d={v:1,n:S.name||"",l:lv,p:S.meds.pen.on?1:0,u:S.num||"112",c:S.c.filter(c=>c[0]||c[1])};
   const xs=S.custom.filter(x=>x[1]);if(xs.length)d.x=xs.map(x=>[x[0],x[1]]);
+  const md=MEDS.filter(m=>S.meds[m].on).map(m=>[m,S.meds[m].n.trim()]);if(md.length)d.md=md;
+  if(S.where.trim())d.w=S.where.trim();if(S.asthma)d.a=1;if(S.mode==="n")d.m="n";
   return BASE+"#c="+b64e(JSON.stringify(d));
 }
 function detectLang(){
@@ -464,7 +575,7 @@ $("b-qr").onclick=()=>{
   try{
     const q=qrcode(0,"M");
     q.addData(cardLink(),"Byte");q.make();
-    box.innerHTML=q.createSvgTag({cellSize:4,margin:4,scalable:true})+`<p>Mit der Handykamera scannen: Die Karte öffnet sich automatisch in der Sprache, die auf dem Handy der Bedienung oder des Kochs eingestellt ist. Die Sprache lässt sich dort jederzeit ändern.</p>`;
+    box.innerHTML=q.createSvgTag({cellSize:4,margin:4,scalable:true})+`<p>Mit der Handykamera scannen: Die ${S.mode==="n"?"Notfall-Karte":"Karte"} öffnet sich automatisch in der Sprache, die auf dem Handy ${S.mode==="n"?"des Helfers":"der Bedienung oder des Kochs"} eingestellt ist. Die Sprache lässt sich dort jederzeit ändern.</p>`;
   }catch(err){box.innerHTML=`<p>Der QR-Code konnte nicht erstellt werden. Bitte Seite neu laden und es noch einmal versuchen.</p>`;}
   box.hidden=false;$("b-qr").textContent="QR-Code ausblenden";
 };
@@ -474,11 +585,57 @@ $("b-link").onclick=()=>{
   try{navigator.clipboard.writeText(url).then(()=>show("Link kopiert. Du kannst ihn z. B. per WhatsApp verschicken."),()=>show(url));}catch(e){show(url);}
 };
 $("b-full").onclick=()=>{const w=$("cardwrap");try{(w.requestFullscreen||w.webkitRequestFullscreen).call(w);}catch(e){}};
+$("b-print").onclick=()=>{
+  if($("qr").hidden)$("b-qr").onclick();
+  setTimeout(()=>{try{window.print();}catch(e){}},50);
+};
+
+/* Bild für den Sperrbildschirm: QR-Code + Hinweis, sichtbar ohne das Handy zu entsperren */
+function lockImage(){
+  const W=1170,H=2532,cv=document.createElement("canvas");cv.width=W;cv.height=H;
+  const x=cv.getContext("2d");
+  x.fillStyle="#14202B";x.fillRect(0,0,W,H);
+  const top=Math.round(H*0.36);
+  x.fillStyle="#C4161C";x.fillRect(0,top,W,210);
+  x.fillStyle="#fff";x.textAlign="center";x.textBaseline="middle";
+  x.font="800 92px 'Helvetica Neue',Arial,sans-serif";x.fillText("ALLERGY · ALLERGIE",W/2,top+80);
+  x.font="700 50px 'Helvetica Neue',Arial,sans-serif";x.fillText("EMERGENCY · NOTFALL",W/2,top+160);
+  const q=qrcode(0,"M");q.addData(cardLink(),"Byte");q.make();
+  const n=q.getModuleCount(),size=700,cell=size/n,qx=(W-size)/2,qy=top+290,pad=40;
+  x.fillStyle="#fff";x.beginPath();x.roundRect?x.roundRect(qx-pad,qy-pad,size+2*pad,size+2*pad,36):x.rect(qx-pad,qy-pad,size+2*pad,size+2*pad);x.fill();
+  x.fillStyle="#000";
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))x.fillRect(Math.floor(qx+c*cell),Math.floor(qy+r*cell),Math.ceil(cell),Math.ceil(cell));
+  x.fillStyle="#fff";x.font="700 46px 'Helvetica Neue',Arial,sans-serif";
+  const ty=qy+size+pad+80;
+  x.fillText("Scan for my allergy card",W/2,ty);
+  x.fillStyle="#C9D3DA";x.font="400 40px 'Helvetica Neue',Arial,sans-serif";
+  x.fillText("(opens in your language)",W/2,ty+60);
+  const life=ALLK.filter(k=>S.levels[k]===3).map(k=>A[k][1].replace(/\s*\(.*\)$/,"")).concat(S.custom.filter(c=>c[1]===3).map(c=>c[0]));
+  if(life.length){
+    x.fillStyle="#FF8A8E";x.font="800 44px 'Helvetica Neue',Arial,sans-serif";
+    let line="Anaphylaxis: "+life.slice(0,4).join(", ")+(life.length>4?" …":"");
+    while(x.measureText(line).width>W-120&&line.length>20)line=line.slice(0,-3)+"…";
+    x.fillText(line,W/2,ty+150);
+  }
+  return cv.toDataURL("image/png");
+}
+$("b-lock").onclick=()=>{
+  const o=$("lockout");
+  if(!o.hidden){o.hidden=true;return;}
+  let url="";try{url=lockImage();}catch(e){}
+  if(!url){o.innerHTML=`<p class="hint">Das Bild konnte nicht erstellt werden. Bitte Seite neu laden und es noch einmal versuchen.</p>`;o.hidden=false;return;}
+  o.innerHTML=`<img src="${url}" alt="Sperrbildschirm-Bild mit QR-Code zur Notfall-Karte">
+  <a class="btn" href="${url}" download="allerlingo-sperrbildschirm.png">Bild speichern</a>
+  <ol><li>Bild speichern (oder auf dem Handy lange auf das Bild drücken → „Zu Fotos hinzufügen“ bzw. „Bild herunterladen“).</li>
+  <li>iPhone: Fotos öffnen → Bild → Teilen-Symbol → „Als Hintergrundbild“ → „Sperrbildschirm“.<br>Android: Galerie → Bild → ⋮ → „Als Hintergrund festlegen“ → „Sperrbildschirm“.</li>
+  <li>Wenn du deine Allergien änderst, das Bild neu erstellen.</li></ol>`;
+  o.hidden=false;
+};
 
 function tab(show){
   $("tab-edit").setAttribute("aria-selected",!show);$("tab-show").setAttribute("aria-selected",show);
   $("p-edit").hidden=show;$("p-show").hidden=!show;
-  if(show){renderLangs();renderCard();}
+  if(show){renderLangs();setMode(S.mode);}
   window.scrollTo(0,0);
 }
 $("tab-edit").onclick=()=>tab(false);$("tab-show").onclick=()=>tab(true);$("go-show").onclick=()=>tab(true);
@@ -610,6 +767,83 @@ vi:["Táo","Kiwi","Dâu tây","Quả có hạt cứng (đào, anh đào, mận �
 id:["Apel","Kiwi","Stroberi","Buah berbiji keras (persik, ceri, plum …)","Jeruk-jerukan (jeruk, lemon …)","Pisang","Tomat","Paprika","Bawang bombai","Bawang putih","Wortel","Jamur","Kacang-kacangan polong (kacang polong, buncis, lentil)","Lupin","Fruktosa (gula buah)","Stevia dan pemanis","Gula alkohol (sorbitol, xilitol, eritritol …)","Sulfit","Daging babi","Daging sapi","Unggas (ayam, kalkun)","Rumput laut (nori, spirulina …)"]
 };
 NEWK.forEach((k,i)=>{A[k]=L.map(c=>{const r=NEWA[c]&&NEWA[c].length===NEWK.length?NEWA[c]:NEWA.en;return r[i];});ORDER.push(k);});
+/* ===== Version 6: Notfall-Karte. Je Sprache: [14 Sätze der Notfall-Karte], [14 Allergien außerhalb des Essens] ===== */
+const EK=["ntitle","nintro","ncall","nmed","nwhere","m_pen","m_anti","m_cort","m_spray","nasthma","nhelp","nh1","nh2","nh3"];
+const MEDK=["penicillin","cephalo","sulfa","nsaid","metamizol","localan","contrast","bee","wasp","latex","pollen","dust","animal","mould"];
+const NEWM={
+de:[["ALLERGIE-NOTFALL","Ich habe schwere Allergien. Wenn ich schlecht atmen oder nicht sprechen kann, habe ich wahrscheinlich eine schwere allergische Reaktion (Anaphylaxie).","Bitte rufen Sie sofort den Notruf {n}.","Meine Notfallmedikamente","Hier zu finden:","Adrenalin-Autoinjektor (Notfall-Pen)","Antihistaminikum (Allergietabletten)","Kortison (Tabletten, Saft oder Zäpfchen)","Asthma-Spray zum Inhalieren","Ich habe Asthma.","So können Sie helfen","Den Adrenalin-Pen fest in die Außenseite des Oberschenkels drücken – auch durch die Kleidung.","Mich nicht aufstehen oder gehen lassen. Bei Atemnot aufrecht sitzen lassen, sonst hinlegen und die Beine hochlegen.","Bei Bewusstlosigkeit: stabile Seitenlage und Atmung prüfen."],
+["Penicillin (auch Amoxicillin und verwandte Antibiotika)","Cephalosporine (Antibiotika)","Sulfonamide (z. B. Cotrimoxazol)","Schmerzmittel wie Aspirin, Ibuprofen, Diclofenac","Metamizol (Novalgin)","Lokalanästhetika (örtliche Betäubung)","Jodhaltiges Röntgen-Kontrastmittel","Bienengift","Wespengift","Latex (z. B. Handschuhe)","Pollen (Gräser, Birke …)","Hausstaubmilben","Tierhaare (Katze, Hund …)","Schimmelpilze"]],
+en:[["ALLERGY EMERGENCY","I have severe allergies. If I have trouble breathing or cannot speak, I am probably having a severe allergic reaction (anaphylaxis).","Please call the emergency number {n} immediately.","My emergency medication","Where to find it:","Adrenaline auto-injector (emergency pen)","Antihistamine (allergy tablets)","Cortisone / steroid (tablets, syrup or suppositories)","Asthma inhaler","I have asthma.","How you can help","Press the adrenaline pen firmly into the outer thigh – it works through clothing.","Do not let me stand up or walk. If I have trouble breathing, let me sit upright; otherwise lay me down with my legs raised.","If I am unconscious: recovery position and check my breathing."],
+["Penicillin (incl. amoxicillin and related antibiotics)","Cephalosporins (antibiotics)","Sulfonamides (e.g. co-trimoxazole)","Painkillers such as aspirin, ibuprofen, diclofenac","Metamizole (dipyrone)","Local anaesthetics","Iodinated X-ray contrast media","Bee venom","Wasp venom","Latex (e.g. gloves)","Pollen (grass, birch …)","House dust mites","Animal dander (cat, dog …)","Mould"]],
+fr:[["URGENCE ALLERGIE","J'ai des allergies graves. Si j'ai du mal à respirer ou si je ne peux pas parler, je fais probablement une réaction allergique grave (anaphylaxie).","Appelez immédiatement le numéro d'urgence {n}.","Mes médicaments d'urgence","Où les trouver :","Stylo d'adrénaline auto-injectable","Antihistaminique (comprimés contre l'allergie)","Cortisone (comprimés, sirop ou suppositoires)","Inhalateur pour l'asthme","Je suis asthmatique.","Comment m'aider","Appuyer fermement le stylo d'adrénaline sur la face externe de la cuisse – même à travers les vêtements.","Ne pas me faire lever ni marcher. En cas de difficultés respiratoires, me laisser assis ; sinon, m'allonger les jambes surélevées.","En cas de perte de connaissance : position latérale de sécurité et vérifier la respiration."],
+["Pénicilline (y compris amoxicilline et antibiotiques apparentés)","Céphalosporines (antibiotiques)","Sulfamides (p. ex. cotrimoxazole)","Antidouleurs comme l'aspirine, l'ibuprofène, le diclofénac","Métamizole (noramidopyrine)","Anesthésiques locaux","Produits de contraste iodés (radiologie)","Venin d'abeille","Venin de guêpe","Latex (p. ex. gants)","Pollens (graminées, bouleau …)","Acariens","Poils d'animaux (chat, chien …)","Moisissures"]],
+es:[["EMERGENCIA POR ALERGIA","Tengo alergias graves. Si me cuesta respirar o no puedo hablar, probablemente estoy sufriendo una reacción alérgica grave (anafilaxia).","Por favor, llame inmediatamente al número de emergencias {n}.","Mi medicación de emergencia","Dónde encontrarla:","Autoinyector de adrenalina","Antihistamínico (pastillas para la alergia)","Cortisona (comprimidos, jarabe o supositorios)","Inhalador para el asma","Tengo asma.","Cómo puede ayudarme","Presione con firmeza el autoinyector de adrenalina en la parte externa del muslo, incluso a través de la ropa.","No me deje levantarme ni caminar. Si me cuesta respirar, déjeme sentado; si no, túmbeme con las piernas elevadas.","Si pierdo el conocimiento: posición lateral de seguridad y compruebe la respiración."],
+["Penicilina (incluida amoxicilina y antibióticos similares)","Cefalosporinas (antibióticos)","Sulfonamidas (p. ej. cotrimoxazol)","Analgésicos como aspirina, ibuprofeno, diclofenaco","Metamizol (Nolotil)","Anestésicos locales","Contrastes yodados (radiología)","Veneno de abeja","Veneno de avispa","Látex (p. ej. guantes)","Polen (gramíneas, abedul …)","Ácaros del polvo","Pelo de animales (gato, perro …)","Moho"]],
+it:[["EMERGENZA ALLERGIA","Ho allergie gravi. Se respiro a fatica o non riesco a parlare, probabilmente ho una reazione allergica grave (anafilassi).","Per favore, chiami subito il numero di emergenza {n}.","I miei farmaci di emergenza","Dove trovarli:","Autoiniettore di adrenalina","Antistaminico (compresse per l'allergia)","Cortisone (compresse, sciroppo o supposte)","Spray inalatore per l'asma","Ho l'asma.","Come può aiutarmi","Premere con decisione la penna di adrenalina sulla parte esterna della coscia, anche attraverso i vestiti.","Non farmi alzare né camminare. Se respiro a fatica, lasciarmi seduto; altrimenti sdraiarmi con le gambe sollevate.","Se perdo conoscenza: posizione laterale di sicurezza e controllare il respiro."],
+["Penicillina (anche amoxicillina e antibiotici simili)","Cefalosporine (antibiotici)","Sulfamidici (es. cotrimossazolo)","Antidolorifici come aspirina, ibuprofene, diclofenac","Metamizolo (Novalgina)","Anestetici locali","Mezzi di contrasto iodati (radiologia)","Veleno d'ape","Veleno di vespa","Lattice (es. guanti)","Pollini (graminacee, betulla …)","Acari della polvere","Peli di animali (gatto, cane …)","Muffe"]],
+tr:[["ALERJİ ACİL DURUMU","Ciddi alerjilerim var. Nefes almakta zorlanıyor veya konuşamıyorsam, büyük olasılıkla ağır bir alerjik reaksiyon (anafilaksi) geçiriyorum.","Lütfen hemen {n} acil durum numarasını arayın.","Acil durum ilaçlarım","Nerede bulunur:","Adrenalin oto-enjektörü (acil durum kalemi)","Antihistaminik (alerji tableti)","Kortizon (tablet, şurup veya fitil)","Astım spreyi (inhaler)","Astımım var.","Nasıl yardım edebilirsiniz","Adrenalin kalemini uyluğun dış yüzüne sıkıca bastırın – giysinin üzerinden de olur.","Ayağa kalkmama veya yürümeme izin vermeyin. Nefes darlığında dik oturtun; aksi halde yatırıp bacaklarımı yükseltin.","Bilincim kapalıysa: koma pozisyonu verin ve solunumumu kontrol edin."],
+["Penisilin (amoksisilin ve benzeri antibiyotikler dahil)","Sefalosporinler (antibiyotik)","Sülfonamidler (örn. kotrimoksazol)","Aspirin, ibuprofen, diklofenak gibi ağrı kesiciler","Metamizol (Novalgin)","Lokal anestezikler","İyotlu röntgen kontrast maddesi","Arı zehiri","Eşek arısı zehiri","Lateks (örn. eldiven)","Polen (çimen, huş ağacı …)","Ev tozu akarları","Hayvan tüyü (kedi, köpek …)","Küf"]],
+el:[["ΑΛΛΕΡΓΙΚΟ ΕΠΕΙΓΟΝ","Έχω σοβαρές αλλεργίες. Αν δυσκολεύομαι να αναπνεύσω ή δεν μπορώ να μιλήσω, πιθανότατα έχω σοβαρή αλλεργική αντίδραση (αναφυλαξία).","Παρακαλώ καλέστε αμέσως τον αριθμό έκτακτης ανάγκης {n}.","Τα φάρμακα έκτακτης ανάγκης μου","Πού θα τα βρείτε:","Αυτόματη σύριγγα αδρεναλίνης (στυλό)","Αντιισταμινικό (χάπια για την αλλεργία)","Κορτιζόνη (χάπια, σιρόπι ή υπόθετα)","Εισπνεόμενο για το άσθμα","Έχω άσθμα.","Πώς μπορείτε να βοηθήσετε","Πιέστε σταθερά το στυλό αδρεναλίνης στην εξωτερική πλευρά του μηρού – ακόμη και μέσα από τα ρούχα.","Μη με αφήσετε να σηκωθώ ή να περπατήσω. Αν δυσκολεύομαι να αναπνεύσω, αφήστε με καθιστό· αλλιώς ξαπλώστε με με τα πόδια ψηλά.","Αν χάσω τις αισθήσεις μου: πλάγια θέση ασφαλείας και ελέγξτε την αναπνοή."],
+["Πενικιλίνη (και αμοξικιλλίνη και συγγενή αντιβιοτικά)","Κεφαλοσπορίνες (αντιβιοτικά)","Σουλφοναμίδες (π.χ. κοτριμοξαζόλη)","Παυσίπονα όπως ασπιρίνη, ιβουπροφαίνη, δικλοφενάκη","Μεταμιζόλη","Τοπικά αναισθητικά","Ιωδιούχα σκιαγραφικά (ακτινογραφίες)","Δηλητήριο μέλισσας","Δηλητήριο σφήκας","Λάτεξ (π.χ. γάντια)","Γύρη (αγρωστώδη, σημύδα …)","Ακάρεα σκόνης","Τρίχωμα ζώων (γάτα, σκύλος …)","Μούχλα"]],
+pl:[["NAGŁY WYPADEK – ALERGIA","Mam ciężkie alergie. Jeśli mam trudności z oddychaniem lub nie mogę mówić, prawdopodobnie mam ciężką reakcję alergiczną (anafilaksję).","Proszę natychmiast zadzwonić pod numer alarmowy {n}.","Moje leki ratunkowe","Gdzie je znaleźć:","Autostrzykawka z adrenaliną","Lek przeciwhistaminowy (tabletki na alergię)","Kortyzon / sterydy (tabletki, syrop lub czopki)","Inhalator na astmę","Mam astmę.","Jak możesz pomóc","Mocno docisnąć autostrzykawkę z adrenaliną do zewnętrznej strony uda – można przez ubranie.","Nie pozwalać mi wstawać ani chodzić. Przy duszności posadzić; w innym razie położyć z uniesionymi nogami.","Przy utracie przytomności: pozycja boczna ustalona i kontrola oddechu."],
+["Penicylina (także amoksycylina i pokrewne antybiotyki)","Cefalosporyny (antybiotyki)","Sulfonamidy (np. kotrimoksazol)","Leki przeciwbólowe, np. aspiryna, ibuprofen, diklofenak","Metamizol (Pyralgina)","Leki znieczulające miejscowo","Jodowe środki kontrastowe (RTG)","Jad pszczoły","Jad osy","Lateks (np. rękawiczki)","Pyłki (trawy, brzoza …)","Roztocza kurzu domowego","Sierść zwierząt (kot, pies …)","Pleśń"]],
+nl:[["ALLERGIE-NOODGEVAL","Ik heb ernstige allergieën. Als ik moeilijk ademhaal of niet kan praten, heb ik waarschijnlijk een ernstige allergische reactie (anafylaxie).","Bel alstublieft direct het alarmnummer {n}.","Mijn noodmedicatie","Waar te vinden:","Adrenaline-autoinjector (noodpen)","Antihistaminicum (allergietabletten)","Cortison (tabletten, drank of zetpillen)","Astma-inhalator","Ik heb astma.","Zo kunt u helpen","De adrenalinepen stevig tegen de buitenkant van het bovenbeen drukken – ook door de kleding heen.","Laat mij niet opstaan of lopen. Bij ademnood rechtop laten zitten; anders laten liggen met de benen omhoog.","Bij bewusteloosheid: stabiele zijligging en de ademhaling controleren."],
+["Penicilline (ook amoxicilline en verwante antibiotica)","Cefalosporines (antibiotica)","Sulfonamiden (bijv. cotrimoxazol)","Pijnstillers zoals aspirine, ibuprofen, diclofenac","Metamizol","Lokale verdoving","Jodiumhoudend contrastmiddel (röntgen)","Bijengif","Wespengif","Latex (bijv. handschoenen)","Pollen (grassen, berk …)","Huisstofmijt","Dierenharen (kat, hond …)","Schimmels"]],
+pt:[["EMERGÊNCIA DE ALERGIA","Tenho alergias graves. Se tiver dificuldade em respirar ou não conseguir falar, provavelmente estou a ter uma reação alérgica grave (anafilaxia).","Por favor, ligue imediatamente para o número de emergência {n}.","A minha medicação de emergência","Onde encontrar:","Autoinjetor de adrenalina (caneta de emergência)","Anti-histamínico (comprimidos para a alergia)","Cortisona (comprimidos, xarope ou supositórios)","Inalador para a asma","Tenho asma.","Como pode ajudar","Pressione com força a caneta de adrenalina na parte exterior da coxa – também através da roupa.","Não me deixe levantar nem andar. Com falta de ar, deixe-me sentado; caso contrário, deite-me com as pernas elevadas.","Se eu estiver inconsciente: posição lateral de segurança e verificar a respiração."],
+["Penicilina (incl. amoxicilina e antibióticos semelhantes)","Cefalosporinas (antibióticos)","Sulfonamidas (p. ex. cotrimoxazol)","Analgésicos como aspirina, ibuprofeno, diclofenac","Metamizol (dipirona)","Anestésicos locais","Contraste iodado (radiologia)","Veneno de abelha","Veneno de vespa","Látex (p. ex. luvas)","Pólen (gramíneas, bétula …)","Ácaros do pó","Pelo de animais (gato, cão …)","Bolor"]],
+sv:[["ALLERGI – NÖDLÄGE","Jag har svåra allergier. Om jag har svårt att andas eller inte kan prata har jag troligen en svår allergisk reaktion (anafylaxi).","Ring genast nödnumret {n}.","Min akutmedicin","Finns här:","Adrenalinpenna (autoinjektor)","Antihistamin (allergitabletter)","Kortison (tabletter, mixtur eller stolpiller)","Astmainhalator","Jag har astma.","Så kan du hjälpa","Tryck adrenalinpennan stadigt mot lårets utsida – det går genom kläderna.","Låt mig inte resa mig eller gå. Vid andnöd: låt mig sitta upp; annars lägg mig ner med benen högt.","Vid medvetslöshet: stabilt sidoläge och kontrollera andningen."],
+["Penicillin (även amoxicillin och liknande antibiotika)","Cefalosporiner (antibiotika)","Sulfonamider (t.ex. trimetoprim-sulfa)","Smärtstillande som acetylsalicylsyra, ibuprofen, diklofenak","Metamizol","Lokalbedövning","Jodhaltigt röntgenkontrastmedel","Bigift","Getinggift","Latex (t.ex. handskar)","Pollen (gräs, björk …)","Kvalster","Pälsdjur (katt, hund …)","Mögel"]],
+da:[["ALLERGI – NØDSITUATION","Jeg har svære allergier. Hvis jeg har svært ved at trække vejret eller ikke kan tale, har jeg sandsynligvis en svær allergisk reaktion (anafylaksi).","Ring straks til alarmnummeret {n}.","Min nødmedicin","Findes her:","Adrenalinpen (autoinjektor)","Antihistamin (allergitabletter)","Binyrebarkhormon (tabletter, mikstur eller stikpiller)","Astmainhalator","Jeg har astma.","Sådan kan du hjælpe","Tryk adrenalinpennen fast mod ydersiden af låret – også gennem tøjet.","Lad mig ikke rejse mig eller gå. Ved åndenød: lad mig sidde op; ellers læg mig ned med benene hævet.","Ved bevidstløshed: aflåst sideleje og kontrollér vejrtrækningen."],
+["Penicillin (også amoxicillin og beslægtede antibiotika)","Cefalosporiner (antibiotika)","Sulfonamider (fx sulfamethizol)","Smertestillende som acetylsalicylsyre, ibuprofen, diclofenac","Metamizol","Lokalbedøvelse","Jodholdigt røntgenkontraststof","Bigift","Hvepsegift","Latex (fx handsker)","Pollen (græs, birk …)","Husstøvmider","Dyrehår (kat, hund …)","Skimmelsvamp"]],
+no:[["ALLERGI – NØDSITUASJON","Jeg har alvorlige allergier. Hvis jeg har pustevansker eller ikke kan snakke, har jeg sannsynligvis en alvorlig allergisk reaksjon (anafylaksi).","Ring nødnummeret {n} med en gang.","Mine nødmedisiner","Finnes her:","Adrenalinpenn (autoinjektor)","Antihistamin (allergitabletter)","Kortison (tabletter, mikstur eller stikkpiller)","Astmainhalator","Jeg har astma.","Slik kan du hjelpe","Trykk adrenalinpennen fast mot utsiden av låret – det går gjennom klærne.","Ikke la meg reise meg eller gå. Ved pustevansker: la meg sitte oppreist; ellers legg meg ned med bena hevet.","Ved bevisstløshet: stabilt sideleie og sjekk pusten."],
+["Penicillin (også amoksicillin og beslektede antibiotika)","Cefalosporiner (antibiotika)","Sulfonamider (f.eks. trimetoprim-sulfa)","Smertestillende som acetylsalisylsyre, ibuprofen, diklofenak","Metamizol","Lokalbedøvelse","Jodholdig røntgenkontrastmiddel","Biegift","Vepsegift","Lateks (f.eks. hansker)","Pollen (gress, bjørk …)","Husstøvmidd","Dyrehår (katt, hund …)","Mugg"]],
+fi:[["ALLERGIAHÄTÄTILANNE","Minulla on vakavia allergioita. Jos minun on vaikea hengittää tai en pysty puhumaan, minulla on todennäköisesti vakava allerginen reaktio (anafylaksia).","Soittakaa heti hätänumeroon {n}.","Hätälääkkeeni","Löytyy täältä:","Adrenaliinikynä (autoinjektori)","Antihistamiini (allergiatabletit)","Kortisoni (tabletit, mikstuura tai peräpuikot)","Astmainhalaattori","Minulla on astma.","Näin voitte auttaa","Painakaa adrenaliinikynä tukevasti reiden ulkosivuun – myös vaatteiden läpi.","Älkää antako minun nousta tai kävellä. Hengenahdistuksessa antakaa minun istua; muuten makuulle jalat koholla.","Tajuttomana: kylkiasento ja tarkistakaa hengitys."],
+["Penisilliini (myös amoksisilliini ja vastaavat antibiootit)","Kefalosporiinit (antibiootit)","Sulfonamidit (esim. sulfa-trimetopriimi)","Kipulääkkeet kuten asetyylisalisyylihappo, ibuprofeeni, diklofenaakki","Metamitsoli","Paikallispuudutteet","Jodipitoinen röntgenvarjoaine","Mehiläisen myrkky","Ampiaisen myrkky","Lateksi (esim. käsineet)","Siitepöly (heinät, koivu …)","Pölypunkit","Eläinten hilse (kissa, koira …)","Home"]],
+cs:[["ALERGICKÁ POHOTOVOST","Mám těžké alergie. Pokud špatně dýchám nebo nemohu mluvit, mám pravděpodobně těžkou alergickou reakci (anafylaxi).","Prosím, ihned volejte tísňovou linku {n}.","Moje léky pro první pomoc","Kde je najdete:","Adrenalinové autoinjekční pero","Antihistaminikum (tablety na alergii)","Kortikoid (tablety, sirup nebo čípky)","Inhalátor na astma","Mám astma.","Jak můžete pomoci","Adrenalinové pero pevně přitlačte na vnější stranu stehna – i přes oblečení.","Nenechte mě vstávat ani chodit. Při dušnosti mě nechte sedět; jinak mě položte se zvednutýma nohama.","Při bezvědomí: zotavovací poloha a kontrola dýchání."],
+["Penicilin (i amoxicilin a příbuzná antibiotika)","Cefalosporiny (antibiotika)","Sulfonamidy (např. kotrimoxazol)","Léky proti bolesti jako aspirin, ibuprofen, diklofenak","Metamizol (Novalgin)","Místní anestetika","Jodové kontrastní látky (rentgen)","Včelí jed","Vosí jed","Latex (např. rukavice)","Pyl (trávy, bříza …)","Roztoči domácího prachu","Zvířecí srst (kočka, pes …)","Plísně"]],
+sk:[["ALERGICKÁ NÚDZA","Mám ťažké alergie. Ak ťažko dýcham alebo nemôžem hovoriť, mám pravdepodobne ťažkú alergickú reakciu (anafylaxiu).","Prosím, okamžite volajte tiesňovú linku {n}.","Moje lieky pre prvú pomoc","Kde ich nájdete:","Adrenalínové autoinjekčné pero","Antihistaminikum (tablety na alergiu)","Kortikoid (tablety, sirup alebo čapíky)","Inhalátor na astmu","Mám astmu.","Ako môžete pomôcť","Adrenalínové pero pevne pritlačte na vonkajšiu stranu stehna – aj cez oblečenie.","Nenechajte ma vstávať ani chodiť. Pri dýchavičnosti ma nechajte sedieť; inak ma položte so zdvihnutými nohami.","Pri bezvedomí: stabilizovaná poloha a kontrola dýchania."],
+["Penicilín (aj amoxicilín a príbuzné antibiotiká)","Cefalosporíny (antibiotiká)","Sulfónamidy (napr. kotrimoxazol)","Lieky proti bolesti ako aspirín, ibuprofén, diklofenak","Metamizol (Novalgin)","Lokálne anestetiká","Jódové kontrastné látky (röntgen)","Včelí jed","Osí jed","Latex (napr. rukavice)","Peľ (trávy, breza …)","Roztoče domáceho prachu","Zvieracia srsť (mačka, pes …)","Plesne"]],
+hu:[["ALLERGIÁS VÉSZHELYZET","Súlyos allergiáim vannak. Ha nehezen kapok levegőt vagy nem tudok beszélni, valószínűleg súlyos allergiás reakcióm (anafilaxiám) van.","Kérem, azonnal hívja a {n} segélyhívó számot.","Sürgősségi gyógyszereim","Itt találja:","Adrenalin autoinjektor (injekciós toll)","Antihisztamin (allergiatabletta)","Kortikoszteroid (tabletta, szirup vagy kúp)","Asztmás inhalátor","Asztmás vagyok.","Így segíthet","Az adrenalin tollat nyomja határozottan a comb külső oldalára – ruhán keresztül is lehet.","Ne hagyja, hogy felálljak vagy járjak. Légszomj esetén hagyjon ülni; különben fektessen le, a lábamat felpolcolva.","Eszméletvesztés esetén: stabil oldalfekvés, és ellenőrizze a légzést."],
+["Penicillin (amoxicillin és rokon antibiotikumok is)","Cefalosporinok (antibiotikumok)","Szulfonamidok (pl. kotrimoxazol)","Fájdalomcsillapítók, pl. aszpirin, ibuprofen, diklofenák","Metamizol (Algopyrin)","Helyi érzéstelenítők","Jódos röntgenkontrasztanyag","Méhméreg","Darázsméreg","Latex (pl. kesztyű)","Pollen (fűfélék, nyír …)","Háziporatka","Állatszőr (macska, kutya …)","Penész"]],
+ro:[["URGENȚĂ ALERGICĂ","Am alergii grave. Dacă respir greu sau nu pot vorbi, probabil am o reacție alergică gravă (anafilaxie).","Vă rog să sunați imediat la numărul de urgență {n}.","Medicamentele mele de urgență","Unde le găsiți:","Autoinjector cu adrenalină (stilou de urgență)","Antihistaminic (tablete pentru alergie)","Cortizon (tablete, sirop sau supozitoare)","Inhalator pentru astm","Am astm.","Cum puteți ajuta","Apăsați ferm stiloul cu adrenalină pe partea exterioară a coapsei – se poate și prin haine.","Nu mă lăsați să mă ridic sau să merg. Dacă respir greu, lăsați-mă să stau în șezut; altfel culcați-mă cu picioarele ridicate.","Dacă îmi pierd cunoștința: poziție laterală de siguranță și verificați respirația."],
+["Penicilină (inclusiv amoxicilină și antibiotice înrudite)","Cefalosporine (antibiotice)","Sulfonamide (de ex. cotrimoxazol)","Analgezice precum aspirina, ibuprofenul, diclofenacul","Metamizol (Algocalmin)","Anestezice locale","Substanță de contrast iodată (radiologie)","Venin de albine","Venin de viespe","Latex (de ex. mănuși)","Polen (graminee, mesteacăn …)","Acarieni din praful de casă","Păr de animale (pisică, câine …)","Mucegai"]],
+hr:[["ALERGIJSKI HITNI SLUČAJ","Imam teške alergije. Ako teško dišem ili ne mogu govoriti, vjerojatno imam tešku alergijsku reakciju (anafilaksiju).","Molim vas, odmah nazovite hitni broj {n}.","Moji lijekovi za hitne slučajeve","Gdje se nalaze:","Autoinjektor s adrenalinom","Antihistaminik (tablete za alergiju)","Kortikosteroid (tablete, sirup ili čepići)","Inhalator za astmu","Imam astmu.","Kako možete pomoći","Adrenalinsku olovku čvrsto pritisnite na vanjsku stranu bedra – može i kroz odjeću.","Ne dopustite mi da ustanem ili hodam. Kod otežanog disanja neka sjedim; inače me polegnite s podignutim nogama.","Kod gubitka svijesti: bočni položaj i provjerite disanje."],
+["Penicilin (i amoksicilin i srodni antibiotici)","Cefalosporini (antibiotici)","Sulfonamidi (npr. kotrimoksazol)","Lijekovi protiv bolova poput aspirina, ibuprofena, diklofenaka","Metamizol (Analgin)","Lokalni anestetici","Jodna kontrastna sredstva (rendgen)","Pčelinji otrov","Osinji otrov","Lateks (npr. rukavice)","Pelud (trave, breza …)","Grinje kućne prašine","Životinjska dlaka (mačka, pas …)","Plijesan"]],
+sl:[["ALERGIJSKI NUJNI PRIMER","Imam hude alergije. Če težko diham ali ne morem govoriti, imam verjetno hudo alergijsko reakcijo (anafilaksijo).","Prosim, takoj pokličite številko za nujne primere {n}.","Moja zdravila za nujne primere","Kje so:","Avtoinjektor z adrenalinom","Antihistaminik (tablete proti alergiji)","Kortikosteroid (tablete, sirup ali svečke)","Inhalator za astmo","Imam astmo.","Kako lahko pomagate","Adrenalinski peresnik močno pritisnite na zunanjo stran stegna – tudi skozi oblačila.","Ne pustite me vstati ali hoditi. Pri težkem dihanju naj sedim; sicer me položite z dvignjenimi nogami.","Pri nezavesti: stabilni bočni položaj in preverite dihanje."],
+["Penicilin (tudi amoksicilin in sorodni antibiotiki)","Cefalosporini (antibiotiki)","Sulfonamidi (npr. kotrimoksazol)","Protibolečinska zdravila, kot so aspirin, ibuprofen, diklofenak","Metamizol","Lokalni anestetiki","Jodna kontrastna sredstva (rentgen)","Čebelji strup","Osji strup","Lateks (npr. rokavice)","Cvetni prah (trave, breza …)","Pršice hišnega prahu","Živalska dlaka (mačka, pes …)","Plesni"]],
+bg:[["АЛЕРГИЧЕН СПЕШЕН СЛУЧАЙ","Имам тежки алергии. Ако дишам трудно или не мога да говоря, вероятно имам тежка алергична реакция (анафилаксия).","Моля, веднага се обадете на спешния номер {n}.","Моите лекарства за спешни случаи","Къде да ги намерите:","Автоинжектор с адреналин","Антихистамин (таблетки за алергия)","Кортикостероид (таблетки, сироп или супозитории)","Инхалатор за астма","Имам астма.","Как можете да помогнете","Притиснете силно адреналиновата писалка към външната страна на бедрото – може и през дрехите.","Не ме оставяйте да ставам или да ходя. При задух ме оставете седнал; иначе ме сложете да легна с повдигнати крака.","При загуба на съзнание: стабилно странично положение и проверете дишането."],
+["Пеницилин (вкл. амоксицилин и сродни антибиотици)","Цефалоспорини (антибиотици)","Сулфонамиди (напр. котримоксазол)","Обезболяващи като аспирин, ибупрофен, диклофенак","Метамизол (Аналгин)","Местни анестетици","Йодни контрастни вещества (рентген)","Пчелна отрова","Осина отрова","Латекс (напр. ръкавици)","Полени (треви, бреза …)","Акари от домашен прах","Животински косми (котка, куче …)","Плесени"]],
+ru:[["АЛЛЕРГИЯ – ЭКСТРЕННЫЙ СЛУЧАЙ","У меня тяжёлые аллергии. Если мне трудно дышать или я не могу говорить, вероятно, у меня тяжёлая аллергическая реакция (анафилаксия).","Пожалуйста, немедленно позвоните по экстренному номеру {n}.","Мои экстренные лекарства","Где их найти:","Автоинжектор адреналина (шприц-ручка)","Антигистаминное средство (таблетки от аллергии)","Кортикостероид (таблетки, сироп или свечи)","Ингалятор от астмы","У меня астма.","Как вы можете помочь","Плотно прижмите шприц-ручку с адреналином к наружной стороне бедра – можно через одежду.","Не давайте мне вставать или ходить. При одышке посадите; иначе уложите с приподнятыми ногами.","При потере сознания: устойчивое боковое положение и проверьте дыхание."],
+["Пенициллин (вкл. амоксициллин и родственные антибиотики)","Цефалоспорины (антибиотики)","Сульфаниламиды (напр. ко-тримоксазол)","Обезболивающие: аспирин, ибупрофен, диклофенак","Метамизол (Анальгин)","Местные анестетики","Йодсодержащие рентгеноконтрастные средства","Пчелиный яд","Осиный яд","Латекс (напр. перчатки)","Пыльца (злаки, берёза …)","Клещи домашней пыли","Шерсть животных (кошка, собака …)","Плесень"]],
+uk:[["АЛЕРГІЯ – НЕВІДКЛАДНИЙ ВИПАДОК","У мене тяжкі алергії. Якщо мені важко дихати або я не можу говорити, імовірно, у мене тяжка алергічна реакція (анафілаксія).","Будь ласка, негайно зателефонуйте на екстрений номер {n}.","Мої екстрені ліки","Де їх знайти:","Автоінжектор адреналіну (шприц-ручка)","Антигістамінний засіб (таблетки від алергії)","Кортикостероїд (таблетки, сироп або свічки)","Інгалятор від астми","У мене астма.","Як ви можете допомогти","Щільно притисніть шприц-ручку з адреналіном до зовнішньої сторони стегна – можна через одяг.","Не дозволяйте мені вставати чи ходити. При задишці посадіть; інакше покладіть із піднятими ногами.","При втраті свідомості: стабільне бокове положення і перевірте дихання."],
+["Пеніцилін (вкл. амоксицилін і споріднені антибіотики)","Цефалоспорини (антибіотики)","Сульфаніламіди (напр. ко-тримоксазол)","Знеболювальні: аспірин, ібупрофен, диклофенак","Метамізол (Анальгін)","Місцеві анестетики","Йодовмісні рентгеноконтрастні засоби","Бджолина отрута","Осина отрута","Латекс (напр. рукавички)","Пилок (злаки, береза …)","Кліщі домашнього пилу","Шерсть тварин (кіт, собака …)","Пліснява"]],
+sq:[["URGJENCË ALERGJIKE","Kam alergji të rënda. Nëse marr frymë me vështirësi ose nuk mund të flas, ka të ngjarë që kam një reaksion të rëndë alergjik (anafilaksi).","Ju lutem telefononi menjëherë numrin e urgjencës {n}.","Ilaçet e mia të urgjencës","Ku gjenden:","Autoinjektor adrenaline (stilolaps urgjence)","Antihistaminik (tableta kundër alergjisë)","Kortizon (tableta, shurup ose supozitorë)","Inhalator për astmën","Kam astmë.","Si mund të ndihmoni","Shtypni fort stilolapsin e adrenalinës në anën e jashtme të kofshës – edhe përmes rrobave.","Mos më lini të ngrihem ose të eci. Nëse marr frymë me vështirësi, më lini ulur; përndryshe më shtrini me këmbët lart.","Nëse humbas ndjenjat: pozicioni anësor i sigurisë dhe kontrolloni frymëmarrjen."],
+["Penicilinë (përfshirë amoksicilinën dhe antibiotikë të ngjashëm)","Cefalosporina (antibiotikë)","Sulfonamide (p.sh. kotrimoksazol)","Qetësues dhimbjesh si aspirina, ibuprofeni, diklofenaku","Metamizol (Analgin)","Anestetikë lokalë","Kontrast me jod (radiologji)","Helm blete","Helm grerëze","Lateks (p.sh. doreza)","Polen (bar, mështekna …)","Marimangat e pluhurit të shtëpisë","Qime kafshësh (mace, qen …)","Myk"]],
+ar:[["طوارئ حساسية","لدي حساسية شديدة. إذا كنت أتنفس بصعوبة أو لا أستطيع الكلام، فأنا على الأرجح أعاني من رد فعل تحسسي شديد (صدمة تأقية).","يرجى الاتصال فورًا برقم الطوارئ {n}.","أدوية الطوارئ الخاصة بي","مكانها:","حاقن أدرينالين تلقائي (قلم الطوارئ)","مضاد الهيستامين (أقراص الحساسية)","كورتيزون (أقراص أو شراب أو تحاميل)","بخاخ الربو","أنا مصاب بالربو.","كيف يمكنك المساعدة","اضغط قلم الأدرينالين بقوة على الجانب الخارجي من الفخذ – يمكن ذلك من خلال الملابس.","لا تدعني أقف أو أمشي. عند ضيق التنفس دعني جالسًا؛ وإلا فمددني مع رفع الساقين.","في حال فقدان الوعي: وضعية الإفاقة الجانبية وتحقق من التنفس."],
+["البنسلين (بما في ذلك الأموكسيسيلين والمضادات الحيوية المشابهة)","السيفالوسبورينات (مضادات حيوية)","السلفوناميدات (مثل كوتريموكسازول)","مسكنات الألم مثل الأسبرين والإيبوبروفين والديكلوفيناك","الميتاميزول","أدوية التخدير الموضعي","صبغة الأشعة المحتوية على اليود","سم النحل","سم الدبابير","اللاتكس (مثل القفازات)","حبوب اللقاح (الأعشاب، البتولا …)","عث غبار المنزل","وبر الحيوانات (القطط، الكلاب …)","العفن"]],
+fa:[["اورژانس حساسیت","من حساسیت‌های شدید دارم. اگر به سختی نفس می‌کشم یا نمی‌توانم صحبت کنم، احتمالاً دچار واکنش حساسیتی شدید (آنافیلاکسی) شده‌ام.","لطفاً فوراً با شماره اورژانس {n} تماس بگیرید.","داروهای اورژانسی من","محل نگهداری:","قلم تزریق خودکار آدرنالین (اپی‌نفرین)","آنتی‌هیستامین (قرص حساسیت)","کورتون (قرص، شربت یا شیاف)","اسپری آسم","من آسم دارم.","چگونه می‌توانید کمک کنید","قلم آدرنالین را محکم روی قسمت بیرونی ران فشار دهید – از روی لباس هم می‌شود.","نگذارید بلند شوم یا راه بروم. در صورت تنگی نفس بگذارید بنشینم؛ در غیر این صورت مرا بخوابانید و پاهایم را بالا ببرید.","در صورت بیهوشی: وضعیت ریکاوری (به پهلو) و تنفس را بررسی کنید."],
+["پنی‌سیلین (از جمله آموکسی‌سیلین و آنتی‌بیوتیک‌های مشابه)","سفالوسپورین‌ها (آنتی‌بیوتیک)","سولفونامیدها (مانند کوتریموکسازول)","مسکن‌هایی مانند آسپرین، ایبوپروفن، دیکلوفناک","متامیزول (دیپیرون)","بی‌حس‌کننده‌های موضعی","ماده حاجب یددار (رادیولوژی)","زهر زنبور عسل","زهر زنبور سرخ","لاتکس (مانند دستکش)","گرده گیاهان (چمن، توس …)","هیره گرد و غبار خانگی","موی حیوانات (گربه، سگ …)","کپک"]],
+he:[["מקרה חירום – אלרגיה","יש לי אלרגיות קשות. אם קשה לי לנשום או שאינני יכול/ה לדבר, כנראה שיש לי תגובה אלרגית קשה (אנפילקסיס).","נא להתקשר מיד למספר החירום {n}.","תרופות החירום שלי","היכן למצוא אותן:","מזרק אדרנלין אוטומטי (אפיפן)","אנטיהיסטמין (כדורים לאלרגיה)","קורטיזון (כדורים, סירופ או נרות)","משאף לאסתמה","יש לי אסתמה.","איך אפשר לעזור","ללחוץ בחוזקה את מזרק האדרנלין על הצד החיצוני של הירך – אפשר גם דרך הבגדים.","לא לתת לי לקום או ללכת. בקוצר נשימה – להושיב אותי; אחרת – להשכיב עם רגליים מורמות.","באובדן הכרה: תנוחת התאוששות ולבדוק נשימה."],
+["פניצילין (כולל אמוקסיצילין ואנטיביוטיקות דומות)","צפלוספורינים (אנטיביוטיקה)","סולפונאמידים (למשל רספרים)","משככי כאבים כמו אספירין, איבופרופן, דיקלופנק","מטמיזול (אופטלגין)","חומרי הרדמה מקומית","חומר ניגוד מכיל יוד (רנטגן)","ארס דבורים","ארס צרעות","לטקס (למשל כפפות)","אבקנים (עשבים, ליבנה …)","קרדית אבק הבית","שיער בעלי חיים (חתול, כלב …)","עובש"]],
+hi:[["एलर्जी आपातकाल","मुझे गंभीर एलर्जी है। अगर मुझे साँस लेने में तकलीफ़ हो या मैं बोल न पाऊँ, तो शायद मुझे गंभीर एलर्जिक प्रतिक्रिया (एनाफिलेक्सिस) हो रही है।","कृपया तुरंत आपातकालीन नंबर {n} पर कॉल करें।","मेरी आपातकालीन दवाइयाँ","यहाँ मिलेंगी:","एड्रेनालिन ऑटो-इंजेक्टर (इमरजेंसी पेन)","एंटीहिस्टामिन (एलर्जी की गोलियाँ)","कॉर्टिसोन/स्टेरॉयड (गोलियाँ, सिरप या सपोज़िटरी)","अस्थमा इनहेलर","मुझे अस्थमा है।","आप ऐसे मदद कर सकते हैं","एड्रेनालिन पेन को जाँघ के बाहरी हिस्से पर ज़ोर से दबाएँ – कपड़ों के ऊपर से भी चलेगा।","मुझे खड़ा होने या चलने न दें। साँस में तकलीफ़ हो तो बैठा रहने दें; नहीं तो लिटाकर पैर ऊपर उठाएँ।","बेहोशी में: रिकवरी पोज़िशन (करवट) में लिटाएँ और साँस जाँचें।"],
+["पेनिसिलिन (एमोक्सिसिलिन और मिलती-जुलती एंटीबायोटिक सहित)","सेफालोस्पोरिन (एंटीबायोटिक)","सल्फ़ोनामाइड (जैसे को-ट्राइमोक्साज़ोल)","दर्द निवारक जैसे एस्पिरिन, आइबुप्रोफ़ेन, डाइक्लोफ़ेनाक","मेटामिज़ोल (एनाल्जिन)","लोकल एनेस्थेटिक (सुन्न करने की दवा)","आयोडीन वाला एक्स-रे कंट्रास्ट","मधुमक्खी का ज़हर","ततैया का ज़हर","लेटेक्स (जैसे दस्ताने)","पराग (घास, भोजवृक्ष …)","घरेलू धूल के कण (माइट्स)","जानवरों के बाल (बिल्ली, कुत्ता …)","फफूंद"]],
+zh:[["过敏急救","我有严重过敏。如果我呼吸困难或无法说话，很可能是发生了严重过敏反应（过敏性休克）。","请立即拨打急救电话 {n}。","我的急救药物","放在这里：","肾上腺素自动注射笔","抗组胺药（抗过敏药片）","可的松/激素（药片、糖浆或栓剂）","哮喘吸入剂","我有哮喘。","您可以这样帮助我","将肾上腺素笔用力按在大腿外侧——隔着衣服也可以。","不要让我站起来或走动。呼吸困难时让我坐直；否则让我平躺并抬高双腿。","如果我失去意识：摆成复原卧位（侧卧）并检查呼吸。"],
+["青霉素（包括阿莫西林及同类抗生素）","头孢类（抗生素）","磺胺类（如复方新诺明）","止痛药，如阿司匹林、布洛芬、双氯芬酸","安乃近（甲氧基安替比林）","局部麻醉药","含碘造影剂（X光）","蜂毒","黄蜂毒","乳胶（如手套）","花粉（草、桦树……）","尘螨","动物皮毛（猫、狗……）","霉菌"]],
+ja:[["アレルギー緊急事態","私は重いアレルギーがあります。呼吸が苦しそうだったり話せなかったりする場合、重いアレルギー反応（アナフィラキシー）の可能性が高いです。","すぐに救急番号 {n} に電話してください。","私の緊急用の薬","場所：","アドレナリン自己注射薬（エピペン）","抗ヒスタミン薬（アレルギーの錠剤）","ステロイド（錠剤、シロップ、座薬）","喘息の吸入薬","私は喘息があります。","助け方","アドレナリン自己注射薬を太ももの外側に強く押し当ててください（服の上からでも大丈夫です）。","立たせたり歩かせたりしないでください。息苦しい場合は座らせ、そうでなければ足を高くして寝かせてください。","意識がない場合：回復体位にして呼吸を確認してください。"],
+["ペニシリン（アモキシシリンなど類似の抗生物質を含む）","セフェム系（抗生物質）","サルファ剤（例：ST合剤）","アスピリン、イブプロフェン、ジクロフェナクなどの鎮痛薬","メタミゾール（スルピリン）","局所麻酔薬","ヨード造影剤（レントゲン）","ハチ毒（ミツバチ）","ハチ毒（スズメバチ・アシナガバチ）","ラテックス（手袋など）","花粉（イネ科、シラカバなど）","ダニ（ハウスダスト）","動物の毛（猫、犬など）","カビ"]],
+ko:[["알레르기 응급 상황","저는 심한 알레르기가 있습니다. 숨쉬기 힘들어하거나 말을 못 하면 심한 알레르기 반응(아나필락시스)일 가능성이 높습니다.","즉시 응급 번호 {n}에 전화해 주세요.","제 응급 약","보관 위치:","에피네프린 자동 주사기(응급 펜)","항히스타민제(알레르기 약)","스테로이드(정제, 시럽 또는 좌약)","천식 흡입기","저는 천식이 있습니다.","이렇게 도와주세요","에피네프린 펜을 허벅지 바깥쪽에 세게 눌러 주세요. 옷 위로도 됩니다.","일어나거나 걷게 하지 마세요. 숨쉬기 힘들면 앉혀 주시고, 그렇지 않으면 눕혀서 다리를 올려 주세요.","의식이 없으면: 회복 자세로 눕히고 호흡을 확인해 주세요."],
+["페니실린(아목시실린 등 유사 항생제 포함)","세팔로스포린(항생제)","설폰아마이드(예: 코트리목사졸)","아스피린, 이부프로펜, 디클로페낙 같은 진통제","메타미졸","국소 마취제","요오드 조영제(엑스레이)","벌독(꿀벌)","말벌 독","라텍스(예: 장갑)","꽃가루(풀, 자작나무 등)","집먼지진드기","동물 털(고양이, 개 등)","곰팡이"]],
+th:[["ภาวะฉุกเฉินจากการแพ้","ฉันมีอาการแพ้รุนแรง ถ้าฉันหายใจลำบากหรือพูดไม่ได้ อาจเป็นเพราะเกิดอาการแพ้รุนแรง (แอนาฟิแล็กซิส)","กรุณาโทรเบอร์ฉุกเฉิน {n} ทันที","ยาฉุกเฉินของฉัน","อยู่ที่:","ปากกาฉีดอะดรีนาลีนอัตโนมัติ","ยาแก้แพ้ (ยาต้านฮิสตามีน)","ยาสเตียรอยด์ (เม็ด น้ำ หรือเหน็บ)","ยาพ่นสำหรับโรคหืด","ฉันเป็นโรคหืด","คุณช่วยได้ดังนี้","กดปากกาอะดรีนาลีนแรง ๆ ที่ต้นขาด้านนอก ฉีดผ่านเสื้อผ้าได้","อย่าให้ฉันลุกขึ้นหรือเดิน ถ้าหายใจลำบากให้นั่ง ถ้าไม่ใช่ให้นอนราบและยกขาสูง","ถ้าหมดสติ: จัดท่านอนตะแคงกึ่งคว่ำ และตรวจการหายใจ"],
+["เพนิซิลลิน (รวมถึงอะม็อกซีซิลลินและยาปฏิชีวนะที่คล้ายกัน)","เซฟาโลสปอริน (ยาปฏิชีวนะ)","ซัลโฟนาไมด์ (เช่น โคไตรม็อกซาโซล)","ยาแก้ปวด เช่น แอสไพริน ไอบูโพรเฟน ไดโคลฟีแนค","เมทามิซอล (ไดไพโรน)","ยาชาเฉพาะที่","สารทึบรังสีที่มีไอโอดีน","พิษผึ้ง","พิษต่อ/แตน","ยางลาเท็กซ์ (เช่น ถุงมือ)","ละอองเกสร (หญ้า ต้นเบิร์ช ฯลฯ)","ไรฝุ่น","ขนสัตว์ (แมว สุนัข ฯลฯ)","เชื้อรา"]],
+vi:[["CẤP CỨU DỊ ỨNG","Tôi bị dị ứng nặng. Nếu tôi khó thở hoặc không nói được, có thể tôi đang bị phản ứng dị ứng nặng (sốc phản vệ).","Vui lòng gọi ngay số cấp cứu {n}.","Thuốc cấp cứu của tôi","Để ở đây:","Bút tiêm adrenaline tự động","Thuốc kháng histamin (thuốc chống dị ứng)","Corticoid (viên, siro hoặc thuốc đặt)","Bình xịt hen suyễn","Tôi bị hen suyễn.","Cách bạn có thể giúp","Ấn mạnh bút adrenaline vào mặt ngoài đùi – có thể tiêm qua quần áo.","Đừng để tôi đứng dậy hay đi lại. Nếu khó thở, để tôi ngồi thẳng; nếu không, để tôi nằm và kê cao chân.","Nếu tôi bất tỉnh: đặt nằm nghiêng an toàn và kiểm tra hơi thở."],
+["Penicillin (kể cả amoxicillin và kháng sinh tương tự)","Cephalosporin (kháng sinh)","Sulfonamid (ví dụ cotrimoxazol)","Thuốc giảm đau như aspirin, ibuprofen, diclofenac","Metamizol (Analgin)","Thuốc gây tê tại chỗ","Thuốc cản quang chứa iốt (X-quang)","Nọc ong mật","Nọc ong vò vẽ","Latex (ví dụ găng tay)","Phấn hoa (cỏ, cây bạch dương …)","Mạt bụi nhà","Lông động vật (mèo, chó …)","Nấm mốc"]],
+id:[["DARURAT ALERGI","Saya punya alergi berat. Jika saya sulit bernapas atau tidak bisa bicara, kemungkinan saya mengalami reaksi alergi berat (anafilaksis).","Mohon segera hubungi nomor darurat {n}.","Obat darurat saya","Lokasinya:","Autoinjektor adrenalin (pena darurat)","Antihistamin (tablet alergi)","Kortikosteroid (tablet, sirup, atau supositoria)","Inhaler asma","Saya menderita asma.","Cara Anda bisa membantu","Tekan pena adrenalin dengan kuat ke paha bagian luar – bisa menembus pakaian.","Jangan biarkan saya berdiri atau berjalan. Jika sesak napas, biarkan saya duduk; jika tidak, baringkan dengan kaki ditinggikan.","Jika saya pingsan: posisi pemulihan (miring) dan periksa napas."],
+["Penisilin (termasuk amoksisilin dan antibiotik sejenis)","Sefalosporin (antibiotik)","Sulfonamida (mis. kotrimoksazol)","Obat pereda nyeri seperti aspirin, ibuprofen, diklofenak","Metamizol (Antalgin)","Anestesi lokal","Kontras rontgen beriodium","Racun lebah","Racun tawon","Lateks (mis. sarung tangan)","Serbuk sari (rumput, birch …)","Tungau debu rumah","Bulu hewan (kucing, anjing …)","Jamur/kapang"]]
+};
+const nm=c=>{const r=NEWM[c];return r&&r[0].length===EK.length&&r[1].length===MEDK.length?r:NEWM.en;};
+EK.forEach((k,i)=>{T[k]=L.map(c=>nm(c)[0][i]);});
+MEDK.forEach((k,i)=>{A[k]=L.map(c=>nm(c)[1][i]);});
+const ALLK=ORDER.concat(MEDK);
 if(!L.includes(S.lang))S.lang="en";
 /* Küchen-Ansicht: Wurde die Seite über einen Karten-Link geöffnet? */
 (function(){
@@ -618,15 +852,18 @@ if(!L.includes(S.lang))S.lang="en";
   try{
     const d=JSON.parse(b64d(h.slice(3)));
     VIEW=true;
-    S={name:String(d.n||""),levels:{},custom:Array.isArray(d.x)?d.x.slice(0,10).map(x=>[String((x&&x[0])||"").slice(0,40),Math.max(0,Math.min(3,+(x&&x[1])||0))]).filter(x=>x[0]):[],pen:!!d.p,num:String(d.u||"112"),c:Array.isArray(d.c)?d.c.slice(0,2).map(x=>[String(x[0]||""),String(x[1]||"")]):[],lang:detectLang(),cmp:false};
+    S={name:String(d.n||""),levels:{},custom:Array.isArray(d.x)?d.x.slice(0,10).map(x=>[String((x&&x[0])||"").slice(0,40),Math.max(0,Math.min(3,+(x&&x[1])||0))]).filter(x=>x[0]):[],meds:{},where:String(d.w||"").slice(0,60),asthma:!!d.a,mode:d.m==="n"?"n":"r",num:String(d.u||"112"),c:Array.isArray(d.c)?d.c.slice(0,2).map(x=>[String(x[0]||""),String(x[1]||"")]):[],lang:detectLang(),cmp:false};
+    MEDS.forEach(m=>S.meds[m]={on:false,n:""});
+    if(d.p)S.meds.pen.on=true;
+    if(Array.isArray(d.md))d.md.forEach(x=>{if(x&&MEDS.includes(x[0]))S.meds[x[0]]={on:true,n:String(x[1]||"").slice(0,40)};});
     while(S.c.length<2)S.c.push(["",""]);
-    Object.keys(d.l||{}).forEach(k=>{if(ORDER.includes(k))S.levels[k]=Math.max(0,Math.min(3,+d.l[k]||0));});
+    Object.keys(d.l||{}).forEach(k=>{if(ALLK.includes(k))S.levels[k]=Math.max(0,Math.min(3,+d.l[k]||0));});
   }catch(e){VIEW=false;}
 })();
 bindInputs();openSelected();renderList();
 if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
 if(VIEW){
-  ["tabs","b-qr","b-link","cmp-row"].forEach(id=>$(id).hidden=true);
+  ["tabs","b-qr","b-link","cmp-row","modes","b-print","b-lock"].forEach(id=>$(id).hidden=true);
   $("b-full").textContent="⛶";$("b-full").setAttribute("aria-label","Fullscreen");
   $("own-a").textContent="Allerlingo – create your own allergy card";
   $("foot").textContent="Allerlingo does not replace talking to the staff. Translations without guarantee. The card data is stored only in this link, not on a server. Entries marked \"Original\" are machine-translated via MyMemory.";
