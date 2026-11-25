@@ -1,6 +1,6 @@
 /* Allerlingo Offline-Speicher: Die App wird beim ersten Besuch auf dem Handy gespeichert
    und funktioniert danach auch ohne Internet. Bei Internet holt sie sich im Hintergrund Updates. */
-const CACHE = "allerlingo-v15";
+const CACHE = "allerlingo-v16";
 const FILES = [
   "./",
   "./index.html",
