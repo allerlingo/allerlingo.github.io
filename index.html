@@ -181,13 +181,22 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
   #qr{display:flex!important;break-inside:avoid}
   #qr svg{max-width:200px}
 }
+.tophelp{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.helpbtn{font:inherit;font-size:.8rem;font-weight:700;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:999px;padding:4px 10px;cursor:pointer}
+.intro{background:var(--accent-soft);border:1px solid var(--accent);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.intro h2{font-family:var(--f-display);font-weight:800;font-size:1.25rem;margin:0}
+.intro .lead{margin:0;font-weight:600}
+.intro .steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:8px}
+.intro .tips{display:flex;flex-direction:column;gap:6px;font-size:.875rem;border-top:1px solid var(--line);padding-top:10px}
+.intro .tips p{margin:0}
+.intro .btn{align-self:flex-start}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tag" id="tagline">Testversion · Version 10</span>
+    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 11</span></span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -196,6 +205,22 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
   </div>
 
   <section id="p-edit" class="panel">
+    <div class="intro" id="intro" hidden>
+      <h2>Willkommen bei Allerlingo 👋</h2>
+      <p class="lead">Deine Allergiekarte in 36 Sprachen: fürs Restaurant und für den Notfall. Wer deinen QR-Code scannt, sieht die Karte automatisch in seiner eigenen Sprache, ganz ohne App.</p>
+      <ol class="steps">
+        <li><strong>Allergien auswählen.</strong> Tippe auf eine Kategorie und wähle den Schweregrad: <em>Unverträglich</em>, <em>Allergie</em> oder <em>Anaphylaxie</em> (lebensbedrohlich). Fehlt etwas? Unter „Anderes“ selbst eintragen.</li>
+        <li><strong>Notfallset und Kontakte eintragen</strong> (freiwillig): z. B. Adrenalin-Pen, Allergietabletten, Asthma-Spray und wen man im Notfall anrufen soll.</li>
+        <li><strong>„Karte zeigen“ tippen</strong> und oben wählen: 🍽️ <em>Restaurant</em> für Kellner und Küche oder 🚑 <em>Notfall</em> für Helfer und Rettungsdienst.</li>
+        <li><strong>QR-Code zeigen.</strong> Dein Gegenüber scannt ihn mit der Handykamera und sieht alles in seiner Sprache.</li>
+      </ol>
+      <div class="tips">
+        <p>📲 <strong>Als App aufs Handy:</strong> iPhone: in Safari auf Teilen → „Zum Home-Bildschirm“. Android: in Chrome auf ⋮ → „App installieren“. Danach funktioniert Allerlingo auch ohne Internet.</p>
+        <p>🔒 <strong>Deine Daten</strong> bleiben auf deinem Handy. Es gibt kein Konto und keinen Server mit deinen Angaben.</p>
+        <p>🚑 <strong>Tipp für den Notfall:</strong> Unter „Karte zeigen“ → „Notfall“ kannst du ein Bild für den Sperrbildschirm erstellen. So kommen Helfer an deine Karte, auch wenn das Handy gesperrt ist.</p>
+      </div>
+      <button type="button" class="btn" id="b-intro-ok">Los geht's</button>
+    </div>
     <div class="box">
       <h2>Wer bist du?</h2>
       <label class="field">Name (steht oben auf der Karte)
@@ -887,9 +912,16 @@ if(!L.includes(S.lang))S.lang="en";
   }catch(e){VIEW=false;}
 })();
 bindInputs();openSelected();renderList();
+/* Einführung: beim ersten Start zeigen, danach über „So funktioniert's“ */
+const INTRO="allerlingo-intro-gesehen";
+function showIntro(on){$("intro").hidden=!on;if(on){tab(false);$("intro").scrollIntoView({block:"start"});}}
+let seen=false;try{seen=localStorage.getItem(INTRO)==="1";}catch(e){}
+if(!VIEW&&!seen)$("intro").hidden=false;
+$("b-intro-ok").onclick=()=>{$("intro").hidden=true;try{localStorage.setItem(INTRO,"1");}catch(e){}window.scrollTo(0,0);};
+$("b-help").onclick=()=>showIntro($("intro").hidden);
 if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
 if(VIEW){
-  ["tabs","b-qr","b-link","cmp-row","modes","b-print","b-lock"].forEach(id=>$(id).hidden=true);
+  ["tabs","b-qr","b-link","cmp-row","modes","b-print","b-lock","b-help"].forEach(id=>$(id).hidden=true);
   $("b-full").textContent="⛶";$("b-full").setAttribute("aria-label","Fullscreen");
   $("own-a").textContent="Allerlingo – create your own allergy card";
   $("foot").textContent="Allerlingo does not replace talking to the staff. Translations without guarantee. The card data is stored only in this link, not on a server. Entries marked \"Original\" are machine-translated via MyMemory.";
