@@ -190,6 +190,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 .intro .tips{display:flex;flex-direction:column;gap:6px;font-size:.875rem;border-top:1px solid var(--line);padding-top:10px}
 .intro .tips p{margin:0}
 .intro .btn{align-self:flex-start}
+.disclaim{margin:0;font-size:.875rem;border-left:4px solid var(--warn);background:var(--warn-soft);padding:10px 12px;border-radius:0 8px 8px 0}
 .howto{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
 .howto summary{cursor:pointer;font-weight:700;color:var(--accent)}
 .howto ol{margin:8px 0 4px;padding-left:1.3em;display:flex;flex-direction:column;gap:6px}
@@ -199,7 +200,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 13</span></span>
+    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 14</span></span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -234,7 +235,8 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
           </ol>
         </details>
       </div>
-      <button type="button" class="btn" id="b-intro-ok">Los geht's</button>
+      <p class="disclaim"><strong>Wichtig:</strong> Allerlingo ist ein Hilfsmittel und ersetzt nicht das Gespräch mit dem Personal, keine ärztliche Beratung und im Notfall nicht den Notruf. Die Übersetzungen werden sorgfältig erstellt und geprüft, Fehler sind aber nie ganz ausgeschlossen. Prüfe im Zweifel immer selbst nach, ob ein Gericht für dich sicher ist.</p>
+      <button type="button" class="btn" id="b-intro-ok">Verstanden – los geht's</button>
     </div>
     <div class="box">
       <h2>Wer bist du?</h2>
