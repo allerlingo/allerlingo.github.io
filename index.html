@@ -140,6 +140,8 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 .cat .rows .arow:first-child{border-top:0}
 .cat .arow .an{flex:1 1 100%}
 .cat .seg{flex:1 1 auto;max-width:100%;grid-template-columns:repeat(4,minmax(0,auto))}
+.cat .seg.seg2{flex:0 1 auto;grid-template-columns:repeat(2,minmax(0,auto))}
+.intolnote{flex:1 1 100%;font-size:.75rem;color:var(--muted)}
 .cat .seg button{padding:7px 5px;white-space:normal;hyphens:manual;line-height:1.2}
 .xdel{font:inherit;font-size:1.1rem;line-height:1;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--muted);cursor:pointer;padding:6px 10px}
 .xadd{display:flex;gap:8px;padding:10px 0 6px;flex-wrap:wrap}
@@ -200,7 +202,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 15</span></span>
+    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 16</span></span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -400,6 +402,7 @@ const KEY="allergiekarte-v1";
 let S={name:"",levels:{},custom:[],pen:false,num:"112",c:[["",""],["",""]],lang:"en",cmp:false};
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s&&s.levels)S=Object.assign(S,s);}catch(e){}
 if(!Array.isArray(S.custom))S.custom=[];
+["lactose","fructose","sugaralc"].forEach(k=>{if((S.levels[k]||0)>1)S.levels[k]=1;});
 const MEDS=["pen","anti","cort","spray","lact"];
 if(!S.meds||typeof S.meds!=="object")S.meds={};
 MEDS.forEach(m=>{if(!S.meds[m])S.meds[m]={on:false,n:""};});
@@ -426,7 +429,9 @@ const CATS=[
  {id:"air",n:"Pollen, Staub & Tiere",i:"🌼",med:1,k:["pollen","dust","animal","mould"]}
 ];
 const OPEN=new Set();let Q="";
-const seg=(attr,v,label)=>`<div class="seg" role="group" aria-label="${esc(label)}">${LV.map((t,i)=>`<button type="button" ${attr} data-l="${i}" aria-pressed="${v===i}">${t}</button>`).join("")}</div>`;
+/* Reine Unverträglichkeiten (kein Immunsystem beteiligt): nur „Aus“ oder „Unverträglich“ */
+const INTOL_ONLY=new Set(["lactose","fructose","sugaralc"]);
+const seg=(attr,v,label,max)=>{const n=max==null?LV.length:max+1;return `<div class="seg${n<LV.length?" seg2":""}" role="group" aria-label="${esc(label)}">${LV.slice(0,n).map((t,i)=>`<button type="button" ${attr} data-l="${i}" aria-pressed="${v===i}">${t}</button>`).join("")}</div>`;};
 const cntTxt=n=>n?`${n} gewählt`:"";
 function catCount(c){if(c.id==="other")return S.custom.filter(x=>x[1]&&!x[2]).length;return c.k.filter(k=>S.levels[k]).length+(c.id==="meds"?S.custom.filter(x=>x[1]&&x[2]).length:0);}
 const xrow=(x,i)=>`<div class="arow"><span class="an">${esc(x[0])}</span>${seg(`data-x="${i}"`,x[1]||0,x[0])}<button type="button" class="xdel" data-del="${i}" aria-label="${esc(x[0])} löschen">×</button></div>`;
@@ -436,7 +441,7 @@ function renderList(){
     const ks=c.k.filter(k=>!q||A[k][0].toLowerCase().includes(q)||c.n.toLowerCase().includes(q));
     if(q&&!ks.length)return "";
     hits+=ks.length;const n=catCount(c);
-    return (c.id==="meds"&&!q?`<p class="catsep">Nicht zum Essen – steht auf der Notfall-Karte</p>`:"")+`<details class="cat" data-c="${c.id}" style="--h:var(--c-${c.id}-soft);--hs:var(--c-${c.id})"${q||OPEN.has(c.id)?" open":""}><summary><span class="ico" aria-hidden="true">${c.i}</span><span class="cname">${c.n}<small>${c.k.length} Einträge</small></span><span class="cnt" data-cnt="${c.id}"${n?"":" hidden"}>${cntTxt(n)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">${ks.map(k=>`<div class="arow"><span class="an">${esc(A[k][0])}</span>${seg(`data-k="${k}"`,S.levels[k]||0,A[k][0])}</div>`).join("")}${c.id==="meds"?S.custom.map((x,i)=>x[2]?xrow(x,i):"").join("")+`<div class="xadd"><input id="in-xm" type="text" maxlength="40" placeholder="Anderes Medikament, z. B. Codein" autocomplete="off" aria-label="Eigenes Medikament eingeben"><button type="button" class="btn" id="b-addxm">Hinzufügen</button></div>`:""}</div></details>`;
+    return (c.id==="meds"&&!q?`<p class="catsep">Nicht zum Essen – steht auf der Notfall-Karte</p>`:"")+`<details class="cat" data-c="${c.id}" style="--h:var(--c-${c.id}-soft);--hs:var(--c-${c.id})"${q||OPEN.has(c.id)?" open":""}><summary><span class="ico" aria-hidden="true">${c.i}</span><span class="cname">${c.n}<small>${c.k.length} Einträge</small></span><span class="cnt" data-cnt="${c.id}"${n?"":" hidden"}>${cntTxt(n)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">${ks.map(k=>`<div class="arow"><span class="an">${esc(A[k][0])}</span>${seg(`data-k="${k}"`,Math.min(S.levels[k]||0,INTOL_ONLY.has(k)?1:3),A[k][0],INTOL_ONLY.has(k)?1:null)}${INTOL_ONLY.has(k)?`<span class="intolnote">Unverträglichkeit, keine Allergie: Allergie oder Anaphylaxie gibt es hier nicht.</span>`:""}</div>`).join("")}${c.id==="meds"?S.custom.map((x,i)=>x[2]?xrow(x,i):"").join("")+`<div class="xadd"><input id="in-xm" type="text" maxlength="40" placeholder="Anderes Medikament, z. B. Codein" autocomplete="off" aria-label="Eigenes Medikament eingeben"><button type="button" class="btn" id="b-addxm">Hinzufügen</button></div>`:""}</div></details>`;
   }).join("");
   const nx=catCount({id:"other"});
   h+=`<details class="cat" data-c="other" style="--h:var(--c-other-soft);--hs:var(--c-other)"${OPEN.has("other")||q?" open":""}><summary><span class="ico" aria-hidden="true">✏️</span><span class="cname">Anderes<small>Selbst eintragen, was fehlt</small></span><span class="cnt" data-cnt="other"${nx?"":" hidden"}>${cntTxt(nx)}</span><span class="chev" aria-hidden="true"></span></summary><div class="rows">
@@ -933,7 +938,7 @@ if(!L.includes(S.lang))S.lang="en";
     if(d.p)S.meds.pen.on=true;
     if(Array.isArray(d.md))d.md.forEach(x=>{if(x&&MEDS.includes(x[0]))S.meds[x[0]]={on:true,n:String(x[1]||"").slice(0,40)};});
     while(S.c.length<2)S.c.push(["",""]);
-    Object.keys(d.l||{}).forEach(k=>{if(ALLK.includes(k))S.levels[k]=Math.max(0,Math.min(3,+d.l[k]||0));});
+    Object.keys(d.l||{}).forEach(k=>{if(ALLK.includes(k))S.levels[k]=Math.max(0,Math.min(INTOL_ONLY.has(k)?1:3,+d.l[k]||0));});
   }catch(e){VIEW=false;}
 })();
 bindInputs();openSelected();renderList();
