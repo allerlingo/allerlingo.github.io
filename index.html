@@ -202,7 +202,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 25</span></span>
+    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 26</span></span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -657,30 +657,29 @@ $("b-print").onclick=()=>{
 
 /* Bild für den Sperrbildschirm: QR-Code + Hinweis, sichtbar ohne das Handy zu entsperren */
 function lockImage(){
-  const W=1170,H=2532,cv=document.createElement("canvas");cv.width=W;cv.height=H;
-  const x=cv.getContext("2d");
+  const W=1290,H=2796,cv=document.createElement("canvas");cv.width=W;cv.height=H;
+  const x=cv.getContext("2d"),F="'Helvetica Neue',Arial,sans-serif",M=W-340;
+  const fit=(t,w,px,y)=>{let f=px;do{x.font=w+" "+f+"px "+F;f-=2;}while(x.measureText(t).width>M&&f>20);x.fillText(t,W/2,y);};
   x.fillStyle="#14202B";x.fillRect(0,0,W,H);
-  const top=Math.round(H*0.36);
-  x.fillStyle="#C4161C";x.fillRect(0,top,W,210);
+  const top=Math.round(H*0.37);
+  x.fillStyle="#C4161C";x.fillRect(0,top,W,180);
   x.fillStyle="#fff";x.textAlign="center";x.textBaseline="middle";
-  x.font="800 92px 'Helvetica Neue',Arial,sans-serif";x.fillText("ALLERGY · ALLERGIE",W/2,top+80);
-  x.font="700 50px 'Helvetica Neue',Arial,sans-serif";x.fillText("EMERGENCY · NOTFALL",W/2,top+160);
+  fit("ALLERGY · ALLERGIE","800",84,top+70);
+  fit("EMERGENCY · NOTFALL","700",46,top+138);
   const q=qrcode(0,"M");q.addData(cardLink(),"Byte");q.make();
-  const n=q.getModuleCount(),size=700,cell=size/n,qx=(W-size)/2,qy=top+290,pad=40;
-  x.fillStyle="#fff";x.beginPath();x.roundRect?x.roundRect(qx-pad,qy-pad,size+2*pad,size+2*pad,36):x.rect(qx-pad,qy-pad,size+2*pad,size+2*pad);x.fill();
+  const n=q.getModuleCount(),size=620,cell=size/n,qx=(W-size)/2,qy=top+260,pad=36;
+  x.fillStyle="#fff";x.beginPath();x.roundRect?x.roundRect(qx-pad,qy-pad,size+2*pad,size+2*pad,32):x.rect(qx-pad,qy-pad,size+2*pad,size+2*pad);x.fill();
   x.fillStyle="#000";
   for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))x.fillRect(Math.floor(qx+c*cell),Math.floor(qy+r*cell),Math.ceil(cell),Math.ceil(cell));
-  x.fillStyle="#fff";x.font="700 46px 'Helvetica Neue',Arial,sans-serif";
-  const ty=qy+size+pad+80;
-  x.fillText("Scan for my allergy card",W/2,ty);
-  x.fillStyle="#C9D3DA";x.font="400 40px 'Helvetica Neue',Arial,sans-serif";
-  x.fillText("(opens in your language)",W/2,ty+60);
+  const ty=qy+size+pad+70;
+  x.fillStyle="#fff";fit("Scan for my allergy card","700",44,ty);
+  x.fillStyle="#C9D3DA";fit("(opens in your language)","400",38,ty+56);
   const life=ALLK.filter(k=>S.levels[k]===3).map(k=>A[k][1].replace(/\s*\(.*\)$/,"")).concat(S.custom.filter(c=>c[1]===3).map(c=>c[0]));
   if(life.length){
-    x.fillStyle="#FF8A8E";x.font="800 44px 'Helvetica Neue',Arial,sans-serif";
+    x.fillStyle="#FF8A8E";x.font="800 40px "+F;
     let line="Anaphylaxis: "+life.slice(0,4).join(", ")+(life.length>4?" …":"");
-    while(x.measureText(line).width>W-120&&line.length>20)line=line.slice(0,-3)+"…";
-    x.fillText(line,W/2,ty+150);
+    while(x.measureText(line).width>M&&line.length>20)line=line.slice(0,-3)+"…";
+    x.fillText(line,W/2,ty+136);
   }
   return cv.toDataURL("image/png");
 }
@@ -693,6 +692,7 @@ $("b-lock").onclick=()=>{
   <button type="button" class="btn" id="b-locksave">Bild speichern</button>
   <ol><li>Auf „Bild speichern“ tippen. Auf dem iPhone öffnet sich das Teilen-Menü: dort <strong>„Bild sichern“</strong> wählen. Alternativ lange auf das Bild drücken → „Zu Fotos hinzufügen“ bzw. „Bild herunterladen“.</li>
   <li>iPhone: Fotos öffnen → Bild → Teilen-Symbol → „Als Hintergrundbild“ → „Sperrbildschirm“.<br>Android: Galerie → Bild → ⋮ → „Als Hintergrund festlegen“ → „Sperrbildschirm“.</li>
+  <li>Sitzt der QR-Code nicht mittig: im Hintergrundbild-Editor mit zwei Fingern kleiner ziehen und zurechtschieben.</li>
   <li>Wenn du deine Allergien änderst, das Bild neu erstellen.</li></ol>`;
   o.hidden=false;
   $("b-locksave").onclick=async()=>{
