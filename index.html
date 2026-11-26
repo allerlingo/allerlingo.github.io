@@ -202,7 +202,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 21</span></span>
+    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 22</span></span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -607,7 +607,8 @@ function cardText(){
 /* Sprachen, deren Übersetzung noch nicht von Muttersprachlern geprüft wurde */
 const UNCHECKED=new Set(["ka","ku","ky","mk","sq","hy","az","uz","kk","sw","tl","bn","ur","ps","ckb","so","ta","ne","mn"]);
 function renderLangs(){
-  $("langs").innerHTML=LANGS.map(([c,n])=>`<option value="${c}"${S.lang===c?" selected":""}>${n}${DEN[c]&&DEN[c]!==n?" – "+DEN[c]:""}${!VIEW&&UNCHECKED.has(c)?" (ungeprüft)":""}</option>`).join("");
+  const top=["de","en"];const rk=c=>{const i=top.indexOf(c);return i<0?99:i;};const sorted=[...LANGS].sort((a,b)=>(rk(a[0])-rk(b[0]))||(DEN[a[0]]||a[1]).localeCompare(DEN[b[0]]||b[1],"de"));
+  $("langs").innerHTML=sorted.map(([c,n])=>`<option value="${c}"${S.lang===c?" selected":""}>${n}${DEN[c]&&DEN[c]!==n?" – "+DEN[c]:""}${!VIEW&&UNCHECKED.has(c)?" (ungeprüft)":""}</option>`).join("");
   updUnchecked();
 }
 function updUnchecked(){const h=$("unchecked-hint");if(h)h.hidden=VIEW||!UNCHECKED.has(S.lang);}
@@ -617,12 +618,12 @@ $("langs").addEventListener("change",e=>{S.lang=e.target.value;save();updUncheck
 const BASE=(location.protocol.startsWith("http")&&location.hostname.endsWith("github.io"))?location.origin+location.pathname:"https://allerlingo.github.io/";
 function b64e(str){const b=new TextEncoder().encode(str);let s="";b.forEach(x=>s+=String.fromCharCode(x));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");}
 function b64d(t){t=t.replace(/-/g,"+").replace(/_/g,"/");while(t.length%4)t+="=";const s=atob(t);return new TextDecoder().decode(Uint8Array.from(s,c=>c.charCodeAt(0)));}
-function cardLink(){
+function cardLink(lang){
   const lv={};ALLK.forEach(k=>{if(S.levels[k])lv[k]=S.levels[k];});
   const d={v:1,n:S.name||"",l:lv,p:S.meds.pen.on?1:0,u:S.num||"112",c:S.c.filter(c=>c[0]||c[1])};
   const xs=S.custom.filter(x=>x[1]);if(xs.length)d.x=xs.map(x=>x[2]?[x[0],x[1],1]:[x[0],x[1]]);
   const md=MEDS.filter(m=>S.meds[m].on).map(m=>[m,S.meds[m].n.trim()]);if(md.length)d.md=md;
-  if(S.where.trim())d.w=S.where.trim();if(S.asthma)d.a=1;if(S.mode==="n")d.m="n";
+  if(S.where.trim())d.w=S.where.trim();if(S.asthma)d.a=1;if(S.mode==="n")d.m="n";if(lang)d.g=lang;
   return BASE+"#c="+b64e(JSON.stringify(d));
 }
 function detectLang(){
@@ -955,7 +956,7 @@ if(!L.includes(S.lang))S.lang="en";
   try{
     const d=JSON.parse(b64d(h.slice(3)));
     VIEW=true;
-    S={name:String(d.n||""),levels:{},custom:Array.isArray(d.x)?d.x.slice(0,12).map(x=>{const r=[String((x&&x[0])||"").slice(0,40),Math.max(0,Math.min(3,+(x&&x[1])||0))];if(x&&x[2])r.push("m");return r;}).filter(x=>x[0]):[],meds:{},where:String(d.w||"").slice(0,60),asthma:!!d.a,mode:d.m==="n"?"n":"r",num:String(d.u||"112"),c:Array.isArray(d.c)?d.c.slice(0,2).map(x=>[String(x[0]||""),String(x[1]||"")]):[],lang:detectLang(),cmp:false};
+    S={name:String(d.n||""),levels:{},custom:Array.isArray(d.x)?d.x.slice(0,12).map(x=>{const r=[String((x&&x[0])||"").slice(0,40),Math.max(0,Math.min(3,+(x&&x[1])||0))];if(x&&x[2])r.push("m");return r;}).filter(x=>x[0]):[],meds:{},where:String(d.w||"").slice(0,60),asthma:!!d.a,mode:d.m==="n"?"n":"r",num:String(d.u||"112"),c:Array.isArray(d.c)?d.c.slice(0,2).map(x=>[String(x[0]||""),String(x[1]||"")]):[],lang:(typeof d.g==="string"&&L.includes(d.g))?d.g:detectLang(),cmp:false};
     MEDS.forEach(m=>S.meds[m]={on:false,n:""});
     if(d.p)S.meds.pen.on=true;
     if(Array.isArray(d.md))d.md.forEach(x=>{if(x&&MEDS.includes(x[0]))S.meds[x[0]]={on:true,n:String(x[1]||"").slice(0,40)};});
