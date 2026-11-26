@@ -202,7 +202,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
 <div class="wrap">
   <header class="top">
     <h1>Aller<span>lingo</span></h1>
-    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 24</span></span>
+    <span class="tophelp"><button type="button" class="helpbtn" id="b-help">So funktioniert's</button><span class="tag" id="tagline">Testversion · Version 25</span></span>
   </header>
 
   <div class="tabs" role="tablist" id="tabs">
@@ -230,7 +230,7 @@ input[type=search]{font:inherit;padding:10px 12px 10px 38px;border:1px solid var
             <li>Erst deine Allergien und dein Notfallset eintragen.</li>
             <li>Oben auf <strong>„Karte zeigen“</strong> tippen, dann auf <strong>„🚑 Notfall“</strong>.</li>
             <li>Unten auf <strong>„Bild für den Sperrbildschirm“</strong> tippen.</li>
-            <li>Auf <strong>„Bild speichern“</strong> tippen oder lange auf das Bild drücken → „Zu Fotos hinzufügen“ bzw. „Bild herunterladen“.</li>
+            <li>Auf <strong>„Bild speichern“</strong> tippen. Auf dem iPhone im Teilen-Menü <strong>„Bild sichern“</strong> wählen. Oder lange auf das Bild drücken → „Zu Fotos hinzufügen“ bzw. „Bild herunterladen“.</li>
             <li><strong>iPhone:</strong> App „Fotos“ öffnen → das Bild antippen → Teilen-Symbol (Viereck mit Pfeil) → <strong>„Als Hintergrundbild“</strong> → „Hinzufügen“ → <strong>„Als Hintergrundpaar festlegen“</strong> oder „Sperrbildschirm anpassen“.</li>
             <li><strong>Android:</strong> App „Galerie“ oder „Fotos“ öffnen → das Bild antippen → <strong>⋮</strong> → <strong>„Als Hintergrund festlegen“</strong> → <strong>„Sperrbildschirm“</strong>. (Die Bezeichnungen können je nach Handy etwas anders heißen.)</li>
             <li>Wichtig: Wenn du später deine Allergien änderst, das Bild <strong>neu erstellen</strong>. Die Angaben stecken im QR-Code und aktualisieren sich nicht von selbst.</li>
@@ -690,11 +690,19 @@ $("b-lock").onclick=()=>{
   let url="";try{url=lockImage();}catch(e){}
   if(!url){o.innerHTML=`<p class="hint">Das Bild konnte nicht erstellt werden. Bitte Seite neu laden und es noch einmal versuchen.</p>`;o.hidden=false;return;}
   o.innerHTML=`<img src="${url}" alt="Sperrbildschirm-Bild mit QR-Code zur Notfall-Karte">
-  <a class="btn" href="${url}" download="allerlingo-sperrbildschirm.png">Bild speichern</a>
-  <ol><li>Bild speichern (oder auf dem Handy lange auf das Bild drücken → „Zu Fotos hinzufügen“ bzw. „Bild herunterladen“).</li>
+  <button type="button" class="btn" id="b-locksave">Bild speichern</button>
+  <ol><li>Auf „Bild speichern“ tippen. Auf dem iPhone öffnet sich das Teilen-Menü: dort <strong>„Bild sichern“</strong> wählen. Alternativ lange auf das Bild drücken → „Zu Fotos hinzufügen“ bzw. „Bild herunterladen“.</li>
   <li>iPhone: Fotos öffnen → Bild → Teilen-Symbol → „Als Hintergrundbild“ → „Sperrbildschirm“.<br>Android: Galerie → Bild → ⋮ → „Als Hintergrund festlegen“ → „Sperrbildschirm“.</li>
   <li>Wenn du deine Allergien änderst, das Bild neu erstellen.</li></ol>`;
   o.hidden=false;
+  $("b-locksave").onclick=async()=>{
+    const fn="allerlingo-sperrbildschirm.png";
+    try{
+      const blob=await (await fetch(url)).blob();const f=new File([blob],fn,{type:"image/png"});
+      if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f]});}catch(e){}return;}
+    }catch(e){}
+    const a=document.createElement("a");a.href=url;a.download=fn;document.body.appendChild(a);a.click();a.remove();
+  };
 };
 
 function tab(show){
